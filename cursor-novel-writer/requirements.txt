@@ -1,1 +1,4 @@
 ebooklib>=0.18
+
+# Optional — knowledge graph (safishamsi/graphify)
+# graphifyy>=0.8.25

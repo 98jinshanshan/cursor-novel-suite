@@ -14,8 +14,8 @@
 - [x] 修复 `graphify_bridge` / `novel_cli`：`--project` 参数（子命令前后均可 + subprocess 顺序）
 - [x] 统一 CLI 文档
 - [x] 清空并忽略 `tmp/video_jobs/`
-- [ ] graphify-novel upstream 命令表 1:1 对照 → [graphify-upstream-verification.md](../cursor-novel-writer/docs/graphify-upstream-verification.md)
-- [ ] GitHub 创建仓库并首次 push → [GITHUB-RELEASE.md](../standards/GITHUB-RELEASE.md)
+- [x] graphify-novel upstream 命令表 1:1 对照 → [graphify-upstream-verification.md](../cursor-novel-writer/docs/graphify-upstream-verification.md)（graphifyy CLI + bridge 重写，2026-05-31）
+- [x] GitHub 创建仓库并首次 push → [GITHUB-RELEASE.md](../standards/GITHUB-RELEASE.md)（`98jinshanshan/cursor-novel-suite`）
 - [ ] `docs/verification/*.md` 多平台（Cursor 部分完成；Qoder/TRAE 预留）
 
 **已确认决策（2026-05-31）：** Option A 脚本架构；demo-novel = 3 人物 + 2 地点 + 1 世界观 + 1 弧 + 1 章
@@ -32,7 +32,7 @@
 - [x] `cursor-novel-writer/docs/graphify-upstream-commands.md`（草案）
 - [ ] `docs/verification/*.md` 多平台安装实测（Cursor 部分完成）
 
-**状态：** P1 主体已完成（2026-05-31）。剩余：Qoder/TRAE 实测、graphify upstream 真机对照。
+**状态：** P1 主体已完成（2026-05-31）。剩余：Qoder/TRAE 实测。
 
 ## P2 — 选择性增强
 
@@ -42,4 +42,4 @@
 - [x] Claude marketplace 插件桩（`.claude-plugin/`）
 - [x] pytest smoke + CI markdownlint（`.github/workflows/ci.yml`）
 
-**状态：** P2 已完成（2026-05-31）。可选后续：graphify upstream 真机、Qoder/TRAE 实测。
+**状态：** P2 已完成（2026-05-31）。可选后续：Qoder/TRAE 实测。

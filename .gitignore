@@ -1,5 +1,7 @@
 tmp/
 **/tmp/video_jobs/
+**/.tmp-graphify-novel/
+**/graphify-out/
 __pycache__/
 *.pyc
 .venv/

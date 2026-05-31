@@ -1,8 +1,8 @@
 # Graphify Upstream 真机对照规程
 
 **版本：** 1.0（2026-05-31）  
-**状态：** 待执行（本机 graphify CLI 未安装时 bridge 走 offline）  
-**命令草案：** [graphify-upstream-commands.md](./graphify-upstream-commands.md)
+**状态：** 已完成（2026-05-31）— graphify-novel 为 Skill；CLI 为 graphifyy  
+**命令对照：** [graphify-upstream-commands.md](./graphify-upstream-commands.md)
 
 ---
 
