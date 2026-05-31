@@ -1,0 +1,15 @@
+{
+  "default": true,
+  "frontMatter": true,
+  "MD013": {
+    "line_length": 120,
+    "code_blocks": false,
+    "tables": false
+  },
+  "MD060": {
+    "style": "any"
+  },
+  "MD029": false,
+  "MD025": false,
+  "MD041": false
+}

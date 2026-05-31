@@ -1,0 +1,8 @@
+{
+  "name": "cursor-novel-writer",
+  "description": "Chinese fiction Agent Skills: init, write, review, export",
+  "version": "1.0.0",
+  "author": {
+    "name": "cursor-novel-writer"
+  }
+}

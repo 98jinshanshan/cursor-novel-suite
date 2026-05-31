@@ -1,0 +1,5 @@
+{
+  "mcpServers": {
+    "note": "Optional. cursor-novel-writer works without MCP via Skills + CLI."
+  }
+}

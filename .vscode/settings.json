@@ -1,0 +1,9 @@
+{
+  "markdownlint.configFile": ".markdownlint.json",
+  "files.associations": {
+    "LICENSE": "plaintext"
+  },
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportMissingImports": "none"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "title": "雾港来信",
+  "author": "示例作者",
+  "updated_at": "2026-05-31T18:00:00+00:00",
+  "chapters": [
+    {
+      "number": 1,
+      "file": "chapters/01_试章.md",
+      "title": "试章",
+      "status": "draft",
+      "words": 86
+    }
+  ],
+  "total_words": 86
+}

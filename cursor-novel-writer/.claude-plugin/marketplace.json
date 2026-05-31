@@ -1,0 +1,15 @@
+{
+  "name": "cursor-novel-suite",
+  "description": "Chinese novel writing + novel-to-video Agent Skills",
+  "owner": {
+    "name": "cursor-novel-writer"
+  },
+  "plugins": [
+    {
+      "name": "cursor-novel-writer",
+      "description": "Story init, chapters, review, EPUB export",
+      "source": "./",
+      "skills": "./skills"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "novel-video": {
+      "command": "python",
+      "args": ["mcp/server.py"],
+      "cwd": "${workspaceFolder}"
+    }
+  }
+}
