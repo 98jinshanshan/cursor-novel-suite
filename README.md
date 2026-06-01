@@ -3,7 +3,8 @@
 两个独立项目，共享 [Agent Skills 开放标准](https://agentskills.io)。
 
 **GitHub：** <https://github.com/98jinshanshan/cursor-novel-suite>  
-**SOLO/TRAE 克隆清单：** [docs/verification/solo-clone-checklist.md](docs/verification/solo-clone-checklist.md)
+**SOLO/TRAE 克隆：** [solo-clone-checklist.md](docs/verification/solo-clone-checklist.md) · **补丁更新：** `platforms/patch-update.ps1`  
+**Phase 0 = `novel-market-scan`：** [SKILLS-INSTALL.md](docs/standards/SKILLS-INSTALL.md)
 
 **文档导航：** [docs/INDEX.md](docs/INDEX.md) · **[Agent 对话入口（主路径）](AGENTS.md)**
 

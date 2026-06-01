@@ -16,14 +16,16 @@
 - 禁止只下载 SKILL.md；必须完整 clone 或 zip 解压 monorepo，再运行 platforms/install-skills.ps1。
 - 用户书在 novels/<slug>/；扫榜在 intel/；引擎在 cursor-novel-writer/engine/。
 
-【Skill 路由】
-- 全流程：novel-pipeline
-- Phase 0 扫榜：novel-market-scan → 运行 novel intel scan --period week
+【Skill 路由 — Phase 0 优先】
+- 不存在 phase-0/ 目录；Phase 0 = novel-market-scan（必须先 Read 其 SKILL.md）。
+- 全流程：novel-pipeline（Phase 0 委托 novel-market-scan）。
+- Phase 0 扫榜：novel-market-scan → novel intel scan --period week → intel/radar/
 - 写作：chapter-writing；审稿：novel-review；导出：novel-export
 - 视频：video-chapter-summary / video-scene-drama
 
 【执行规则】
-1. 收到写小说/扫榜/导出/视频请求 → 先 Read 对应 SKILL.md，再执行。
+1. 写小说/开书前：若无 canon/concept-brief.md，必须先走 Phase 0（Read novel-market-scan）。
+2. 收到任何 skill 任务 → 先 Read 对应 SKILL.md，再执行 CLI。
 2. 开始写入前确认 active novel（novel active 或 --project novels/<slug>）。
 3. 需要确定性检查时运行：py -3 cursor-novel-writer/engine/novel_cli.py suite doctor
 4. 若报「找不到 skill」→ 先 doctor，提示用户重装 platforms/install-skills.ps1，不要幻觉编造 skill 名。
@@ -57,6 +59,7 @@
 | --- | --- |
 | 1 | IDE 打开 **monorepo 根**（含 `.novel-suite-root`） |
 | 2 | `powershell -File platforms/install-skills.ps1 -Agents trae-cn` |
+| 2b | 已 clone：`powershell -File platforms/patch-update.ps1 -Agents trae-cn` |
 | 3 | SOLO 上传 Agent，粘贴上方 System Prompt |
 | 4 | 对话运行 `suite doctor` 验证 |
 

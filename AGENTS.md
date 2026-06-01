@@ -27,9 +27,24 @@ Windows 也可用：
 
 ```powershell
 powershell -File platforms/install-skills.ps1
+powershell -File platforms/patch-update.ps1   # 已 clone 后拉补丁
 ```
 
-**重要：** Skills 必须装到当前工作区；Option A 脚本依赖完整仓库里的 `engine/scripts/`。
+**重要：** Skills 必须装到当前工作区；Option A 脚本依赖完整仓库里的 `engine/scripts/`。  
+**Skill 清单与 Phase 0 对照：** [docs/standards/SKILLS-INSTALL.md](docs/standards/SKILLS-INSTALL.md)  
+**已克隆项目补丁更新：** `powershell -File platforms/patch-update.ps1`
+
+---
+
+## Phase 0 = `novel-market-scan`（无 `phase-0/` 目录）
+
+| 说法 | 实际 |
+| --- | --- |
+| Phase 0 / 扫榜 / 选题 | Skill **`novel-market-scan`** |
+| 引擎命令 | `novel intel scan --period week` |
+| 必装 wrapper | `.trae/skills/novel-market-scan/scripts/intel_scan.py` |
+
+Agent 读技能时**必须先 Read `novel-market-scan`**，再执行 Phase 1+。
 
 ---
 

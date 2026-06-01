@@ -84,3 +84,7 @@ foreach ($agent in $Agents) {
 }
 
 Write-Host "Done. Run: py -3 cursor-novel-writer/engine/novel_cli.py suite doctor"
+Write-Host ""
+Write-Host "Phase 0 = novel-market-scan (NOT a phase-0/ folder). Verify:"
+Write-Host "  .trae/skills/novel-market-scan/scripts/intel_scan.py  (trae-cn)"
+Write-Host "  See docs/standards/SKILLS-INSTALL.md"

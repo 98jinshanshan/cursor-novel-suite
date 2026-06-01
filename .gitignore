@@ -9,6 +9,8 @@ intel/radar/*
 !intel/radar/.gitkeep
 intel/concepts/*
 !intel/concepts/.gitkeep
+# Local npx skills lock (machine-specific paths; regenerate with npx skills add)
+skills-lock.json
 # IDE skill installs (junction); source: cursor-novel-*/skills + platforms/install-skills.ps1
 .agents/
 .cursor/skills/
