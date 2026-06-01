@@ -6,28 +6,63 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+. "$PSScriptRoot\_suite-common.ps1"
 
 $Agents = $Agents | ForEach-Object { $_ -split ',' } | ForEach-Object { $_.Trim() } | Where-Object { $_ }
-
-function Get-SuiteRoot {
-    param([string]$StartDir)
-    $current = (Resolve-Path $StartDir).Path
-    for ($i = 0; $i -lt 12; $i++) {
-        if (Test-Path (Join-Path $current ".novel-suite-root")) {
-            $writerCli = Join-Path $current "cursor-novel-writer\engine\novel_cli.py"
-            if (Test-Path $writerCli) { return $current }
-        }
-        $parent = Split-Path -Parent $current
-        if ($parent -eq $current) { break }
-        $current = $parent
-    }
-    throw "Cannot find Novel Suite root (need .novel-suite-root). Open monorepo root or set NOVEL_SUITE_ROOT."
-}
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $SuiteRoot = Get-SuiteRoot -StartDir $ScriptDir
 $WriterSkills = Join-Path $SuiteRoot "cursor-novel-writer\skills"
 $VideoSkills = Join-Path $SuiteRoot "cursor-novel-video\skills"
+
+function Remove-SkillDest {
+    param([string]$Path)
+    if (-not (Test-Path $Path)) { return }
+    try {
+        Remove-Item -LiteralPath $Path -Recurse -Force -ErrorAction Stop
+        return
+    } catch {
+        Write-Host "WARN: Remove-Item failed for $Path — trying robocopy purge"
+    }
+    $empty = Join-Path $env:TEMP ("novel-suite-empty-" + [guid]::NewGuid().ToString("n"))
+    New-Item -ItemType Directory -Force -Path $empty | Out-Null
+    try {
+        & robocopy $empty $Path /MIR /R:1 /W:1 /NFL /NDL /NJH /NJS /NC /NS | Out-Null
+        if (Test-Path $Path) {
+            Remove-Item -LiteralPath $Path -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    } finally {
+        Remove-Item -LiteralPath $empty -Recurse -Force -ErrorAction SilentlyContinue
+    }
+    if (Test-Path $Path) {
+        throw "Cannot remove existing skill dest: $Path"
+    }
+}
+
+function Copy-SkillTreeRobocopy {
+    param([string]$Source, [string]$Dest)
+    $parent = Split-Path -Parent $Dest
+    if ($parent -and -not (Test-Path $parent)) {
+        New-Item -ItemType Directory -Force -Path $parent | Out-Null
+    }
+    & robocopy $Source $Dest /E /COPY:DAT /R:1 /W:1 /NFL /NDL /NJH /NJS /NC /NS
+    if (-not (Test-RobocopyOk -ExitCode $LASTEXITCODE)) {
+        throw "robocopy failed for $Source -> $Dest (exit $LASTEXITCODE)"
+    }
+}
+
+function Copy-SkillTreeWithFallback {
+    param([string]$Source, [string]$Dest)
+    try {
+        Copy-Item -LiteralPath $Source -Destination $Dest -Recurse -Force -ErrorAction Stop
+        return "copy"
+    } catch {
+        Write-Host "WARN: Copy-Item failed for $(Split-Path $Source -Leaf) — $($_.Exception.Message)"
+        Write-Host "WARN: falling back to robocopy"
+        Copy-SkillTreeRobocopy -Source $Source -Dest $Dest
+        return "robocopy"
+    }
+}
 
 function Install-SkillDir {
     param(
@@ -42,34 +77,30 @@ function Install-SkillDir {
     New-Item -ItemType Directory -Force -Path $DestRoot | Out-Null
     Get-ChildItem $SourceDir -Directory | ForEach-Object {
         $dest = Join-Path $DestRoot $_.Name
-        if (Test-Path $dest) { Remove-Item -Recurse -Force $dest }
+        Remove-SkillDest -Path $dest
         $mode = "copy"
         if (-not $Copy) {
             try {
                 New-Item -ItemType Junction -Path $dest -Target $_.FullName | Out-Null
                 $mode = "junction"
             } catch {
-                Write-Host "WARN: junction failed for $($_.Name); using copy"
-                Copy-Item -Recurse $_.FullName $dest
+                Write-Host "WARN: junction failed for $($_.Name); using copy/robocopy"
+                $mode = Copy-SkillTreeWithFallback -Source $_.FullName -Dest $dest
             }
         } else {
-            Copy-Item -Recurse $_.FullName $dest
+            $mode = Copy-SkillTreeWithFallback -Source $_.FullName -Dest $dest
         }
-        if ($mode -eq "junction") {
-            Write-Host "Linked $($_.Name) -> $dest ($Label, junction)"
-        } else {
-            Write-Host "Installed $($_.Name) -> $dest ($Label, copy)"
-        }
+        Write-Host "Installed $($_.Name) -> $dest ($Label, $mode)"
     }
 }
 
 $AgentPathMap = @{
-    "cursor"   = @(
+    "cursor"  = @(
         $(if ($Global) { "$env:USERPROFILE\.cursor\skills" } else { Join-Path $SuiteRoot ".agents\skills" }),
         $(if (-not $Global) { Join-Path $SuiteRoot ".cursor\skills" })
     )
-    "qoder"    = @($(if ($Global) { "$env:USERPROFILE\.qoder\skills" } else { Join-Path $SuiteRoot ".qoder\skills" }))
-    "trae-cn"  = @($(if ($Global) { "$env:USERPROFILE\.trae-cn\skills" } else { Join-Path $SuiteRoot ".trae\skills" }))
+    "qoder"   = @($(if ($Global) { "$env:USERPROFILE\.qoder\skills" } else { Join-Path $SuiteRoot ".qoder\skills" }))
+    "trae-cn" = @($(if ($Global) { "$env:USERPROFILE\.trae-cn\skills" } else { Join-Path $SuiteRoot ".trae\skills" }))
 }
 
 Write-Host "Suite root: $SuiteRoot"
