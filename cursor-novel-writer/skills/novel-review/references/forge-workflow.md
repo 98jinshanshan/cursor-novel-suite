@@ -2,6 +2,8 @@
 
 多人格分阶段审稿，最后合成修订计划。**不要**一次让 Agent 扮演所有角色。
 
+Persona 详细 prompt：[personas/](./personas/)
+
 ---
 
 ## 阶段 1：硬校验（blocker）
@@ -12,20 +14,23 @@
 - 时间线与 `plot/timeline.md` 无矛盾
 - 人物位置/能力与上一章一致
 - 未违反 `worldbuilding/systems/` 规则
+- 伏笔矩阵状态正确
 
 输出：`reviews/chNN-review.md` 顶部 **Blockers** 小节。
+
+**Gate：** 存在 blocker → 禁止阶段 4–5 与导出。
 
 ---
 
 ## 阶段 2：人格轮审（warn / nit）
 
-按序运行，每人格单独一节：
+按序运行，每人格单独一节（读对应 persona 文件）：
 
-| Persona | 关注点 | 输出格式 |
+| Persona | 文件 | 关注点 |
 | --- | --- | --- |
-| **Ghostlight** | 读者是否困惑、信息是否过早/过晚 | 3–5 条读者问题 |
-| **Lumen** | 结构、节奏、本章是否推动弧线 | 修订清单（优先级） |
-| **Sable** | 用词、重复、对话标签 | 行级建议（引用原文片段） |
+| **Ghostlight** | [ghostlight.md](./personas/ghostlight.md) | 读者困惑、pacing |
+| **Lumen** | [lumen.md](./personas/lumen.md) | 结构、弧线、钩子 |
+| **Sable** | [sable.md](./personas/sable.md) | 用词、重复（初轮，非 de-AI 全表） |
 
 ---
 
@@ -37,13 +42,29 @@
 
 ---
 
+## 阶段 4：去 AI 味（Pipeline Phase 7）
+
+1. 读 `canon/voice-brief.md`
+2. 按 [deai-checklist.md](./deai-checklist.md) 全表检查
+3. 以 **Sable** persona 输出 **De-AI** 小节 + 行级修改
+4. 执行 surgical edits（用户未要求不得全文重写）
+
+---
+
+## 阶段 5：再验证（Pipeline Phase 8）
+
+1. 重跑阶段 1 硬校验
+2. 重跑 **Ghostlight** 冷读
+3. 若仍有 blocker 或 deai ❌ → 回到阶段 4（**全循环最多 2 次**）
+4. 通过后标记 `task_plan.md` Phase 7–8 为 `[x]`
+
+---
+
 ## Graphify 集成点
 
 - 审稿前：`graphify_bridge.py review --chapter ...`
 - 多章后：`update --from-chapters`
 - 关系查询：`query --from "A" --to "B"`
-
-Skill 脚本（Option A）：
 
 ```bash
 python skills/novel-review/scripts/graphify_bridge.py --project . review --chapter chapters/01_*.md
@@ -55,3 +76,4 @@ python skills/novel-review/scripts/graphify_bridge.py --project . review --chapt
 
 - 未过 blocker 直接进入润色全文
 - 人格输出互相矛盾时不做 synthesis 直接改稿
+- 跳过阶段 5 直接导出 EPUB

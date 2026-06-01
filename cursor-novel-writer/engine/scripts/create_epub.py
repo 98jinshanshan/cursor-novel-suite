@@ -8,6 +8,7 @@ import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 
 def parse_story_meta(story_path: Path) -> dict[str, str]:
@@ -78,8 +79,8 @@ h2 { margin-top: 1.5em; }
     )
     book.add_item(css)
 
-    spine = ["nav"]
-    toc = []
+    spine: list[Any] = ["nav"]
+    toc: list[Any] = []
 
     for i, ch_path in enumerate(chapters):
         raw = ch_path.read_text(encoding="utf-8")
@@ -117,8 +118,8 @@ def main() -> int:
     project = args.project.resolve()
     story = project / "story.md"
     meta = parse_story_meta(story) if story.exists() else {}
-    title = meta.get("title", project.name)
-    author = meta.get("author", "作者")
+    title = (meta.get("title") or project.name).strip() or project.name
+    author = (meta.get("author") or "作者").strip() or "作者"
     chapters = collect_chapters(project)
     if not chapters:
         print("ERROR: no chapters in chapters/", file=sys.stderr)

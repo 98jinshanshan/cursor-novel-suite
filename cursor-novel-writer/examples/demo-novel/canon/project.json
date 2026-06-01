@@ -1,0 +1,14 @@
+{
+  "novel_id": "demo-novel",
+  "slug": "demo-novel",
+  "title": "雾港来信",
+  "platform_target": "通用",
+  "created_at": "2026-05-31T00:00:00+00:00",
+  "paths": {
+    "chapters": "chapters/",
+    "drafts": "chapters/.drafts/",
+    "snapshots": "canon/snapshots/",
+    "reviews": "reviews/",
+    "dist": "dist/"
+  }
+}

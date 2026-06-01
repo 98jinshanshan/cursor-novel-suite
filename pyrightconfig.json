@@ -1,0 +1,20 @@
+{
+  "typeCheckingMode": "basic",
+  "include": [
+    "cursor-novel-writer/engine",
+    "cursor-novel-video/engine"
+  ],
+  "venvPath": ".",
+  "venv": ".venv",
+  "exclude": [
+    "**/__pycache__",
+    "**/.venv",
+    "**/tmp",
+    "**/graphify-out"
+  ],
+  "extraPaths": [
+    "cursor-novel-writer/engine/scripts",
+    "cursor-novel-video/engine/scripts"
+  ],
+  "reportMissingImports": "warning"
+}

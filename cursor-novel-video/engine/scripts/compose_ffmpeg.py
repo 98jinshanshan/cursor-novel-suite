@@ -10,6 +10,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from result_contract import emit_result
+
 def make_title_card(text: str, out: Path, w: int, h: int) -> None:
     subprocess.run(
         [sys.executable, str(Path(__file__).parent / "make_title_card.py"),
@@ -182,6 +184,7 @@ def main() -> int:
         subprocess.run(["ffmpeg", "-y", "-i", str(args.input), "-vf", "scale=1080:1920", str(args.output)], check=True)
         out = args.output
     print(f"OK: {out}")
+    emit_result("ok", path=str(out), mode=args.mode)
     return 0
 
 

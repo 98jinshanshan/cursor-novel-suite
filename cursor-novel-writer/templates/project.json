@@ -1,0 +1,14 @@
+{
+  "novel_id": "",
+  "slug": "",
+  "title": "",
+  "platform_target": "通用",
+  "created_at": "",
+  "paths": {
+    "chapters": "chapters/",
+    "drafts": "chapters/.drafts/",
+    "snapshots": "canon/snapshots/",
+    "reviews": "reviews/",
+    "dist": "dist/"
+  }
+}

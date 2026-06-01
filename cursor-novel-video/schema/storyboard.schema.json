@@ -6,6 +6,16 @@
   "properties": {
     "job_id": { "type": "string" },
     "source_chapter": { "type": "string" },
+    "novel": {
+      "type": "object",
+      "properties": {
+        "slug": { "type": "string" },
+        "title": { "type": "string" },
+        "project": { "type": "string" },
+        "chapter": { "type": "string" },
+        "in_registry": { "type": "boolean" }
+      }
+    },
     "mode": { "type": "string", "enum": ["summary", "drama"] },
     "aspect": { "type": "string", "enum": ["9:16", "16:9", "1:1"], "default": "9:16" },
     "target_duration_sec": { "type": "integer", "minimum": 30 },

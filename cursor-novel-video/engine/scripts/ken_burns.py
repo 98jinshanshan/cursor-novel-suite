@@ -9,6 +9,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from result_contract import emit_result
+
 
 def main() -> int:
     ap = argparse.ArgumentParser()
@@ -36,6 +38,7 @@ def main() -> int:
     ]
     subprocess.run(cmd, check=True)
     print(f"OK: {args.output}")
+    emit_result("ok", path=str(args.output), kind="video")
     return 0
 
 

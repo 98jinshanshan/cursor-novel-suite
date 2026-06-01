@@ -1,0 +1,54 @@
+---
+description: 代码阶段结束后必须检查 Problems/linter/相关测试，有问题修完再结束任务
+alwaysApply: true
+---
+
+# 代码交付前问题项检查（强制）
+
+凡在本轮对话中**写入或修改了代码/配置/模板**（含 `.py`、`.md`、`.mdc`、`.json`、CI 等），在宣告任务完成之前必须执行本检查。
+
+## 何时触发
+
+- 完成一轮「代码生成阶段」后（实现、修复、重构、补测试等）
+- **结束前最后一道门**：无检查通过 → 不得向用户说「已完成 / 任务结束」
+
+## 何时可跳过
+
+- 纯问答、纯分析、只读审计且**未改任何文件**
+- 用户明确只要文字方案、不要动仓库
+
+## 必须执行的检查
+
+1. **Problems / Linter**
+   - 对**本轮改动过的路径**调用 IDE linter（如 `ReadLints`）或等价手段
+   - 覆盖：Python（pyright/basedpyright）、Markdown（markdownlint）及改动触发的其他诊断
+
+2. **相关自动化测试**（若存在且与改动相关）
+   - 例：`cursor-novel-writer/tests/`、`cursor-novel-video/tests/`
+   - 改了 engine/CLI → 跑 smoke pytest；仅改 Skill 文档 → 可省略 pytest
+
+3. **修复循环**
+   - 有问题 → 在本轮内修复 → **再次检查**
+   - 重复直到：Problems 中与本次改动相关的项清零，或测试通过
+
+4. **无法本轮解决的阻塞**
+   - 须在结束语中**明确列出**（环境缺依赖、需用户授权、上游 bug 等）
+   - 不得静默忽略仍存在的错误
+
+## 结束汇报（必须一句）
+
+任务收尾时简要说明验证结果，例如：
+
+- `Problems：已清零（改动路径）`
+- `pytest：14 passed`
+- 或 `遗留：…（原因）`
+
+## 反模式
+
+- 改完代码直接说「完成了」而不查 Problems
+- 只跑测试不看 linter（或反之）
+- 把明显可修的 import / MD013 / trailing spaces 留给用户
+
+## 文档
+
+人类可读说明：[docs/standards/POST-CODE-VERIFICATION.md](../../docs/standards/POST-CODE-VERIFICATION.md)

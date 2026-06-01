@@ -94,7 +94,7 @@ def cmd_review(project: Path, chapter: Path) -> int:
             return 0
     print(f"Offline review stub for {chapter.name}.")
     print("Install: pip install graphifyy — then update --from-chapters, or use novel-review skill.")
-    return 0
+    return 2
 
 
 def cmd_update(project: Path, from_chapters: bool) -> int:

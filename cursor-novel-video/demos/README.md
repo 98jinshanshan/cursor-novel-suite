@@ -17,8 +17,9 @@ py -3 engine/video_cli.py summary \
 
 | 文件 | 模式 | 来源章 | 说明 |
 | --- | --- | --- | --- |
-| [demo-novel-ch01-summary-9x16-subtitled.mp4](./demo-novel-ch01-summary-9x16-subtitled.mp4) | summary | 01_试章 | 竖屏 9:16，约 13s，含烧录字幕 |
+| `demo-novel-ch01-summary-9x16-subtitled.mp4` | summary | 01_试章 | 竖屏 9:16，12.6s，含烧录字幕（2026-06-01 生成） |
 
 ## 体积
 
 - 提交 Git 的样片建议 **< 5 MB**；更大文件用 Git LFS 或仅保留 README 说明。
+- 当前样片：`demo-novel-ch01-summary-9x16-subtitled.mp4` ≈ 223 KB。

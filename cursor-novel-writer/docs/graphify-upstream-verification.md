@@ -8,7 +8,9 @@
 
 ## 1. 目标
 
-将 `engine/scripts/graphify_bridge.py` 的调用与 [graphify-novel](https://github.com/Anshler/graphify-novel) 官方 CLI **逐项对照**，填实 verification 表，消除「假定命令签名」风险。
+将 `engine/scripts/graphify_bridge.py` 的调用与
+[graphify-novel](https://github.com/Anshler/graphify-novel) 官方 CLI **逐项对照**，
+填实 verification 表，消除「假定命令签名」风险。
 
 ---
 

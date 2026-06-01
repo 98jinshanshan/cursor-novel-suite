@@ -1,5 +1,8 @@
 # 目录架构与文档存放 — 合规审计
 
+> 历史快照（截至 2026-05-31）。当前结构状态请以  
+> [STRUCTURE-STANDARDS.md](../standards/STRUCTURE-STANDARDS.md) 与 [ROADMAP](../plans/ROADMAP.md) 为准。
+
 **日期：** 2026-05-31  
 **层级：** 第三层（结构专项，承接第一层工程审计 + 第二层交叉审计）  
 **规范依据：** [STRUCTURE-STANDARDS.md](../standards/STRUCTURE-STANDARDS.md)  

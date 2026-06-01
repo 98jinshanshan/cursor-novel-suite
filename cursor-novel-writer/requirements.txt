@@ -1,4 +1,5 @@
 ebooklib>=0.18
+jsonschema>=4.0
 
 # Optional — knowledge graph (safishamsi/graphify)
 # graphifyy>=0.8.25

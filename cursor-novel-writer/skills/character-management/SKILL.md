@@ -33,7 +33,8 @@ From story-skills: rich profiles + bidirectional relationship links.
    ```
 
 4. Update `characters/_index.md` table.
-5. Update related characters' `relationships` (bidirectional).
+5. Update related characters' `relationships` (bidirectional). See
+   [references/bidirectional-relations.md](./references/bidirectional-relations.md).
 6. After major chapter events, run graphify update:
 
    ```bash

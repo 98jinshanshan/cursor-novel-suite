@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NovelRegistry",
+  "type": "object",
+  "required": ["version", "novels"],
+  "additionalProperties": true,
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "active_slug": { "type": ["string", "null"] },
+    "novels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["slug", "path"],
+        "additionalProperties": true,
+        "properties": {
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "title": { "type": "string" },
+          "path": { "type": "string", "minLength": 1 },
+          "platform": { "type": "string" },
+          "novel_id": { "type": "string" },
+          "video_jobs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["job_id", "mode", "chapter", "status"],
+              "additionalProperties": true,
+              "properties": {
+                "job_id": { "type": "string" },
+                "mode": { "type": "string", "enum": ["summary", "drama"] },
+                "chapter": { "type": "string" },
+                "status": { "type": "string" },
+                "job_dir": { "type": "string" },
+                "artifact": { "type": "string" },
+                "created_at": { "type": "string" },
+                "updated_at": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

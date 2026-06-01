@@ -23,6 +23,8 @@ intake → summary script → storyboard.json → TTS → visuals → FFmpeg com
 
 Job dir: `tmp/video_jobs/<job_id>/` with `job_state.json`.
 
+Deep reference: [references/PIPELINE.md](./references/PIPELINE.md)（SVM-09 + RESULT 契约）
+
 ## Stage 1: Intake
 
 - Input: path to `chapters/NN_*.md` or novel project root + chapter number

@@ -9,6 +9,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from result_contract import emit_result
+
 
 def probe_duration(path: Path) -> float:
     cmd = [
@@ -100,6 +102,7 @@ def main() -> int:
     args.output.parent.mkdir(parents=True, exist_ok=True)
     write_srt(entries, args.output)
     print(f"OK: {args.output} ({len(entries)} cues, {duration:.1f}s)")
+    emit_result("ok", path=str(args.output), cues=len(entries), duration_sec=round(duration, 1))
     return 0
 
 

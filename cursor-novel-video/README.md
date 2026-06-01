@@ -18,6 +18,8 @@ npx skills add <owner>/cursor-novel-video -a cursor -a qoder -a trae-cn -g -y
 
 PowerShell: `.\platforms\install.ps1`
 
+Monorepo 级市场情报：[intel/README.md](../intel/README.md)（P-1 选品）
+
 ## 依赖
 
 - Python 3.10+
@@ -35,16 +37,16 @@ PowerShell: `.\platforms\install.ps1`
 ## CLI
 
 ```bash
-# 摘要短视频（默认竖屏 9:16）
+# 绑定 registry 中的小说（推荐）
 python engine/video_cli.py summary \
-  --chapter ../cursor-novel-writer/my-novel/chapters/01_开篇.md
+  --project ../novels/<slug> --chapter chapters/01_开篇.md
 
-# 分场景叙事（逐段 TTS + 画面对齐，可加字幕）
-python engine/video_cli.py drama \
-  --chapter ../cursor-novel-writer/my-novel/chapters/01_开篇.md --subtitles
+# 或直接给章节绝对/相对路径（自动推断 demo-novel / novels/<slug>）
+python engine/video_cli.py summary \
+  --chapter ../cursor-novel-writer/examples/demo-novel/chapters/01_试章.md
 ```
 
-输出：`tmp/video_jobs/<job_id>/output/*.mp4`
+输出：`tmp/video_jobs/<job_id>/output/*.mp4`；登记在 `novels/_registry.json` → `video_jobs[]`（若在 registry 中）。
 
 ## 输入约定
 
@@ -59,6 +61,18 @@ python engine/video_cli.py drama \
 | `adapters/seedance.md` | `REPLICATE_API_TOKEN` |
 
 无 API 时使用 **edge-tts + 标题卡片 + Ken Burns + FFmpeg**。
+
+## Quick Trigger 一览（VS-10）
+
+| 用户说法（示例） | Skill / CLI |
+| --- | --- |
+| 章节摘要视频、短视频、60秒 | `video-chapter-summary` / `video_cli summary` |
+| 分场景叙事、 drama 成片 | `video-scene-drama` / `video_cli drama` |
+| 加字幕、烧录字幕 | `--subtitles` 或 `burn_subtitles.py` |
+| 导出多尺寸、QC | `video-export` / `qc_video.py` |
+| 竖屏 / 横屏 | `--aspect 9:16` / `16:9` / `1:1` |
+
+脚本成功时 stdout 含 `RESULT: {...}` 行（SVM-06），Agent/MCP 应解析该 JSON。
 
 ## MCP（可选）
 

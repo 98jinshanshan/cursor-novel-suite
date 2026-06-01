@@ -2,4 +2,6 @@ LICENSE
 **/tmp/**
 cursor-novel-video/tmp/**
 **/graphify-out/**
+**/GRAPH_REPORT.md
+cursor-novel-writer/examples/demo-novel/graphify-out/
 **/references/story-template.md

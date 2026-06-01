@@ -1,0 +1,46 @@
+---
+description: 小说/视频套件对话入口：优先 Skills 路由，禁止把 CLI 当唯一入口
+alwaysApply: true
+---
+
+# Novel Suite Agent 入口路由
+
+本仓库是 **Agent Skills  monorepo**（`cursor-novel-writer` + `cursor-novel-video`）。
+
+## 主入口
+
+- 用户在 **Agent 对话**中说「写小说 / 扫榜 / 选题 / 续写 / 审稿 / 导出 / 做视频」→ **必须先读取对应 Skill**，按 Skill 工作流执行。
+- **不要**默认让用户手开终端；需要确定性操作时，Agent 自行调用 CLI/脚本并汇报结果。
+- 全流程默认总控：**`novel-pipeline`**（见仓库根 [AGENTS.md](../../AGENTS.md)）。
+
+## 路由表
+
+| 用户意图 | 读取 Skill | 典型引擎调用 |
+| --- | --- | --- |
+| 工作区自检、找不到 skill | — | `novel suite doctor` |
+| 扫榜、热门题材、短视频选题、Phase 0 | `novel-market-scan` | `novel intel scan --period week` |
+| 全流程、一键 pipeline | `novel-pipeline` | `pipeline status` / `pipeline gate` |
+| 新建小说、立项 | `story-init` | `novel init --concept ...` |
+| 写章、续写 | `chapter-writing` | 写 `novels/<slug>/chapters/` |
+| 审稿、去 AI | `novel-review` | `novel review` |
+| 导出 EPUB | `novel-export` | `novel export` |
+| 摘要短视频 / drama | `video-chapter-summary` / `video-scene-drama` | `video_cli summary/drama` |
+
+## 强制门控
+
+- 无 `canon/concept-brief.md` 或 Phase 0 未 `[x]` → 禁止 Phase 1+ 实质写作
+- 最新 review 有 open blockers → 禁止 Phase 7/9
+- `novel export` 前必须满足 phase 9 gate
+
+## 工作区
+
+- 打开 **Novel Suite 根**（含 `.novel-suite-root`）；可选 `NOVEL_SUITE_ROOT` 环境变量
+- 排障首选：`novel suite doctor`（或让用户说「运行 suite doctor」）
+- 用户书在 `novels/<slug>/`；扫榜在 `intel/`
+- 开始写入前确认 `novels/.active` 或显式 `--project`
+- Skill 脚本为 Option A wrapper，**依赖完整 monorepo**（`engine/scripts/`）
+
+## 文档
+
+- 对话话术与多 IDE 说明： [AGENTS.md](../../AGENTS.md)
+- 平台排障（含 TRAE SOLO）： [docs/verification/trae-cn.md](../../docs/verification/trae-cn.md)

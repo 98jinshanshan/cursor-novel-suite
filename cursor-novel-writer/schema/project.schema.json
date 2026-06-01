@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NovelProject",
+  "type": "object",
+  "required": ["novel_id", "slug", "title", "platform_target", "paths"],
+  "additionalProperties": true,
+  "properties": {
+    "novel_id": { "type": "string", "minLength": 1 },
+    "slug": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "platform_target": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string" },
+    "paths": {
+      "type": "object",
+      "required": ["chapters", "reviews"],
+      "additionalProperties": true,
+      "properties": {
+        "chapters": { "type": "string", "minLength": 1 },
+        "drafts": { "type": "string" },
+        "snapshots": { "type": "string" },
+        "reviews": { "type": "string", "minLength": 1 },
+        "dist": { "type": "string" }
+      }
+    }
+  }
+}

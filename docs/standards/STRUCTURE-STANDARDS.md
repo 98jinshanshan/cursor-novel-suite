@@ -13,7 +13,8 @@
 | 空间 | 含义 | 是否进 Git | 示例 |
 | --- | --- | --- | --- |
 | **工具仓** | 可安装的 Skills + engine + 文档 | ✅ | `cursor-novel-writer/skills/` |
-| **用户工程** | 用户创作的小说/视频 job 数据 | ⚠️ 示例可进 Git | `my-novel/chapters/` |
+| **用户工程** | 用户创作的小说/视频 job 数据 | ⚠️ 示例可进 Git | `novels/<slug>/` |
+| **市场情报** | 扫榜雷达、立项前 concept | ❌ 用户内容 ignore | `intel/radar/`, `intel/concepts/` |
 | **生成物** | tmp、dist、EPUB、渲染 MP4 | ❌ 默认 ignore | `tmp/video_jobs/` |
 
 ### 1.2 Agent Skills 标准（强制）
@@ -70,6 +71,25 @@ Monorepo 级审计 / 规范 / 路线图 / 平台验证？
 - 在 `skills/` 内放与 skill 无关的审计 md  
 - 生成物写入 `docs/`
 
+### 1.4 Novel Suite 根契约（路径无关、结构有关）
+
+**根目录（`<NOVEL_SUITE_ROOT>`）** 由结构识别，不依赖固定盘符或路径：
+
+| 识别方式 | 说明 |
+| --- | --- |
+| 标记文件 | 根目录含 `.novel-suite-root` |
+| 子目录 | 同时含 `cursor-novel-writer/engine/novel_cli.py` 与 `cursor-novel-video/` |
+| 环境变量 | `NOVEL_SUITE_ROOT` 指向上述根（CI / 多工作区时可选） |
+| 向上遍历 | 从 `cwd` 或 `engine/scripts/` 向上最多 12 层查找 |
+
+**代码入口：** `cursor-novel-writer/engine/scripts/suite_paths.py`  
+**健康检查：** `novel suite doctor`（或 `suite_doctor.py --json`）  
+**Skills 安装：** 仓库根 `platforms/install-skills.ps1`（自动定位根，junction 优先）
+
+**禁止在文档/脚本中硬编码** 如 `g:/CURSOR`；示例命令使用相对路径或 `<NOVEL_SUITE_ROOT>` / `${workspaceFolder}`。
+
+**IDE 工作区：** 用户必须打开 **Novel Suite 根**，不能只打开 `cursor-novel-writer/` 子目录（否则 Option A wrapper 找不到 `engine/scripts/`）。
+
 ---
 
 ## 2. 目标目录树（Monorepo 根）
@@ -96,6 +116,9 @@ CURSOR/
 │       ├── cursor.md
 │       ├── qoder.md
 │       └── trae-cn.md
+│
+├── intel/                           # 【P-1】市场情报（radar + concepts）
+├── novels/                          # 用户小说工程
 │
 ├── cursor-novel-writer/             # 独立可发布仓库
 └── cursor-novel-video/
@@ -138,7 +161,9 @@ cursor-novel-writer/
 │       └── update_progress.py       # 【缺】
 │
 ├── schema/
-│   └── progress.schema.json
+│   ├── progress.schema.json
+│   ├── project.schema.json
+│   └── registry.schema.json
 ├── templates/                       # 用户 novel 工程脚手架
 ├── examples/
 │   ├── README.md
@@ -163,22 +188,40 @@ cursor-novel-writer/
     └── graphify-upstream-commands.md
 ```
 
-### 3.1 用户小说工程约定（不变，与 story-skills 对齐）
+### 3.1 用户小说工程约定（与 story-skills 对齐，P4 多书隔离）
+
+**Monorepo 根：**
 
 ```text
-<user-novel-project>/                # 用户 workspace，非工具仓
+novels/                              # 用户生产书（gitignore 内容，保留 README）
+├── README.md
+├── _registry.json                   # 运行时生成：全部书登记
+├── .active                          # 当前活动 slug
+└── <slug>/                          # 一本书 = 一个目录
+```
+
+**单书目录 `<slug>/`：**
+
+```text
+<slug>/
+├── canon/project.json               # novel_id, platform_target, 路径索引
+├── canon/progress.json
+├── canon/voice-brief.md
+├── canon/snapshots/chNN-after.md    # 章后小结
 ├── story.md
 ├── task_plan.md
-├── canon/progress.json
-├── characters/_index.md + *.md
+├── characters/...
 ├── worldbuilding/...
-├── plot/foreshadowing.md + arcs/...
-├── chapters/NN_标题.md
-├── reviews/                         # 【建议增】novel-review 输出
+├── plot/...
+├── chapters/NN_标题.md              # 生效正文
+├── chapters/.drafts/                # 验证修订稿（promote 后入主目录）
+├── reviews/chNN-review.md
 ├── graphify-out/
 ├── bible/
 └── dist/*.epub
 ```
+
+**演示：** `cursor-novel-writer/examples/demo-novel/` 不写入 `novels/` registry。
 
 ---
 

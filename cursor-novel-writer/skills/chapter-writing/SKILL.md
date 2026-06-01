@@ -6,19 +6,32 @@ description: |
 license: MIT
 metadata:
   author: cursor-novel-writer
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Chapter Writing
 
 Fuses story-skills chapter workflow + Novel Master snapshots + novel-skill Chinese format.
 
+## Project Resolution（P4）
+
+**Before writing:** confirm active novel:
+
+```bash
+python engine/novel_cli.py active
+```
+
+All paths below are relative to **`novels/<slug>/`** (or explicit `--project`).
+
+**Never** write to repo root or another novel's folder.
+
 ## Pre-write Context Load
 
-1. `story.md`, `task_plan.md`, `plot/foreshadowing.md`
-2. `characters/`, relevant `worldbuilding/`
-3. Previous chapter file if exists
-4. Optional: `python skills/chapter-writing/scripts/graphify_bridge.py --project . query --character "<name>"`
+1. `canon/project.json`, `story.md`, `task_plan.md`, `plot/foreshadowing.md`
+2. **`canon/voice-brief.md`**（Phase 4，含 platform_target）
+3. `characters/`, relevant `worldbuilding/`
+4. Previous chapter file if exists
+5. Optional: `python skills/chapter-writing/scripts/graphify_bridge.py --project . query --character "<name>"`
 
 ## Chapter Structure
 
@@ -57,20 +70,17 @@ Target: 3500–5500 字 unless user specifies.
 
 1. Update `task_plan.md` progress and `canon/progress.json`
 2. Update `chapters/_index.md`
-3. Run review:
+3. **Snapshot file** (required): copy [templates/snapshot-chapter.md](../../templates/snapshot-chapter.md) → `canon/snapshots/chNN-after.md`
+4. Run review:
 
    ```bash
-   python skills/chapter-writing/scripts/graphify_bridge.py --project . review --chapter chapters/NN_*.md
+   python engine/novel_cli.py review --chapter chapters/NN_*.md --project <novels/slug>
    ```
 
-4. Emit **Story Bible 快照** (unless user says 不需要):
+## Revision drafts（验证阶段）
 
-```markdown
-## 快照 — 第N章后
-- 状态变更：...
-- 新伏笔 / 回收：...
-- 下一章钩子：...
-```
+- 验证/去 AI 改稿 → write to `chapters/.drafts/NN_标题.md` only
+- After review pass: `python engine/novel_cli.py promote NN_标题.md --project <novels/slug>`
 
 ## Editor Personas (optional pass)
 

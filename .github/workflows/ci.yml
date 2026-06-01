@@ -16,6 +16,24 @@ jobs:
       - name: markdownlint
         run: npx --yes markdownlint-cli2 "cursor-novel-writer/**/*.md" "cursor-novel-video/**/*.md" "docs/**/*.md" "*.md"
 
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install deps
+        run: |
+          pip install -r requirements-dev.txt
+          pip install -r cursor-novel-writer/requirements.txt
+          pip install -r cursor-novel-video/requirements.txt
+      - name: pyright
+        run: npx --yes pyright -p pyrightconfig.json
+
   test:
     runs-on: ubuntu-latest
     steps:
@@ -33,6 +51,8 @@ jobs:
           python -m compileall -q cursor-novel-writer/engine cursor-novel-video/engine
       - name: pytest (no ffmpeg)
         run: pytest -m "not ffmpeg" -q
+      - name: suite doctor
+        run: python cursor-novel-writer/engine/novel_cli.py suite doctor --core-only
 
   test-ffmpeg:
     runs-on: ubuntu-latest

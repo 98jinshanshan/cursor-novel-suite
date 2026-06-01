@@ -11,6 +11,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
+MONOREPO = ROOT.parent
 ENGINE = ROOT / "engine"
 SCRIPTS = ENGINE / "scripts"
 DEMO_CH = ROOT.parent / "cursor-novel-writer" / "examples" / "demo-novel" / "chapters" / "01_试章.md"
@@ -51,12 +52,109 @@ def test_create_job_storyboard(tmp_path: Path, monkeypatch):
     assert len(sb["scenes"]) >= 2
 
 
+def test_infer_novel_binding_demo_chapter():
+    if not DEMO_CH.is_file():
+        pytest.skip("demo chapter missing")
+    sys.path.insert(0, str(SCRIPTS))
+    import novel_bind  # noqa: E402
+
+    binding = novel_bind.infer_novel_binding(DEMO_CH)
+    assert binding is not None
+    assert binding["novel_slug"] == "demo-novel"
+    assert binding["in_registry"] is False
+    assert binding["source_chapter"].replace("\\", "/").endswith("chapters/01_试章.md")
+
+
+def test_create_job_binds_novel_metadata(tmp_path: Path, monkeypatch):
+    monkeypatch.setattr(video_cli, "DEFAULT_JOBS", tmp_path / "jobs")
+    project = tmp_path / "my-novel"
+    (project / "canon").mkdir(parents=True)
+    (project / "canon" / "project.json").write_text(
+        json.dumps({"slug": "my-novel", "title": "My Novel"}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    ch = project / "chapters" / "01_open.md"
+    ch.parent.mkdir(parents=True)
+    ch.write_text(SAMPLE, encoding="utf-8")
+    sys.path.insert(0, str(SCRIPTS))
+    import novel_bind  # noqa: E402
+
+    binding = novel_bind.infer_novel_binding(ch)
+    job = video_cli.create_job("summary", ch, "9:16", binding=binding)
+    sb = json.loads((job / "storyboard.json").read_text(encoding="utf-8"))
+    assert sb["novel"]["slug"] == "my-novel"
+    state = json.loads((job / "job_state.json").read_text(encoding="utf-8"))
+    assert state["novel_slug"] == "my-novel"
+
+
+def test_record_video_job_in_registry(tmp_path: Path, monkeypatch):
+    sys.path.insert(0, str(MONOREPO / "cursor-novel-writer" / "engine"))
+    from scripts import project_registry as reg  # noqa: E402
+
+    novels = tmp_path / "novels"
+    slug = "vid-test"
+    project = novels / slug
+    (project / "canon").mkdir(parents=True)
+    (project / "canon" / "project.json").write_text(
+        json.dumps({"slug": slug, "title": "Video Test"}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    ch = project / "chapters" / "01_a.md"
+    ch.parent.mkdir(parents=True)
+    ch.write_text(SAMPLE, encoding="utf-8")
+    reg_path = novels / "_registry.json"
+    reg_path.write_text(
+        json.dumps(
+            {
+                "version": 1,
+                "novels": [{"slug": slug, "path": f"novels/{slug}", "title": "Video Test"}],
+                "active_slug": slug,
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(reg, "REGISTRY_PATH", reg_path)
+    monkeypatch.setattr(reg, "MONOREPO_ROOT", tmp_path)
+    monkeypatch.setattr(reg, "NOVELS_DIR", novels)
+
+    sys.path.insert(0, str(SCRIPTS))
+    import novel_bind  # noqa: E402
+
+    monkeypatch.setattr(novel_bind, "_REG", reg)
+
+    binding = novel_bind.infer_novel_binding(ch)
+    assert binding is not None
+    assert binding["in_registry"] is True
+    job_dir = tmp_path / "cursor-novel-video" / "tmp" / "video_jobs" / "job1"
+    job_dir.mkdir(parents=True)
+    assert novel_bind.record_video_job(
+        binding, job_id="job1", job_dir=job_dir, mode="summary", status="running"
+    )
+    data = json.loads(reg_path.read_text(encoding="utf-8"))
+    jobs = data["novels"][0]["video_jobs"]
+    assert jobs[0]["job_id"] == "job1"
+    assert jobs[0]["chapter"] == "chapters/01_a.md"
+
+
 def test_beat_lock_split_sentences():
     sys.path.insert(0, str(SCRIPTS))
     import beat_lock  # noqa: E402
 
     parts = beat_lock.split_sentences("第一句。第二句！")
     assert len(parts) == 2
+
+
+def test_summary_missing_chapter_emits_error_result(tmp_path: Path):
+    missing = tmp_path / "missing.md"
+    r = subprocess.run(
+        [sys.executable, str(ENGINE / "video_cli.py"), "summary", "--chapter", str(missing)],
+        capture_output=True,
+        text=True,
+        cwd=str(ROOT),
+    )
+    assert r.returncode == 1
+    assert "RESULT:" in r.stdout
 
 
 @pytest.mark.ffmpeg

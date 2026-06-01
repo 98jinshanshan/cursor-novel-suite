@@ -30,3 +30,11 @@ py -3 engine/video_cli.py summary --chapter ../cursor-novel-writer/examples/demo
 ## Agent 触发
 
 「根据 examples/demo-novel 继续写第 2 章」
+
+**全流程（推荐）：**
+
+「用 novel-pipeline 从 Phase 6 继续 demo-novel：验证、去 AI 味、导出 EPUB」
+
+```bash
+py -3 engine/novel_cli.py pipeline status --project examples/demo-novel
+```

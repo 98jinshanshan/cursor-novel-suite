@@ -1,5 +1,9 @@
 # 小说 + 视频工具套件 — 深度审计报告
 
+> 历史快照（截至 2026-05-31）。后续实施状态以  
+> [ROADMAP](../plans/ROADMAP.md) 与  
+> [2026-06-02-full-reference-gap-matrix.md](./2026-06-02-full-reference-gap-matrix.md) 为准。
+
 **日期：** 2026-05-31  
 **范围：** `cursor-novel-writer` + `cursor-novel-video` + 衔接 + 多平台  
 **深度：** B（代码逐审 + E2E smoke + GitHub 融合核对 + 测试建议）  

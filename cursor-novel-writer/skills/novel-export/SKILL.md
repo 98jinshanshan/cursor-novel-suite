@@ -32,9 +32,10 @@ python engine/novel_cli.py export --format epub
 ## Steps (Agent)
 
 1. Verify all chapters in `chapters/` match `chapters/_index.md`
-2. Read title/author from `story.md` frontmatter
-3. Run create_epub.py
-4. Report output path and chapter count
+2. Run Quill audit: [references/quill-export-audit.md](./references/quill-export-audit.md)
+3. Read title/author from `story.md` frontmatter
+4. Run create_epub.py
+5. Report output path and chapter count
 
 ## EPUB Features
 

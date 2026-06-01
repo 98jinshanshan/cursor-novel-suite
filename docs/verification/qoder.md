@@ -1,19 +1,36 @@
-# Qoder 平台 — 安装与 smoke 验证
+# Qoder 平台 — Agent 对话与 smoke 验证
 
-**状态：** 预留（GitHub 发布后用同一远程仓快速实测）  
-**说明：** [cursor-novel-writer/platforms/qoder/README.md](../../cursor-novel-writer/platforms/qoder/README.md)  
-**发布指南：** [docs/standards/GITHUB-RELEASE.md](../../docs/standards/GITHUB-RELEASE.md) §7
+**状态：** 最小 smoke 已完成（2026-06-01）  
+**主入口：** [AGENTS.md](../../AGENTS.md)
 
-## 计划检查项（待填）
+## 一次性安装
 
-| 项 | 命令/操作 | 结果 | 日期 |
-| --- | --- | --- | --- |
-| clone GitHub 仓 | `git clone ...` | — | — |
-| install 脚本 | `platforms/install.ps1 -Agent qoder` | — | — |
-| Skills 加载 | `.qoder/skills/` | — | — |
-| 小说 export smoke | demo-novel EPUB | — | — |
-| 视频 summary smoke | demo 第1章 | — | — |
+在 **Novel Suite 根目录**（含 `.novel-suite-root`）：
+
+```powershell
+powershell -File platforms/install-skills.ps1 -Agents qoder
+py -3 cursor-novel-writer/engine/novel_cli.py suite doctor
+```
+
+Skills：`.qoder/skills/`
+
+## Agent 对话 smoke
+
+| 步骤 | 输入 | 预期 |
+| --- | --- | --- |
+| 0 | `novel suite doctor` | 全部 OK |
+| 1 | `按 novel-market-scan 执行本周 intel scan` | intel 产出 |
+| 2 | `按 novel-pipeline 显示 pipeline status` | Phase 列表 |
+| 3 | `继续写 active 小说下一章` | chapter 草稿 |
+
+## 常见排障
+
+| 现象 | 处理 |
+| --- | --- |
+| 找不到 skill | `suite doctor` → 重装 `platforms/install-skills.ps1` |
+| 工作区错误 | 打开 Novel Suite 根，不要只开子文件夹 |
 
 ## 备注
 
-Monorepo 推送完成后，在 Qoder 中打开 clone 目录即可；Skills 需 **完整 repo**（Option A wrapper）。
+- Option A wrapper 依赖完整 monorepo
+- Agent 包 ≠ Skills 目录（与 TRAE 相同）

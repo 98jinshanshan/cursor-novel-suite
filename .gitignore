@@ -2,8 +2,25 @@ tmp/
 **/tmp/video_jobs/
 **/.tmp-graphify-novel/
 **/graphify-out/
+novels/**/*
+!novels/README.md
+novels/.active
+intel/radar/*
+!intel/radar/.gitkeep
+intel/concepts/*
+!intel/concepts/.gitkeep
+# IDE skill installs (junction); source: cursor-novel-*/skills + platforms/install-skills.ps1
+.agents/
+.cursor/skills/
+.qoder/
+.trae/
+.pytest_cache/
 __pycache__/
 *.pyc
 .venv/
+.env
+*.env
+**/credentials.json
+**/secrets*.json
 dist/
 *.epub

@@ -1,0 +1,4 @@
+{
+  "extraPaths": ["engine/scripts"],
+  "reportMissingImports": "warning"
+}

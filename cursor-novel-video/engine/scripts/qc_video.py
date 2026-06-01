@@ -38,6 +38,9 @@ def main() -> int:
         ok = ok and has_a
     result = {"ok": ok, "duration": dur, "has_video": has_v, "has_audio": has_a}
     print(json.dumps(result, indent=2))
+    from result_contract import emit_result
+
+    emit_result("ok" if ok else "fail", path=str(args.video), **result)
     return 0 if ok else 2
 
 

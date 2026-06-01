@@ -8,6 +8,8 @@ import asyncio
 import sys
 from pathlib import Path
 
+from result_contract import emit_result
+
 
 async def run_tts(text: str, output: Path, voice: str) -> None:
     try:
@@ -35,6 +37,7 @@ def main() -> int:
     args.output.parent.mkdir(parents=True, exist_ok=True)
     asyncio.run(run_tts(text.strip(), args.output, args.voice))
     print(f"OK: {args.output}")
+    emit_result("ok", path=str(args.output), kind="audio")
     return 0
 
 

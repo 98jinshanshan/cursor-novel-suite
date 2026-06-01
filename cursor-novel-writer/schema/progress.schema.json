@@ -3,15 +3,18 @@
   "title": "NovelProgress",
   "type": "object",
   "required": ["title", "chapters"],
+  "additionalProperties": true,
   "properties": {
-    "title": { "type": "string" },
+    "title": { "type": "string", "minLength": 1 },
+    "slug": { "type": "string" },
     "author": { "type": "string" },
-    "updated_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string" },
     "chapters": {
       "type": "array",
       "items": {
         "type": "object",
         "required": ["number", "status"],
+        "additionalProperties": true,
         "properties": {
           "number": { "type": "integer", "minimum": 1 },
           "file": { "type": "string" },
@@ -20,7 +23,8 @@
             "type": "string",
             "enum": ["planned", "drafting", "draft", "reviewed", "final"]
           },
-          "word_count": { "type": "integer", "minimum": 0 }
+          "word_count": { "type": "integer", "minimum": 0 },
+          "words": { "type": "integer", "minimum": 0 }
         }
       }
     },

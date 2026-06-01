@@ -7,6 +7,8 @@ import argparse
 import sys
 from pathlib import Path
 
+from result_contract import emit_result
+
 try:
     from PIL import Image, ImageDraw, ImageFont
 except ImportError:
@@ -38,6 +40,7 @@ def main() -> int:
     args = ap.parse_args()
     make_title_card(args.text, args.output, args.width, args.height)
     print(f"OK: {args.output}")
+    emit_result("ok", path=str(args.output), kind="image")
     return 0
 
 
