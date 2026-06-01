@@ -3,14 +3,18 @@
 
 from __future__ import annotations
 
+import importlib
+import importlib.util
 import json
 import sys
+import types
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-_WRITER_ENGINE = None
+_WRITER_ENGINE: Path | None = None
 _REG: Any = None
+_SP: Any = None
 
 
 def _writer_engine() -> Path:
@@ -18,30 +22,71 @@ def _writer_engine() -> Path:
     if _WRITER_ENGINE is None:
         video_root = Path(__file__).resolve().parents[2]
         suite_root = video_root.parent
-        marker = suite_root / ".novel-suite-root"
         writer_cli = suite_root / "cursor-novel-writer" / "engine" / "novel_cli.py"
-        if marker.is_file() and writer_cli.is_file():
+        if (suite_root / ".novel-suite-root").is_file() and writer_cli.is_file():
             _WRITER_ENGINE = suite_root / "cursor-novel-writer" / "engine"
         else:
             _WRITER_ENGINE = suite_root / "cursor-novel-writer" / "engine"
     return _WRITER_ENGINE
 
 
+def _suite_paths_module():
+    """Load writer suite_paths without colliding with cursor-novel-video/scripts."""
+    global _SP
+    if _SP is not None:
+        return _SP
+    engine = _writer_engine()
+    path = engine / "scripts" / "suite_paths.py"
+    spec = importlib.util.spec_from_file_location("novel_writer_suite_paths", path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Cannot load suite_paths from {path}")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    _SP = mod
+    return mod
+
+
 def _registry_module():
+    """Load writer project_registry (depends on suite_paths)."""
     global _REG
     if _REG is not None:
         return _REG
     engine = _writer_engine()
-    mod_path = engine / "scripts" / "project_registry.py"
-    import importlib.util
+    saved_path = sys.path[:]
+    scripts_snapshot = sys.modules.get("scripts")
+    try:
+        sys.path.insert(0, str(engine))
+        for key in list(sys.modules):
+            if key == "scripts" or key.startswith("scripts."):
+                mod = sys.modules[key]
+                mod_file = getattr(mod, "__file__", "") or ""
+                if "cursor-novel-video" in mod_file.replace("\\", "/"):
+                    del sys.modules[key]
+        if "scripts" not in sys.modules:
+            pkg = types.ModuleType("scripts")
+            pkg.__path__ = [str(engine / "scripts")]
+            sys.modules["scripts"] = pkg
+        _REG = importlib.import_module("scripts.project_registry")
+        return _REG
+    finally:
+        sys.path[:] = saved_path
+        if scripts_snapshot is not None and "scripts" not in sys.modules:
+            sys.modules["scripts"] = scripts_snapshot
 
-    spec = importlib.util.spec_from_file_location("novel_project_registry", mod_path)
-    if spec is None or spec.loader is None:
-        raise ImportError(f"Cannot load project_registry from {mod_path}")
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    _REG = mod
-    return mod
+
+def _suite_root() -> Path:
+    return _suite_paths_module().suite_root()
+
+
+def _slug_in_registry(slug: str) -> bool:
+    reg_path = _suite_root() / "novels" / "_registry.json"
+    if not reg_path.is_file():
+        return False
+    try:
+        data = json.loads(reg_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return False
+    return any(n.get("slug") == slug for n in data.get("novels", []))
 
 
 def infer_novel_binding(chapter: Path, *, project: Path | None = None) -> dict[str, Any] | None:
@@ -80,10 +125,9 @@ def infer_novel_binding(chapter: Path, *, project: Path | None = None) -> dict[s
         except json.JSONDecodeError:
             pass
 
-    reg = _registry_module()
-    in_registry = reg.find_by_slug(slug) is not None
+    suite_root = _suite_root()
     try:
-        rel_to_monorepo = root.relative_to(reg.MONOREPO_ROOT.resolve()).as_posix()
+        rel_to_monorepo = root.relative_to(suite_root.resolve()).as_posix()
     except ValueError:
         rel_to_monorepo = root.as_posix()
 
@@ -93,14 +137,13 @@ def infer_novel_binding(chapter: Path, *, project: Path | None = None) -> dict[s
         "novel_title": title,
         "novel_project": rel_to_monorepo,
         "source_chapter": chapter_rel,
-        "in_registry": in_registry,
+        "in_registry": _slug_in_registry(slug),
     }
 
 
 def job_dir_rel(job_dir: Path) -> str:
-    reg = _registry_module()
     try:
-        return job_dir.resolve().relative_to(reg.MONOREPO_ROOT.resolve()).as_posix()
+        return job_dir.resolve().relative_to(_suite_root().resolve()).as_posix()
     except ValueError:
         return job_dir.resolve().as_posix()
 

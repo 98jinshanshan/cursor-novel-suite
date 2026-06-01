@@ -45,3 +45,4 @@
 | Cursor | [verification/cursor.md](./verification/cursor.md) |
 | Qoder | [verification/qoder.md](./verification/qoder.md) |
 | TRAE CN | [verification/trae-cn.md](./verification/trae-cn.md) |
+| SOLO 克隆 | [verification/solo-clone-checklist.md](./verification/solo-clone-checklist.md) |

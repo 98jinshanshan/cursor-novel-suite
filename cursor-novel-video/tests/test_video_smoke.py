@@ -88,8 +88,8 @@ def test_create_job_binds_novel_metadata(tmp_path: Path, monkeypatch):
 
 
 def test_record_video_job_in_registry(tmp_path: Path, monkeypatch):
-    sys.path.insert(0, str(MONOREPO / "cursor-novel-writer" / "engine"))
-    from scripts import project_registry as reg  # noqa: E402
+    sys.path.insert(0, str(SCRIPTS))
+    import novel_bind  # noqa: E402
 
     novels = tmp_path / "novels"
     slug = "vid-test"
@@ -114,20 +114,21 @@ def test_record_video_job_in_registry(tmp_path: Path, monkeypatch):
         ),
         encoding="utf-8",
     )
-    monkeypatch.setattr(reg, "REGISTRY_PATH", reg_path)
-    monkeypatch.setattr(reg, "MONOREPO_ROOT", tmp_path)
-    monkeypatch.setattr(reg, "NOVELS_DIR", novels)
 
-    sys.path.insert(0, str(SCRIPTS))
-    import novel_bind  # noqa: E402
-
-    monkeypatch.setattr(novel_bind, "_REG", reg)
+    sp = novel_bind._suite_paths_module()
+    monkeypatch.setattr(sp, "suite_root", lambda: tmp_path)
 
     binding = novel_bind.infer_novel_binding(ch)
     assert binding is not None
     assert binding["in_registry"] is True
     job_dir = tmp_path / "cursor-novel-video" / "tmp" / "video_jobs" / "job1"
     job_dir.mkdir(parents=True)
+    reg = novel_bind._registry_module()
+    monkeypatch.setattr(reg, "REGISTRY_PATH", reg_path)
+    monkeypatch.setattr(reg, "MONOREPO_ROOT", tmp_path)
+    monkeypatch.setattr(reg, "NOVELS_DIR", novels)
+    monkeypatch.setattr(novel_bind, "_REG", reg)
+
     assert novel_bind.record_video_job(
         binding, job_id="job1", job_dir=job_dir, mode="summary", status="running"
     )

@@ -2,7 +2,8 @@
 
 **状态：** 仓内 smoke ✅；SOLO 自定义 Agent 见排障  
 **主入口：** [AGENTS.md](../../AGENTS.md)  
-**SOLO Prompt 模板：** [solo-agent-prompt.md](../../cursor-novel-writer/platforms/trae/solo-agent-prompt.md)
+**SOLO Prompt 模板：** [solo-agent-prompt.md](../../cursor-novel-writer/platforms/trae/solo-agent-prompt.md)  
+**克隆后清单：** [solo-clone-checklist.md](./solo-clone-checklist.md)
 
 ---
 
@@ -69,5 +70,7 @@ SOLO 多一层 Agent 上传 UI，更容易混淆。
 | 项 | 结果 | 日期 |
 | --- | --- | --- |
 | install-skills.ps1 | ✅ | 2026-06-01 |
-| suite doctor | 待 UI 补录 | — |
-| SOLO Agent + Skills 联调 | ⏳ 待补 | — |
+| SOLO zip 克隆 + junction 13 skills | ✅ | 2026-06-02（用户实测） |
+| pytest writer 23 + video 8 | ✅ | 2026-06-02（novel_bind 路径冲突已修） |
+| suite doctor (full) | ✅ | SOLO 克隆环境 |
+| SOLO Agent + Skills 联调 | ✅ smoke 话术通过 | 2026-06-02 |
