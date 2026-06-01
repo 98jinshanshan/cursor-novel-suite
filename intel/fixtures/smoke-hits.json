@@ -1,0 +1,32 @@
+[
+  {
+    "platform": "douyin",
+    "title": "离婚后她逆袭打脸，豪门总裁追妻火葬场",
+    "url": "https://example.com/demo/douyin-1",
+    "snippet": "都市情感逆袭反转，短视频完播率高，打脸爽点密集"
+  },
+  {
+    "platform": "bilibili",
+    "title": "重生复仇题材本周热度上升，爽文节奏适配切条",
+    "url": "https://example.com/demo/bilibili-1",
+    "snippet": "重生复仇打脸，悬疑反转，适合剧情号"
+  },
+  {
+    "platform": "kuaishou",
+    "title": "刑侦悬疑谜案真相大白，推理反转引热议",
+    "url": "https://example.com/demo/kuaishou-1",
+    "snippet": "悬疑刑侦破案，谜案反转，视觉张力强"
+  },
+  {
+    "platform": "xiaohongshu",
+    "title": "古言权谋宫斗侯府逆袭，王爷将军情感线",
+    "url": "https://example.com/demo/xhs-1",
+    "snippet": "古言权谋宅斗，宫斗侯府，古装视觉"
+  },
+  {
+    "platform": "weibo",
+    "title": "玄幻仙侠修仙宗门升级，灵根飞升系统流",
+    "url": "https://example.com/demo/weibo-1",
+    "snippet": "玄幻仙侠升级，宗门灵根，系统异能"
+  }
+]

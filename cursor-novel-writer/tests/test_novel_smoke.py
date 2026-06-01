@@ -239,6 +239,31 @@ def test_novel_cli_intel_scan_from_input(tmp_path: Path):
     assert len(list(concepts.glob("*.md"))) == 1
 
 
+def test_novel_cli_intel_scan_demo(tmp_path: Path):
+    radar = tmp_path / "radar-demo.md"
+    r = subprocess.run(
+        [
+            sys.executable,
+            str(ENGINE / "novel_cli.py"),
+            "intel",
+            "scan",
+            "--demo",
+            "--period",
+            "week",
+            "--radar",
+            str(radar),
+            "--no-concepts",
+        ],
+        capture_output=True,
+        text=True,
+        cwd=str(ROOT),
+    )
+    assert r.returncode == 0, r.stderr + r.stdout
+    assert "WARN: --demo" in r.stderr
+    assert radar.is_file()
+    assert "题材热度榜" in radar.read_text(encoding="utf-8")
+
+
 def test_pipeline_gate_demo_phase7_blocked():
     r = subprocess.run(
         [

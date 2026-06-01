@@ -32,6 +32,18 @@ SKILL_INSTALL_DIRS = {
     "trae-cn": [".trae/skills"],
 }
 
+MIN_SUITE_VERSION = "2026.06.02-sync"
+
+REQUIRED_SYNC_PATHS = (
+    "platforms/solo-sync.ps1",
+    "platforms/patch-update.ps1",
+    "platforms/zip-refresh.ps1",
+    "platforms/local-mirror.ps1",
+    "docs/verification/solo-clone-checklist.md",
+)
+
+DEMO_FIXTURE = "intel/fixtures/smoke-hits.json"
+
 
 def _check(name: str, ok: bool, detail: str = "") -> dict:
     return {"name": name, "ok": ok, "detail": detail}
@@ -41,6 +53,23 @@ def _skill_names(path: Path) -> set[str]:
     if not path.is_dir():
         return set()
     return {p.name for p in path.iterdir() if p.is_dir() and (p / "SKILL.md").is_file()}
+
+
+def _read_suite_version(root: Path) -> str:
+    marker = root / sp.MARKER
+    if not marker.is_file():
+        return ""
+    for line in marker.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if line.startswith("suite-version="):
+            return line.split("=", 1)[1].strip()
+    return ""
+
+
+def _version_at_least(current: str, minimum: str) -> bool:
+    if not current:
+        return False
+    return current >= minimum
 
 
 def run_doctor(*, core_only: bool = False) -> tuple[list[dict], int]:
@@ -62,6 +91,35 @@ def run_doctor(*, core_only: bool = False) -> tuple[list[dict], int]:
     checks.append(_check("novels_dir", (root / "novels").is_dir(), "novels/"))
     checks.append(_check("intel_dir", (root / "intel").is_dir(), "intel/"))
     checks.append(_check("agents_md", (root / "AGENTS.md").is_file(), "AGENTS.md"))
+
+    version = _read_suite_version(root)
+    checks.append(
+        _check(
+            "suite_version",
+            _version_at_least(version, MIN_SUITE_VERSION),
+            version or f"missing suite-version= in {sp.MARKER}",
+        )
+    )
+    missing_sync: list[str] = []
+    for rel in REQUIRED_SYNC_PATHS:
+        if not (root / rel).is_file():
+            missing_sync.append(rel)
+    checks.append(
+        _check(
+            "sync_tooling",
+            not missing_sync,
+            "solo-sync + zip-refresh present"
+            if not missing_sync
+            else f"missing: {missing_sync}; run platforms/solo-sync.ps1 -UseZip",
+        )
+    )
+    checks.append(
+        _check(
+            "intel_demo_fixture",
+            (root / DEMO_FIXTURE).is_file(),
+            DEMO_FIXTURE,
+        )
+    )
 
     src_skills = root / sp.WRITER_DIR / "skills"
     src_names = _skill_names(src_skills)

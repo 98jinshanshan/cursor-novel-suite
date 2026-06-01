@@ -4,7 +4,7 @@
 
 **GitHub：** <https://github.com/98jinshanshan/cursor-novel-suite>  
 **SOLO/TRAE：** [solo-clone-checklist.md](docs/verification/solo-clone-checklist.md)  
-**补丁更新：** `platforms/patch-update.ps1` · **Phase 0：** [SKILLS-INSTALL.md](docs/standards/SKILLS-INSTALL.md)
+**SOLO 同步：** `platforms/solo-sync.ps1` · **Phase 0：** [SKILLS-INSTALL.md](docs/standards/SKILLS-INSTALL.md)
 
 **文档导航：** [docs/INDEX.md](docs/INDEX.md) · **[Agent 对话入口（主路径）](AGENTS.md)**
 

@@ -358,6 +358,8 @@ def cmd_intel_scan(args: argparse.Namespace) -> int:
         cmd.extend(["--concepts-dir", str(args.concepts_dir)])
     if getattr(args, "no_concepts", False):
         cmd.append("--no-concepts")
+    if getattr(args, "demo", False):
+        cmd.append("--demo")
     return subprocess.call(cmd)
 
 
@@ -544,6 +546,11 @@ def main() -> int:
     intel_scan.add_argument("--max-results", type=int, default=6, dest="max_results")
     intel_scan.add_argument("--timeout", type=float, default=12.0)
     intel_scan.add_argument("--input", type=Path, default=None, help="Optional JSON/NDJSON hit input")
+    intel_scan.add_argument(
+        "--demo",
+        action="store_true",
+        help="Offline smoke using intel/fixtures/smoke-hits.json",
+    )
     intel_scan.add_argument("--radar", type=Path, default=None, help="Custom radar markdown output path")
     intel_scan.add_argument("--concepts-dir", type=Path, default=None, dest="concepts_dir")
     intel_scan.add_argument("--concept-top", type=int, default=3, dest="concept_top")

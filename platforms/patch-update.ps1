@@ -74,3 +74,4 @@ if (-not $SkipTests) {
 
 Write-Host ""
 Write-Host "Patch update complete. SOLO smoke: Read novel-market-scan then run intel scan --period week"
+Write-Host "SOLO sync (zip / mirror / git): powershell -File platforms/solo-sync.ps1 -UseZip -Agents trae-cn"

@@ -48,6 +48,40 @@ zip 下载：解压后进入**含 `.novel-suite-root` 的那一层**再打开 ID
 
 ---
 
+## 开发 → SOLO 测试闭环
+
+| 角色 | 路径 | 每次 push 后 |
+| --- | --- | --- |
+| **开发（Cursor）** | `G:\CURSOR` | `git push origin main` |
+| **测试（SOLO）** | 例如 `G:\SOLO小说项目\…`（monorepo 根） | 见下方 **solo-sync** |
+
+SOLO **不必**重 clone；**不必**读 `G:\CURSOR`（SOLO 对 g:\ 写入常受限）。
+
+```powershell
+# SOLO 测试端（无 git 时默认 HTTP zip）
+powershell -File platforms/solo-sync.ps1 -UseZip -Agents trae-cn
+
+# 同机且可读开发目录时（可选）
+powershell -File platforms/solo-sync.ps1 -Source G:\CURSOR -Agents trae-cn
+
+# 已有 .git 且网络通
+powershell -File platforms/solo-sync.ps1 -UseGit -Agents trae-cn
+```
+
+同步后跑 **方案 A** 验收（下文「SOLO Agent 对话模板」）。
+
+### SOLO 实测对照（避免假绿）
+
+| 现象 | 原因 | 处理 |
+| --- | --- | --- |
+| 无 `solo-sync.ps1` / `patch-update.ps1` | 旧 zip（如 934e7af） | `solo-sync.ps1 -UseZip` |
+| `suite doctor` OK 但缺 platforms/ | doctor 旧版未检 sync 工具 | 同步到 `2026.06.02-sync` 后重跑 doctor |
+| pytest video 3 失败 | 旧版 `novel_bind` | 同步最新 main |
+| `intel scan` 联网失败 | DuckDuckGo 不可用 | `intel scan --demo`（离线 fixture） |
+| Agent 用 mock JSON 冒充 Phase 0 | 未用官方 `--demo` | 改用 CLI `--demo`，输出含 WARN |
+
+---
+
 ## 补丁式更新（已克隆 SOLO 项目）
 
 在 **Novel Suite 根目录** 一键执行：
@@ -56,16 +90,19 @@ zip 下载：解压后进入**含 `.novel-suite-root` 的那一层**再打开 ID
 powershell -File platforms/patch-update.ps1 -Agents trae-cn
 ```
 
-等价于：`git pull` → 重装 Skills junction → pip → `suite doctor` → Phase 0 文件检查 → pytest（31 passed）。
+等价于：`git pull` → 重装 Skills junction → pip → `suite doctor` → Phase 0 文件检查 → pytest（32 passed）。
 
-**无 git 时：** 重新下载最新 zip 覆盖代码（保留 `novels/`、`intel/concepts/` 用户数据），再运行：
+**无 git 时（SOLO 推荐）：** 一条命令同步 GitHub 最新并验收：
 
 ```powershell
-powershell -File platforms/install-skills.ps1 -Agents trae-cn
-py -3 cursor-novel-writer/engine/novel_cli.py suite doctor
+powershell -File platforms/solo-sync.ps1 -UseZip -Agents trae-cn
 ```
 
-**最低版本：** 含 commit `05f9326` 及之后（Phase 0 文档 + 对话模板 + CI markdownlint 修复）。
+等价于：HTTP 下载 main.zip → 覆盖代码（保留 `novels/`、`intel/`）→ install-skills → pip → doctor → pytest（**32 passed**）。
+
+手动分步：`platforms/zip-refresh.ps1` → `patch-update.ps1 -SkipPull`。
+
+**最低版本：** `suite-version=2026.06.02-sync`（含 solo-sync / zip-refresh / intel --demo）。
 
 ---
 
@@ -94,16 +131,17 @@ SOLO System Prompt：[solo-agent-prompt.md](../../cursor-novel-writer/platforms/
 
 ### 方案 A：分步对话（推荐）
 
-#### 第 1 步 — 补丁更新
+#### 第 1 步 — 同步最新（原「补丁更新」）
 
 ```text
-请在本工作区执行补丁更新（不要只读 SKILL.md）：
-1) powershell -File platforms/patch-update.ps1 -Agents trae-cn
-2) 把每一步 exit code、suite doctor 结果、pytest 摘要原样贴出来
+请在本工作区执行 SOLO 同步（不要只读 SKILL.md）：
+1) powershell -File platforms/solo-sync.ps1 -UseZip -Agents trae-cn
+   （若无 solo-sync.ps1，说明版本过旧，先用 zip-refresh.ps1 或 HTTP 拉 main.zip）
+2) 把通道选择、exit code、suite doctor、pytest 摘要原样贴出
 3) 若有 FAIL，给出修复命令，不要跳过
 ```
 
-预期：`git pull` 成功、`.trae/skills` 共 13 个 junction、pytest **31 passed**。
+预期：`solo-sync` 成功、`.trae/skills` 13 个、pytest **32 passed**、`doctor` 含 sync_tooling OK。
 
 #### 第 2 步 — Phase 0 专项
 
@@ -113,6 +151,7 @@ Phase 0 没有 phase-0/ 目录，对应 Skill 是 novel-market-scan。请：
 2) 确认存在 .trae/skills/novel-market-scan/scripts/intel_scan.py
 3) 运行 py -3 cursor-novel-writer/engine/novel_cli.py intel paths
 4) 运行 py -3 cursor-novel-writer/engine/novel_cli.py intel scan --period week
+   （联网失败则：intel scan --demo --period week，并说明 WARN 离线模式）
 5) 列出 intel/radar/ 最新报告路径，并摘要 Top3 题材
 若未 Read novel-market-scan 就执行 scan，请说明并重来。
 ```
@@ -148,7 +187,7 @@ Phase 0 没有 phase-0/ 目录，对应 Skill 是 novel-market-scan。请：
 - suite doctor 核心项全 OK
 - Phase 0 intel scan 有 radar 产出
 - pipeline status / gate phase 1 通过
-- pytest 31 passed（若你跑了 patch-update）
+- pytest 32 passed（若你跑了 patch-update）
 - 说明 Phase 0 对应 novel-market-scan，不是 phase-0 目录
 ```
 
@@ -158,8 +197,8 @@ Phase 0 没有 phase-0/ 目录，对应 Skill 是 novel-market-scan。请：
 你是 Novel Suite 助手。请严格按顺序执行并汇报（必须代为运行命令，不要只给命令让我手敲）：
 
 【0】确认工作区为 Novel Suite 根（.novel-suite-root）。
-【1】powershell -File platforms/patch-update.ps1 -Agents trae-cn
-【2】Read novel-market-scan/SKILL.md → intel scan --period week → 展示 radar Top3
+【1】powershell -File platforms/solo-sync.ps1 -UseZip -Agents trae-cn
+【2】Read novel-market-scan/SKILL.md → intel scan --demo（或联网 scan）→ 展示 radar Top3
 【3】Read novel-pipeline/SKILL.md → pipeline status + gate --phase 1（demo-novel）
 【4】可选：demo 第1章 9:16 summary 视频加字幕
 【5】输出验收表：13 skills、Phase0=novel-market-scan、doctor、pytest、产物路径
@@ -182,11 +221,11 @@ Phase 0 没有 phase-0/ 目录，对应 Skill 是 novel-market-scan。请：
 
 | 项 | 通过标志 |
 | --- | --- |
-| 补丁 | `patch-update.ps1` 无报错 |
+| 同步 | `solo-sync.ps1 -UseZip` 无报错 |
 | Phase 0 | Agent **读过** `novel-market-scan`，且有 `intel/radar/*.md` |
 | 总控 | 能解释 Phase 0→1 门控，且 `pipeline gate --phase 1` OK |
 | 技能 | `.trae/skills/novel-market-scan/scripts/intel_scan.py` 存在 |
-| 测试 | pytest **31 passed**（patch-update 默认会跑） |
+| 测试 | pytest **32 passed**（patch-update 默认会跑） |
 
 **小提示：** SOLO 自定义 Agent 请从最新
 [solo-agent-prompt.md](../../cursor-novel-writer/platforms/trae/solo-agent-prompt.md)
@@ -200,7 +239,7 @@ Phase 0 没有 phase-0/ 目录，对应 Skill 是 novel-market-scan。请：
 py -3 -m pytest cursor-novel-writer/tests cursor-novel-video/tests -m "not ffmpeg" -q
 ```
 
-**通过标准：** **31 passed**（2026-06 起）。
+**通过标准：** **32 passed**（2026-06 起）。
 
 ---
 
@@ -214,6 +253,9 @@ cursor-novel-suite/          ← IDE 打开这一层
 ├── cursor-novel-writer/skills/
 ├── platforms/
 │   ├── install-skills.ps1
-│   └── patch-update.ps1     ← 补丁更新
+│   ├── solo-sync.ps1        ← SOLO 同步入口（zip / mirror / git）
+│   ├── zip-refresh.ps1
+│   └── patch-update.ps1
+├── intel/fixtures/smoke-hits.json  ← intel scan --demo
 └── AGENTS.md
 ```

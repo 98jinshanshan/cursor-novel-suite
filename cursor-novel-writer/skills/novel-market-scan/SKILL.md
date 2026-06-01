@@ -66,6 +66,7 @@ metadata:
 python engine/novel_cli.py intel paths          # 打印 intel/ 与当周 radar 路径
 python engine/novel_cli.py intel scan --period week
 python engine/novel_cli.py intel scan --period month --no-concepts
+python engine/novel_cli.py intel scan --demo --period week   # 离线 smoke（非 live 数据）
 python engine/novel_cli.py pipeline gate --phase 1
 ```
 

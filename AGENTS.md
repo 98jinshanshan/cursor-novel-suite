@@ -27,12 +27,13 @@ Windows 也可用：
 
 ```powershell
 powershell -File platforms/install-skills.ps1
-powershell -File platforms/patch-update.ps1   # 已 clone 后拉补丁
+powershell -File platforms/patch-update.ps1   # git clone 后拉补丁
+powershell -File platforms/solo-sync.ps1 -UseZip -Agents trae-cn   # SOLO / 无 git
 ```
 
 **重要：** Skills 必须装到当前工作区；Option A 脚本依赖完整仓库里的 `engine/scripts/`。  
 **Skill 清单与 Phase 0 对照：** [docs/standards/SKILLS-INSTALL.md](docs/standards/SKILLS-INSTALL.md)  
-**已克隆项目补丁更新：** `powershell -File platforms/patch-update.ps1`
+**SOLO 测试端同步：** `platforms/solo-sync.ps1`（`-UseZip` / `-Source G:\CURSOR` / `-UseGit`）→ [solo-clone-checklist.md](docs/verification/solo-clone-checklist.md)
 
 ---
 

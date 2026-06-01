@@ -291,6 +291,11 @@ def main() -> int:
     ap.add_argument("--max-results", type=int, default=6, help="Max hits per query")
     ap.add_argument("--timeout", type=float, default=12.0, help="HTTP timeout seconds")
     ap.add_argument("--input", type=Path, default=None, help="Optional JSON/NDJSON hit input")
+    ap.add_argument(
+        "--demo",
+        action="store_true",
+        help="Offline smoke: use intel/fixtures/smoke-hits.json (not live market data)",
+    )
     ap.add_argument("--radar", type=Path, default=None, help="Output radar markdown path")
     ap.add_argument("--concepts-dir", type=Path, default=None, help="Directory for generated concept briefs")
     ap.add_argument("--concept-top", type=int, default=3, help="Number of concept briefs to generate")
@@ -305,7 +310,14 @@ def main() -> int:
         return 1
 
     raw_hits: list[Hit] = []
-    if args.input:
+    if args.demo:
+        fixture = sp.suite_root() / "intel" / "fixtures" / "smoke-hits.json"
+        if not fixture.is_file():
+            print(f"ERROR: demo fixture missing: {fixture}", file=sys.stderr)
+            return 1
+        print("WARN: --demo uses offline fixture; not live market scan.", file=sys.stderr)
+        raw_hits.extend(load_hits_from_input(fixture))
+    elif args.input:
         raw_hits.extend(load_hits_from_input(args.input))
     else:
         for p in platforms:
