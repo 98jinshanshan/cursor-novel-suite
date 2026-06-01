@@ -9,6 +9,10 @@ powershell -File platforms/install-skills.ps1 -Agents trae-cn
 py -3 cursor-novel-writer/engine/novel_cli.py suite doctor
 ```
 
+已 clone 补丁：`powershell -File platforms/patch-update.ps1 -Agents trae-cn`
+
+**Phase 0 = `novel-market-scan`**（无 `phase-0/` 目录）→ [SKILLS-INSTALL.md](../../docs/standards/SKILLS-INSTALL.md)
+
 或：
 
 ```bash
