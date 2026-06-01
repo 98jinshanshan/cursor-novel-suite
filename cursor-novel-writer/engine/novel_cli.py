@@ -332,6 +332,8 @@ def cmd_suite_doctor(args: argparse.Namespace) -> int:
         cmd.append("--json")
     if getattr(args, "core_only", False):
         cmd.append("--core-only")
+    if getattr(args, "agents", ""):
+        cmd.extend(["--agents", args.agents])
     return subprocess.call(cmd)
 
 
@@ -590,6 +592,11 @@ def main() -> int:
         "--core-only",
         action="store_true",
         help="Skip IDE skill install dirs (CI)",
+    )
+    suite_doc.add_argument(
+        "--agents",
+        default="",
+        help="Check skills only for these agents (comma-separated, e.g. trae-cn)",
     )
     suite_doc.set_defaults(func=cmd_suite_doctor)
 

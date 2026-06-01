@@ -72,7 +72,7 @@ def _version_at_least(current: str, minimum: str) -> bool:
     return current >= minimum
 
 
-def run_doctor(*, core_only: bool = False) -> tuple[list[dict], int]:
+def run_doctor(*, core_only: bool = False, agents: list[str] | None = None) -> tuple[list[dict], int]:
     checks: list[dict] = []
     exit_code = 0
 
@@ -133,8 +133,17 @@ def run_doctor(*, core_only: bool = False) -> tuple[list[dict], int]:
         )
     )
 
+    agent_filter: set[str] | None = None
+    if agents:
+        agent_filter = {a.strip() for a in agents if a.strip()}
+        unknown = agent_filter - set(SKILL_INSTALL_DIRS)
+        if unknown:
+            raise SystemExit(f"ERROR: unknown --agents: {sorted(unknown)}")
+
     for platform, rel_dirs in SKILL_INSTALL_DIRS.items():
         if core_only:
+            continue
+        if agent_filter is not None and platform not in agent_filter:
             continue
         for rel in rel_dirs:
             installed = root / Path(rel)
@@ -175,8 +184,14 @@ def main() -> int:
         action="store_true",
         help="Skip IDE skill install dirs (for CI)",
     )
+    ap.add_argument(
+        "--agents",
+        default="",
+        help="Comma-separated IDE agents to check skills for (e.g. trae-cn,cursor). Default: all.",
+    )
     args = ap.parse_args()
-    checks, code = run_doctor(core_only=args.core_only)
+    agent_list = [a.strip() for a in args.agents.split(",") if a.strip()] or None
+    checks, code = run_doctor(core_only=args.core_only, agents=agent_list)
     if args.json:
         print(json.dumps({"ok": code == 0, "checks": checks}, ensure_ascii=False, indent=2))
     else:

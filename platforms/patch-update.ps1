@@ -52,7 +52,8 @@ if (-not $SkipPip) {
 Write-Host "== suite doctor =="
 py -3 cursor-novel-writer/engine/novel_cli.py suite doctor --core-only
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-py -3 cursor-novel-writer/engine/novel_cli.py suite doctor
+$agentList = ($Agents -join ",")
+py -3 cursor-novel-writer/engine/novel_cli.py suite doctor --agents $agentList
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 Write-Host "== Phase 0 skill check (novel-market-scan) =="
