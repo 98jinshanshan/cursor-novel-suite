@@ -1,8 +1,9 @@
 # GitHub 发布与上传规范
 
-**版本：** 1.0（2026-05-31）  
+**版本：** 1.1（2026-06-03）  
 **适用范围：** Monorepo `CURSOR/`（含 `cursor-novel-writer` + `cursor-novel-video`）  
-**当前优先级：** 先在 **Cursor 本机跑通** → 再 **GitHub 标准排版上传** → Qoder/TRAE 实测留待后续（结构已预留）
+**套件版本：** `.novel-suite-root` → `suite-version=2026.06.03-nec`  
+**Cursor：** 见 [verification/cursor.md](../verification/cursor.md)（NEC smoke 已跑通）
 
 ---
 

@@ -12,6 +12,11 @@ metadata:
 
 # Video Chapter Summary (MVP)
 
+## Node Execution Contract (NEC)
+
+**执行前必读：** [references/node-dispatch.md](./references/node-dispatch.md)。  
+成功后在 `tmp/video_jobs/<id>/node.completion.json` 落盘。
+
 Fuses [video_skills](https://github.com/hexiaochun/video_skills) one-shot workflow
 and [super-video-maker](https://github.com/Bomx/super-video-maker-skill) staged pipeline.
 

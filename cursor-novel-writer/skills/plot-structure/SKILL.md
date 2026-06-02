@@ -11,6 +11,10 @@ metadata:
 
 # Plot Structure
 
+## Node Execution Contract (NEC)
+
+**执行前必读：** [references/node-dispatch.md](./references/node-dispatch.md)。完成后 `novel node sync --phase 3`。
+
 Fuses story-skills plot frameworks + novel-skill foreshadowing matrix.
 
 ## Framework Selection

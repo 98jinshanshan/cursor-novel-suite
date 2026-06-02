@@ -1,0 +1,41 @@
+{
+  "folders": [
+    {
+      "name": "01 · Writer (skills + engine)",
+      "path": "cursor-novel-writer"
+    },
+    {
+      "name": "02 · Video",
+      "path": "cursor-novel-video"
+    },
+    {
+      "name": "03 · Docs & Workflow",
+      "path": "docs"
+    },
+    {
+      "name": "04 · Novels (your books)",
+      "path": "novels"
+    },
+    {
+      "name": "05 · Intel (radar)",
+      "path": "intel"
+    },
+    {
+      "name": "06 · Platforms (install)",
+      "path": "platforms"
+    }
+  ],
+  "settings": {
+    "markdownlint.configFile": ".markdownlint.json",
+    "files.exclude": {
+      "**/.agents": true,
+      "**/.qoder": true,
+      "**/.trae": true,
+      "**/.cursor/skills": true,
+      "**/.pytest_cache": true,
+      "**/__pycache__": true,
+      "**/.venv": true
+    },
+    "explorer.sortOrder": "foldersNestsFiles"
+  }
+}

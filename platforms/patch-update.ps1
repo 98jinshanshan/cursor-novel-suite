@@ -1,6 +1,6 @@
 # Patch-update an existing Novel Suite clone (git pull + skills + deps + doctor)
 param(
-    [string[]]$Agents = @("trae-cn"),
+    [string[]]$Agents = @("cursor", "trae-cn"),
     [switch]$SkipPull,
     [switch]$SkipPip,
     [switch]$SkipTests

@@ -52,6 +52,25 @@ def test_create_job_storyboard(tmp_path: Path, monkeypatch):
     assert len(sb["scenes"]) >= 2
 
 
+def test_video_job_node_completion_manifest(tmp_path: Path):
+    sys.path.insert(0, str(SCRIPTS))
+    import video_node_completion  # noqa: E402
+
+    job = tmp_path / "job_test"
+    job.mkdir()
+    (job / "script.md").write_text("# script\n", encoding="utf-8")
+    (job / "storyboard.json").write_text("{}", encoding="utf-8")
+    out = job / "output"
+    out.mkdir()
+    mp4 = out / "clip.mp4"
+    mp4.write_bytes(b"\x00\x00\x00\x18ftypmp42")
+    path = video_node_completion.write_job_completion(job, artifact=mp4, qc_ok=True, mode="summary")
+    assert path.is_file()
+    data = json.loads(path.read_text(encoding="utf-8"))
+    assert data["status"] == "complete"
+    assert data["skill"] == "video-chapter-summary"
+
+
 def test_infer_novel_binding_demo_chapter():
     if not DEMO_CH.is_file():
         pytest.skip("demo chapter missing")

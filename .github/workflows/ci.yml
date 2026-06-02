@@ -53,6 +53,10 @@ jobs:
         run: pytest -m "not ffmpeg" -q
       - name: suite doctor
         run: python cursor-novel-writer/engine/novel_cli.py suite doctor --core-only
+      - name: NEC smoke (writer + video)
+        run: |
+          python cursor-novel-writer/engine/scripts/nec_cursor_smoke.py
+          python cursor-novel-video/engine/scripts/nec_video_smoke.py
 
   test-ffmpeg:
     runs-on: ubuntu-latest

@@ -5,5 +5,18 @@
   },
   "python.analysis.diagnosticSeverityOverrides": {
     "reportMissingImports": "none"
+  },
+  "files.exclude": {
+    "**/.agents": true,
+    "**/.qoder": true,
+    "**/.trae": true,
+    "**/.cursor/skills": true,
+    "**/.pytest_cache": true,
+    "**/__pycache__": true
+  },
+  "explorer.sortOrder": "foldersNestsFiles",
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "*.md": "${capture}.completion.json"
   }
 }

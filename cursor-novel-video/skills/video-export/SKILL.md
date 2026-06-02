@@ -11,6 +11,10 @@ metadata:
 
 # Video Export & QC
 
+## Node Execution Contract (NEC)
+
+**执行前必读：** [references/node-dispatch.md](./references/node-dispatch.md)（V2 节点）。
+
 ## Export Targets
 
 | Platform | Aspect | Resolution |

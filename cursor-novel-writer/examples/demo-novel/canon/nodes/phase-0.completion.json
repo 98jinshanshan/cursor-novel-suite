@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "phase": 0,
+  "skill": "novel-market-scan",
+  "project_slug": "demo-novel",
+  "status": "complete",
+  "started_at": "2026-06-01T00:00:00+00:00",
+  "completed_at": "2026-06-01T00:00:00+00:00",
+  "artifacts": {
+    "concept_brief": "canon/concept-brief.md",
+    "radar_md": ""
+  },
+  "subtasks": [
+    {
+      "id": "P0-S0",
+      "title": "确认 intel 路径与周期",
+      "executor": "cli",
+      "command": "novel intel paths",
+      "status": "done",
+      "output_paths": []
+    },
+    {
+      "id": "P0-S1",
+      "title": "短视频平台热点 CLI 扫描",
+      "executor": "cli",
+      "command": "novel intel scan",
+      "status": "done",
+      "output_paths": []
+    },
+    {
+      "id": "P0-S2",
+      "title": "文字平台快照",
+      "executor": "hybrid",
+      "reference": "platform-scan-guide.md",
+      "status": "done",
+      "output_paths": []
+    },
+    {
+      "id": "P0-S3",
+      "title": "题材簇 Top10",
+      "executor": "hybrid",
+      "reference": "radar-report-template.md",
+      "status": "done",
+      "output_paths": []
+    },
+    {
+      "id": "P0-S4",
+      "title": "短视频 rubric + concept",
+      "executor": "cli",
+      "command": "novel intel scan",
+      "status": "done",
+      "output_paths": []
+    },
+    {
+      "id": "P0-S5",
+      "title": "用户确认 concept",
+      "executor": "agent",
+      "reference": "concept-brief.md",
+      "status": "done",
+      "output_paths": ["canon/concept-brief.md"]
+    },
+    {
+      "id": "P0-S6",
+      "title": "立项与 gate",
+      "executor": "cli",
+      "command": "novel init --concept",
+      "status": "done",
+      "output_paths": []
+    }
+  ]
+}

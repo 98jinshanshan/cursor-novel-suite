@@ -10,6 +10,10 @@ metadata:
 
 # Worldbuilding
 
+## Node Execution Contract (NEC)
+
+**执行前必读：** [references/node-dispatch.md](./references/node-dispatch.md)。完成 Phase 2a 后运行 `novel node sync --phase 2`。
+
 ## Steps
 
 1. Read `story.md`, `worldbuilding/_index.md`.

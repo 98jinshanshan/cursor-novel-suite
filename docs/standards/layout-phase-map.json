@@ -1,0 +1,121 @@
+{
+  "layout_version": "2.0.0",
+  "nec_version": "1.0",
+  "updated": "2026-06-03",
+  "canonical_skill_roots": [
+    "cursor-novel-writer/skills",
+    "cursor-novel-video/skills"
+  ],
+  "hidden_install_roots": [
+    ".agents/skills",
+    ".cursor/skills",
+    ".qoder/skills",
+    ".trae/skills"
+  ],
+  "phases": [
+    {
+      "phase": 0,
+      "skills": ["novel-market-scan"],
+      "artifacts": {
+        "radar_md": "intel/radar/{iso_week}.md",
+        "radar_completion": "intel/radar/{iso_week}.completion.json",
+        "concepts_dir": "intel/concepts/"
+      },
+      "project_completion": "novels/{slug}/canon/nodes/phase-0.completion.json"
+    },
+    {
+      "phase": 1,
+      "skills": ["story-init"],
+      "artifacts": {
+        "story_md": "novels/{slug}/story.md",
+        "project_json": "novels/{slug}/canon/project.json"
+      },
+      "project_completion": "novels/{slug}/canon/nodes/phase-1.completion.json"
+    },
+    {
+      "phase": 2,
+      "skills": ["worldbuilding", "character-management"],
+      "artifacts": {
+        "characters_glob": "novels/{slug}/characters/*.md",
+        "world_locations": "novels/{slug}/worldbuilding/locations/",
+        "world_systems": "novels/{slug}/worldbuilding/systems/"
+      },
+      "project_completion": "novels/{slug}/canon/nodes/phase-2.completion.json",
+      "gate_min_phase": 3
+    },
+    {
+      "phase": 3,
+      "skills": ["plot-structure"],
+      "artifacts": {
+        "arcs_glob": "novels/{slug}/plot/arcs/*.md",
+        "foreshadowing": "novels/{slug}/plot/foreshadowing.md"
+      },
+      "project_completion": "novels/{slug}/canon/nodes/phase-3.completion.json",
+      "gate_min_phase": 4
+    },
+    {
+      "phase": 4,
+      "skills": ["voice-brief-template"],
+      "artifacts": {
+        "voice_brief": "novels/{slug}/canon/voice-brief.md"
+      },
+      "project_completion": "novels/{slug}/canon/nodes/phase-4.completion.json",
+      "gate_min_phase": 5
+    },
+    {
+      "phase": 5,
+      "skills": ["chapter-writing"],
+      "artifacts": {
+        "chapters_glob": "novels/{slug}/chapters/*.md",
+        "snapshots_dir": "novels/{slug}/canon/snapshots/"
+      },
+      "project_completion": "novels/{slug}/canon/nodes/phase-5.completion.json",
+      "gate_min_phase": 6
+    },
+    {
+      "phase": 6,
+      "skills": ["novel-review"],
+      "artifacts": {
+        "reviews_glob": "novels/{slug}/reviews/ch*-review.md"
+      },
+      "project_completion": "novels/{slug}/canon/nodes/phase-6.completion.json",
+      "gate_min_phase": 7
+    },
+    {
+      "phase": 7,
+      "skills": ["novel-review"],
+      "project_completion": "novels/{slug}/canon/nodes/phase-7.completion.json",
+      "gate_min_phase": 8
+    },
+    {
+      "phase": 8,
+      "skills": ["novel-review"],
+      "project_completion": "novels/{slug}/canon/nodes/phase-8.completion.json",
+      "gate_min_phase": 9
+    },
+    {
+      "phase": 9,
+      "skills": ["novel-export"],
+      "artifacts": {
+        "dist_epub": "novels/{slug}/dist/*.epub"
+      },
+      "project_completion": "novels/{slug}/canon/nodes/phase-9.completion.json",
+      "gate_min_phase": 9
+    }
+  ],
+  "video_nodes": [
+    {
+      "node": "V0",
+      "skill": "video-chapter-summary",
+      "job_completion": "cursor-novel-video/tmp/video_jobs/{job_id}/node.completion.json"
+    },
+    {
+      "node": "V1",
+      "skill": "video-scene-drama"
+    },
+    {
+      "node": "V2",
+      "skill": "video-export"
+    }
+  ]
+}

@@ -1,54 +1,83 @@
 # Cursor 平台 — Agent 对话与 smoke 验证
 
-**状态：** 部分实测（2026-05-31，Windows / Cursor）  
-**主入口：** [AGENTS.md](../../AGENTS.md)（对话话术，非 CLI 优先）
+**状态：** Cursor 侧 NEC 验收已完成（2026-06-03）  
+**主入口：** [AGENTS.md](../../AGENTS.md)  
+**统一验收表：** [NEC-smoke-matrix.md](./NEC-smoke-matrix.md)
 
 ## 一次性安装
 
-在 **Novel Suite 根目录**（含 `.novel-suite-root`，路径任意）：
-
-```bash
-npx skills add ./cursor-novel-writer -a cursor -y
-npx skills add ./cursor-novel-video -a cursor -y
-py -3 cursor-novel-writer/engine/novel_cli.py suite doctor
-```
-
-或：
+在 **Novel Suite 根**（含 `.novel-suite-root`）：
 
 ```powershell
 powershell -File platforms/install-skills.ps1 -Agents cursor
+py -3 cursor-novel-writer/engine/novel_cli.py suite doctor --agents cursor
 ```
 
-Skills 目录：`.agents/skills/`、`.cursor/skills/`（junction 链接到源 skills，见 `platforms/install-skills.ps1`）。
+可选：去掉旧双份安装（仅保留 `.cursor/skills`）：
 
-## Agent 对话 smoke（推荐主路径）
+```powershell
+Remove-Item -Recurse -Force .agents\skills -ErrorAction SilentlyContinue
+```
 
-| 步骤 | 在 Agent 对话输入 | 预期 |
+或 `npx skills add ./cursor-novel-writer -a cursor -y`（+ video）。
+
+**工作区：** 推荐 [novel-suite.code-workspace](../../novel-suite.code-workspace)。  
+**编辑源：** `cursor-novel-writer/skills/`、`cursor-novel-video/skills/`（不要改 `.cursor/skills` 镜像）。
+
+## 引擎一键 smoke（Cursor 已跑通）
+
+```powershell
+py -3 cursor-novel-writer/engine/scripts/nec_cursor_smoke.py --out docs/verification/cursor-nec-run-latest.json
+py -3 cursor-novel-video/engine/scripts/nec_video_smoke.py
+```
+
+| 脚本 | 预期 |
+| --- | --- |
+| `nec_cursor_smoke.py` | 退出码 0，`gaps: []` |
+| `nec_video_smoke.py` | 退出码 0，`status: complete` |
+
+机器记录：[cursor-nec-run-latest.json](./cursor-nec-run-latest.json)
+
+## NEC 分步（与矩阵一致）
+
+| 步骤 | 命令 | 预期 |
 | --- | --- | --- |
-| 0 | `请运行 novel suite doctor 并解读结果` | 全部 OK |
-| 1 | `请读取 novel-market-scan，执行 intel scan --period week 并总结 Top3 题材` | `intel/radar/*.md` + `intel/concepts/*.md` |
-| 2 | `按 novel-pipeline 对 demo-novel 显示 pipeline status` | Phase 列表 |
-| 3 | `把 demo 第1章做成 9:16 summary 视频加字幕` | MP4 输出 |
+| 1 | `novel suite doctor --agents cursor` | 全 OK（可有 `skills_cursor_dual_install` WARN） |
+| 2 | `intel_scan.py --demo` | `intel/radar/*.completion.json` **complete** |
+| 3 | `novel node sync --phase 1..9 --project examples/demo-novel` | 10 个 manifest，无 pending |
+| 4 | `novel pipeline gate --phase 6 --project examples/demo-novel` | GATE OK |
+| 5 | `novel export --project examples/demo-novel` | `dist/*.epub` |
 
-**说明：** 截图中的「Agent / Auto」是模式与模型选择，不是 Skill 下拉。
+## Agent 对话（主路径）
 
-## 检查项（引擎层）
+见 [NEC-smoke-matrix.md](./NEC-smoke-matrix.md) §Agent 对话 smoke。
 
-| 项 | 命令/操作 | 结果 | 日期 |
-| --- | --- | --- | --- |
-| suite doctor | `novel_cli.py suite doctor` | 待核对 | — |
-| Skills 目录 | `.agents/skills/` 含 novel-pipeline 等 | 待核对 | — |
-| pyright | `powershell -File .\typecheck.ps1` | ✅ | 2026-06-01 |
+## 检查项（Cursor 实测）
 
-## 常见排障
-
-| 现象 | 原因 | 处理 |
+| 项 | 结果 | 日期 |
 | --- | --- | --- |
-| Agent 说找不到 skill | 工作区不是 Novel Suite 根；或未装 Skills | `suite doctor` → `platforms/install-skills.ps1` |
-| 脚本报 missing engine | 只打开了 `cursor-novel-writer/` 子目录 | 打开含 `.novel-suite-root` 的根目录 |
-| Agent 只给命令不执行 | 模式/权限限制 | 明确说「请直接执行并汇报结果」 |
+| `suite_version` ≥ 2026.06.03-nec | ✅ | 2026-06-03 |
+| `layout_version` 2.0.0 | ✅ | 2026-06-03 |
+| install → `.cursor/skills` 13 项 | ✅ | 2026-06-03 |
+| `nec_cursor_smoke` gaps 空 | ✅ | 2026-06-03 |
+| `nec_video_smoke` | ✅ | 2026-06-03 |
+| pytest（not ffmpeg） | ✅ 38 passed | 2026-06-03 |
+| pyright | ✅ | 2026-06-01 |
 
-## 备注
+## 排障
 
-- Cursor Rule：`.cursor/rules/novel-agent-entry.mdc`
-- 根发现规范：[STRUCTURE-STANDARDS.md](../standards/STRUCTURE-STANDARDS.md) §1.4
+| 现象 | 处理 |
+| --- | --- |
+| 左侧四套 skills | 重载窗口；见 [WORKSPACE-LAYOUT.md](../standards/WORKSPACE-LAYOUT.md) |
+| doctor 双份 WARN | 删 `.agents/skills` 或安装时不要 `-AlsoAgents` |
+| 找不到 skill | 打开 Suite 根 + `install-skills.ps1 -Agents cursor` |
+| manifest 有 pending | `novel node sync --phase N` 后 `node validate --phase N` |
+
+## GitHub 更新（已克隆仓库）
+
+```powershell
+git pull origin main
+powershell -File platforms/patch-update.ps1 -SkipPull -Agents cursor
+```
+
+无 git：`platforms/zip-refresh.ps1` 后同上（`-SkipPull`）。

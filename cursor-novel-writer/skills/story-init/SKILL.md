@@ -14,6 +14,11 @@ metadata:
 
 Initialize a Chinese general-fiction project. Fused from story-skills (structure) and novel-skill (Chinese workflow).
 
+## Node Execution Contract (NEC)
+
+**执行前必读：** [references/node-dispatch.md](./references/node-dispatch.md)。  
+`novel init` 自动生成 `canon/nodes/phase-1.completion.json`（P1-S2 done）；gate phase 2 前完成 P1-S3。
+
 ## When to Use
 
 - User wants to start a new novel from scratch

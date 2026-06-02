@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "phase": 4,
+  "skill": "voice-brief",
+  "project_slug": "demo-novel",
+  "status": "complete",
+  "started_at": "2026-06-02T16:15:51+00:00",
+  "artifacts": {
+    "voice_brief": "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\canon\\voice-brief.md"
+  },
+  "subtasks": [
+    {
+      "id": "P4-S1",
+      "title": "填写 voice-brief",
+      "executor": "agent",
+      "reference": "templates/voice-brief.md",
+      "status": "done",
+      "output_paths": [
+        "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\canon\\voice-brief.md"
+      ]
+    },
+    {
+      "id": "P4-S2",
+      "title": "pipeline gate phase 5",
+      "executor": "cli",
+      "command": "novel pipeline gate --phase 5",
+      "status": "done",
+      "output_paths": []
+    }
+  ],
+  "completed_at": "2026-06-02T16:15:51+00:00"
+}

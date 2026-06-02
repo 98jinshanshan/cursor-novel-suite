@@ -207,6 +207,15 @@ def _load_binding(job_dir: Path) -> dict | None:
     }
 
 
+def _write_failed_completion(job_dir: Path, note: str, mode: str) -> None:
+    try:
+        from scripts.video_node_completion import write_job_completion_failed  # noqa: PLC0415
+
+        write_job_completion_failed(job_dir, note=note, mode=mode)
+    except Exception as exc:  # noqa: BLE001
+        print(f"WARN: node.completion.json (failed) not written: {exc}", file=sys.stderr)
+
+
 def _write_job_state(job_dir: Path, payload: dict) -> None:
     binding = _load_binding(job_dir)
     if binding:
@@ -282,6 +291,7 @@ def run_pipeline(job_dir: Path, mode: str, aspect: str, subtitles: bool = False)
     except subprocess.CalledProcessError as exc:
         msg = f"PIPELINE FAIL: stage command exited {exc.returncode}"
         _write_job_state(job_dir, {"status": "failed", "stage": "render", "reason": msg, "job_id": job_dir.name})
+        _write_failed_completion(job_dir, msg, mode)
         emit_error(msg, mode=mode, job_id=job_dir.name)
         return 1
 
@@ -289,6 +299,7 @@ def run_pipeline(job_dir: Path, mode: str, aspect: str, subtitles: bool = False)
     if not outputs:
         msg = "PIPELINE FAIL: no output mp4 produced"
         _write_job_state(job_dir, {"status": "failed", "stage": "export", "reason": msg, "job_id": job_dir.name})
+        _write_failed_completion(job_dir, msg, mode)
         emit_error(msg, mode=mode, job_id=job_dir.name)
         return 1
 
@@ -326,6 +337,7 @@ def run_pipeline(job_dir: Path, mode: str, aspect: str, subtitles: bool = False)
                 "artifacts": [{"type": "video", "path": str(final)}],
             },
         )
+        _write_failed_completion(job_dir, msg, mode)
         emit_error(msg, mode=mode, job_id=job_dir.name, artifact=str(final))
         return 1
 
@@ -338,6 +350,13 @@ def run_pipeline(job_dir: Path, mode: str, aspect: str, subtitles: bool = False)
             "artifacts": [{"type": "video", "path": str(final)}],
         },
     )
+    try:
+        from scripts.video_node_completion import write_job_completion  # noqa: PLC0415
+
+        write_job_completion(job_dir, artifact=final, qc_ok=True, mode=mode)
+        print(f"OK: completion -> {job_dir / 'node.completion.json'}")
+    except Exception as exc:  # noqa: BLE001
+        print(f"WARN: node.completion.json not written: {exc}", file=sys.stderr)
     print(f"OK: {final}")
     emit_result("ok", artifact=str(final), mode=mode, job_id=job_dir.name)
     return 0

@@ -14,6 +14,11 @@ metadata:
 
 **编排 Skill**：delegate 原子 Skill，**强制一书一目录**，禁止跨书写入。
 
+## Node Execution Contract (NEC)
+
+进入任一 Phase 前：**Read** 该 Phase 原子 Skill 的 [node-dispatch.md](./references/node-dispatch.md)（或子 Skill 内同名文件）。  
+总控路由表见上文；微观分派与完成清单见各 Skill NEC。
+
 ## Multi-Novel Isolation（P4 — 必守）
 
 1. **用户新书** → `novels/<auto-slug>/`（非 `my-novel`、非 repo 根）  

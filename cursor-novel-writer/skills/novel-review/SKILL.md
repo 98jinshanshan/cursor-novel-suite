@@ -12,6 +12,11 @@ metadata:
 
 # Novel Review
 
+## Node Execution Contract (NEC)
+
+**执行前必读：** [references/node-dispatch.md](./references/node-dispatch.md)。  
+Phase 6→8 分别 `novel node sync --phase 6|7|8`；报告须含 `## Blockers`、`## De-AI`、`Re-validate`。
+
 Integrates graphify-novel, zencoder editor roles, postwriter validation layers, de-AI pass.
 
 ## Hard Validators (must pass)

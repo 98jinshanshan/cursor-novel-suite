@@ -1,2 +1,4 @@
 novel-suite-root=1
-suite-version=2026.06.02-sync
+suite-version=2026.06.03-nec
+layout-version=2.0.0
+nec-version=1.0

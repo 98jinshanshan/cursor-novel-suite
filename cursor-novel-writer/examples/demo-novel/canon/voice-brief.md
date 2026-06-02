@@ -2,6 +2,13 @@
 
 > Phase 4 示例。chapter-writing / novel-review 须对照。
 
+## 发表平台
+
+| 项 | 约定 |
+| --- | --- |
+| platform_target | 番茄小说 |
+| 合规参考 | platform-compliance.md |
+
 ## 叙述
 
 | 项 | 约定 |

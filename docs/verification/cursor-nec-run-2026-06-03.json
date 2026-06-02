@@ -1,0 +1,357 @@
+{
+  "platform": "cursor",
+  "run_at": "2026-06-02T15:45:56.597979+00:00",
+  "steps": [
+    {
+      "name": "suite_doctor",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py suite doctor",
+      "exit": 0,
+      "stdout": "OK: suite_root — G:\\CURSOR\nOK: writer_engine — G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py\nOK: video_engine — G:\\CURSOR\\cursor-novel-video\\engine\\video_cli.py\nOK: marker — .novel-suite-root\nOK: novels_dir — novels/\nOK: intel_dir — intel/\nOK: agents_md — AGENTS.md\nOK: suite_version — 2026.06.02-sync\nOK: layout_version — layout 2.0.0 OK\nOK: sync_tooling — solo-sync + zip-refresh present\nOK: intel_demo_fixture — intel/fixtures/smoke-hits.json\nOK: writer_skills_source — 10 skills\nOK: skills_cursor_.agents_skills — 13 installed\nOK: skills_cursor_.cursor_skills — 13 installed\nOK: skills_qoder_.qoder_skills — 10 installed\nOK: skills_trae-cn_.trae_skills — 13 installed\nOK: intel_scan_wrapper — G:\\CURSOR\\cursor-novel-writer\\skills\\novel-market-scan\\scripts\\intel_scan.py\nOK: active_novel — (none — run novel init)\n\nDoctor: all checks passed.",
+      "stderr": ""
+    },
+    {
+      "name": "phase0_intel_scan_demo",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\skills\\novel-market-scan\\scripts\\intel_scan.py --demo",
+      "exit": 0,
+      "stdout": "OK: radar -> G:\\CURSOR\\intel\\radar\\2026-W23.md\nOK: completion -> G:\\CURSOR\\intel\\radar\\2026-W23.completion.json\nOK: concept -> G:\\CURSOR\\intel\\concepts\\2026-W23-01-novel-289d0565.md\nOK: concept -> G:\\CURSOR\\intel\\concepts\\2026-W23-02-novel-20cd2f00.md\nOK: concept -> G:\\CURSOR\\intel\\concepts\\2026-W23-03-novel-45a83263.md",
+      "stderr": "WARN: --demo uses offline fixture; not live market scan."
+    },
+    {
+      "name": "pipeline_status",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py pipeline status --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "Project: G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\nSlug: demo-novel\nConcept brief: OK\nVoice brief: OK\n  [x] Phase 0: 选品（novel-market-scan → canon/concept-brief.md）\n  [x] Phase 1: 立项（story-init）\n  [x] Phase 2: 世界观 + 人物（worldbuilding + character-management）\n  [x] Phase 3: 大纲（plot-structure）\n  [x] Phase 4: 文风契约（canon/voice-brief.md）\n  [x] Phase 5: 逐章写作（chapter-writing）— 第1章试章\n  [x] Phase 6: 验证（novel-review — blocker 清零）\n  [x] Phase 7: 去 AI 味（Sable + deai-checklist）\n  [x] Phase 8: 再验证（re-review，最多 2 轮）\n  [x] Phase 9: 导出（novel-export）\n\nPipeline phases complete.",
+      "stderr": ""
+    },
+    {
+      "name": "phase1_node_sync",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py node sync --phase 1 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "OK: synced -> G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\canon\\nodes\\phase-1.completion.json",
+      "stderr": ""
+    },
+    {
+      "name": "phase1_node_validate",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py node validate --phase 1 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "NODE VALIDATE OK: phase=1 project=G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "stderr": ""
+    },
+    {
+      "name": "phase2_node_sync",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py node sync --phase 2 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "OK: synced -> G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\canon\\nodes\\phase-2.completion.json",
+      "stderr": ""
+    },
+    {
+      "name": "phase2_node_validate",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py node validate --phase 2 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "NODE VALIDATE OK: phase=2 project=G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "stderr": ""
+    },
+    {
+      "name": "phase2_pipeline_gate",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py pipeline gate --phase 2 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "GATE OK: project=G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel phase>=2",
+      "stderr": ""
+    },
+    {
+      "name": "phase3_node_sync",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py node sync --phase 3 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "OK: synced -> G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\canon\\nodes\\phase-3.completion.json",
+      "stderr": ""
+    },
+    {
+      "name": "phase3_node_validate",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py node validate --phase 3 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "NODE VALIDATE OK: phase=3 project=G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "stderr": ""
+    },
+    {
+      "name": "phase3_pipeline_gate",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py pipeline gate --phase 3 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "GATE OK: project=G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel phase>=3",
+      "stderr": ""
+    },
+    {
+      "name": "phase4_node_sync",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py node sync --phase 4 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "OK: synced -> G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\canon\\nodes\\phase-4.completion.json",
+      "stderr": ""
+    },
+    {
+      "name": "phase4_node_validate",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py node validate --phase 4 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "NODE VALIDATE OK: phase=4 project=G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "stderr": ""
+    },
+    {
+      "name": "phase4_pipeline_gate",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py pipeline gate --phase 4 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "GATE OK: project=G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel phase>=4",
+      "stderr": ""
+    },
+    {
+      "name": "phase5_node_sync",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py node sync --phase 5 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "OK: synced -> G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\canon\\nodes\\phase-5.completion.json",
+      "stderr": ""
+    },
+    {
+      "name": "phase5_node_validate",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py node validate --phase 5 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "NODE VALIDATE OK: phase=5 project=G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "stderr": ""
+    },
+    {
+      "name": "phase5_pipeline_gate",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py pipeline gate --phase 5 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "GATE OK: project=G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel phase>=5",
+      "stderr": ""
+    },
+    {
+      "name": "phase6_node_sync",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py node sync --phase 6 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "OK: synced -> G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\canon\\nodes\\phase-6.completion.json",
+      "stderr": ""
+    },
+    {
+      "name": "phase6_node_validate",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py node validate --phase 6 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "NODE VALIDATE OK: phase=6 project=G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "stderr": ""
+    },
+    {
+      "name": "phase6_pipeline_gate",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py pipeline gate --phase 6 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "GATE OK: project=G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel phase>=6",
+      "stderr": ""
+    },
+    {
+      "name": "phase7_node_sync",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py node sync --phase 7 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "OK: synced -> G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\canon\\nodes\\phase-7.completion.json",
+      "stderr": ""
+    },
+    {
+      "name": "phase7_node_validate",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py node validate --phase 7 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "NODE VALIDATE OK: phase=7 project=G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "stderr": ""
+    },
+    {
+      "name": "phase7_pipeline_gate",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py pipeline gate --phase 7 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "GATE OK: project=G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel phase>=7",
+      "stderr": ""
+    },
+    {
+      "name": "phase8_node_sync",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py node sync --phase 8 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "OK: synced -> G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\canon\\nodes\\phase-8.completion.json",
+      "stderr": ""
+    },
+    {
+      "name": "phase8_node_validate",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py node validate --phase 8 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "NODE VALIDATE OK: phase=8 project=G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "stderr": ""
+    },
+    {
+      "name": "phase8_pipeline_gate",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py pipeline gate --phase 8 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "GATE OK: project=G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel phase>=8",
+      "stderr": ""
+    },
+    {
+      "name": "phase9_node_sync",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py node sync --phase 9 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "OK: synced -> G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\canon\\nodes\\phase-9.completion.json",
+      "stderr": ""
+    },
+    {
+      "name": "phase9_node_validate",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py node validate --phase 9 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "NODE VALIDATE OK: phase=9 project=G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "stderr": ""
+    },
+    {
+      "name": "phase9_pipeline_gate",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py pipeline gate --phase 9 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "GATE OK: project=G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel phase>=9",
+      "stderr": ""
+    },
+    {
+      "name": "export_epub",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py export --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "OK: G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\dist\\雾港来信.epub (1 chapters)\nGATE OK: project=G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel phase>=9",
+      "stderr": ""
+    },
+    {
+      "name": "phase9_node_sync_after_export",
+      "cmd": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\python.exe G:\\CURSOR\\cursor-novel-writer\\engine\\novel_cli.py node sync --phase 9 --project G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+      "exit": 0,
+      "stdout": "OK: synced -> G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\canon\\nodes\\phase-9.completion.json",
+      "stderr": ""
+    }
+  ],
+  "manifests": {
+    "phase-0": {
+      "path": "cursor-novel-writer/examples/demo-novel/canon/nodes/phase-0.completion.json",
+      "phase": 0,
+      "status": "complete",
+      "skill": "novel-market-scan",
+      "subtasks_total": 7,
+      "subtasks_done": 7,
+      "pending_ids": []
+    },
+    "phase-1": {
+      "path": "cursor-novel-writer/examples/demo-novel/canon/nodes/phase-1.completion.json",
+      "phase": 1,
+      "status": "complete",
+      "skill": "story-init",
+      "subtasks_total": 4,
+      "subtasks_done": 3,
+      "pending_ids": [
+        "P1-S3"
+      ]
+    },
+    "phase-2": {
+      "path": "cursor-novel-writer/examples/demo-novel/canon/nodes/phase-2.completion.json",
+      "phase": 2,
+      "status": "complete",
+      "skill": "worldbuilding+character-management",
+      "subtasks_total": 4,
+      "subtasks_done": 2,
+      "pending_ids": [
+        "P2b-S3",
+        "P2-S4"
+      ]
+    },
+    "phase-3": {
+      "path": "cursor-novel-writer/examples/demo-novel/canon/nodes/phase-3.completion.json",
+      "phase": 3,
+      "status": "complete",
+      "skill": "plot-structure",
+      "subtasks_total": 3,
+      "subtasks_done": 2,
+      "pending_ids": [
+        "P3-S3"
+      ]
+    },
+    "phase-4": {
+      "path": "cursor-novel-writer/examples/demo-novel/canon/nodes/phase-4.completion.json",
+      "phase": 4,
+      "status": "complete",
+      "skill": "voice-brief",
+      "subtasks_total": 2,
+      "subtasks_done": 1,
+      "pending_ids": [
+        "P4-S2"
+      ]
+    },
+    "phase-5": {
+      "path": "cursor-novel-writer/examples/demo-novel/canon/nodes/phase-5.completion.json",
+      "phase": 5,
+      "status": "complete",
+      "skill": "chapter-writing",
+      "subtasks_total": 3,
+      "subtasks_done": 2,
+      "pending_ids": [
+        "P5-S6"
+      ]
+    },
+    "phase-6": {
+      "path": "cursor-novel-writer/examples/demo-novel/canon/nodes/phase-6.completion.json",
+      "phase": 6,
+      "status": "complete",
+      "skill": "novel-review",
+      "subtasks_total": 2,
+      "subtasks_done": 1,
+      "pending_ids": [
+        "P6-S3"
+      ]
+    },
+    "phase-7": {
+      "path": "cursor-novel-writer/examples/demo-novel/canon/nodes/phase-7.completion.json",
+      "phase": 7,
+      "status": "complete",
+      "skill": "novel-review",
+      "subtasks_total": 2,
+      "subtasks_done": 2,
+      "pending_ids": []
+    },
+    "phase-8": {
+      "path": "cursor-novel-writer/examples/demo-novel/canon/nodes/phase-8.completion.json",
+      "phase": 8,
+      "status": "complete",
+      "skill": "novel-review",
+      "subtasks_total": 1,
+      "subtasks_done": 1,
+      "pending_ids": []
+    },
+    "phase-9": {
+      "path": "cursor-novel-writer/examples/demo-novel/canon/nodes/phase-9.completion.json",
+      "phase": 9,
+      "status": "complete",
+      "skill": "novel-export",
+      "subtasks_total": 3,
+      "subtasks_done": 2,
+      "pending_ids": [
+        "P9-S1"
+      ]
+    },
+    "radar:2026-W23.completion.json": {
+      "path": "intel/radar/2026-W23.completion.json",
+      "phase": 0,
+      "status": "partial",
+      "skill": "novel-market-scan",
+      "subtasks_total": 7,
+      "subtasks_done": 5,
+      "pending_ids": [
+        "P0-S5",
+        "P0-S6"
+      ]
+    }
+  },
+  "gaps": [
+    "manifest pending subtasks: phase-1 ['P1-S3']",
+    "manifest pending subtasks: phase-2 ['P2b-S3', 'P2-S4']",
+    "manifest pending subtasks: phase-3 ['P3-S3']",
+    "manifest pending subtasks: phase-4 ['P4-S2']",
+    "manifest pending subtasks: phase-5 ['P5-S6']",
+    "manifest pending subtasks: phase-6 ['P6-S3']",
+    "manifest pending subtasks: phase-9 ['P9-S1']",
+    "manifest incomplete: radar:2026-W23.completion.json status=partial",
+    "manifest pending subtasks: radar:2026-W23.completion.json ['P0-S5', 'P0-S6']"
+  ],
+  "inventory": {
+    "skills_with_skill_md": 10,
+    "node_dispatch_files": 9
+  }
+}

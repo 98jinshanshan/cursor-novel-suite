@@ -6,7 +6,8 @@
 **SOLO/TRAE：** [solo-clone-checklist.md](docs/verification/solo-clone-checklist.md)  
 **SOLO 同步：** `platforms/solo-sync.ps1` · **Phase 0：** [SKILLS-INSTALL.md](docs/standards/SKILLS-INSTALL.md)
 
-**文档导航：** [docs/INDEX.md](docs/INDEX.md) · **[Agent 对话入口（主路径）](AGENTS.md)**
+**文档导航：** [docs/INDEX.md](docs/INDEX.md) · **[Agent 对话入口（主路径）](AGENTS.md)**  
+**目录架构 2.0：** [DIRECTORY-ARCHITECTURE.md](docs/standards/DIRECTORY-ARCHITECTURE.md) · 可选 [novel-suite.code-workspace](novel-suite.code-workspace) 打开
 
 | 项目 | 说明 |
 | --- | --- |
@@ -26,7 +27,9 @@ npx skills add ./cursor-novel-video -a cursor -a qoder -a trae-cn -y
 py -3 cursor-novel-writer/engine/novel_cli.py suite doctor
 ```
 
-Windows：`powershell -File platforms/install-skills.ps1`
+Windows：`powershell -File platforms/install-skills.ps1 -Agents cursor`
+
+**GitHub 更新：** `git pull` 后 `powershell -File platforms/patch-update.ps1 -Agents cursor`
 
 3. 打开 **Agent 对话窗口**，直接说（示例）：
 
@@ -50,7 +53,7 @@ Windows：`powershell -File platforms/install-skills.ps1`
 
 | IDE | 打开工作区 | Skills 安装位置 | 对话入口 |
 | --- | --- | --- | --- |
-| Cursor | Novel Suite 根 | `.agents/skills/` | Agent 模式 + [AGENTS.md](AGENTS.md) |
+| Cursor | Novel Suite 根 | `.cursor/skills/`（`install-skills.ps1 -Agents cursor`） | Agent 模式 + [AGENTS.md](AGENTS.md) |
 | Qoder | Novel Suite 根 | `.qoder/skills/` | Agent 对话 |
 | TRAE / SOLO | Novel Suite 根 | `.trae/skills/` | Agent 对话 / `#novel-pipeline` |
 

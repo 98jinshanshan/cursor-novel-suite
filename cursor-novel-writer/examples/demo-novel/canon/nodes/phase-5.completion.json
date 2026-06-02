@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "phase": 5,
+  "skill": "chapter-writing",
+  "project_slug": "demo-novel",
+  "status": "complete",
+  "started_at": "2026-06-02T16:15:52+00:00",
+  "artifacts": {
+    "chapters": [
+      "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\chapters\\01_试章.md"
+    ],
+    "snapshots": [
+      "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\canon\\snapshots\\ch01-after.md"
+    ]
+  },
+  "subtasks": [
+    {
+      "id": "P5-S3",
+      "title": "章节正文",
+      "executor": "agent",
+      "reference": "chapter-writing/node-dispatch.md",
+      "status": "done",
+      "output_paths": [
+        "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\chapters\\01_试章.md"
+      ]
+    },
+    {
+      "id": "P5-S4",
+      "title": "章后 snapshot",
+      "executor": "agent",
+      "reference": "templates/snapshot-chapter.md",
+      "status": "done",
+      "output_paths": [
+        "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\canon\\snapshots\\ch01-after.md"
+      ]
+    },
+    {
+      "id": "P5-S6",
+      "title": "pipeline gate phase 6",
+      "executor": "cli",
+      "command": "novel pipeline gate --phase 6",
+      "status": "done",
+      "output_paths": []
+    }
+  ],
+  "completed_at": "2026-06-02T16:15:52+00:00"
+}

@@ -102,7 +102,7 @@ powershell -File platforms/solo-sync.ps1 -UseZip -Agents trae-cn
 
 手动分步：`platforms/zip-refresh.ps1` → `patch-update.ps1 -SkipPull`。
 
-**最低版本：** `suite-version=2026.06.02-sync`（含 solo-sync / zip-refresh / intel --demo）。
+**最低版本：** `suite-version=2026.06.03-nec`（含 NEC smoke、node sync、intel --demo）。
 
 ---
 

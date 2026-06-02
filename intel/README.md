@@ -4,7 +4,7 @@ Monorepo 级选品空间，与 `novels/`（单书工程）分离。
 
 | 路径 | 用途 |
 | --- | --- |
-| `radar/` | 周/月题材雷达报告（`novel-market-scan` 产出） |
+| `radar/` | 周/月题材雷达报告 + `YYYY-Www.completion.json`（NEC 完成清单） |
 | `concepts/` | 待立项概念包（`concept-brief.md` 副本，立项前） |
 
 ## 命名约定

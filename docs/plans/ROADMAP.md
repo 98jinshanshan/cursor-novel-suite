@@ -121,3 +121,25 @@
 - [x] pytest：binding + registry 登记
 
 **状态：** X-08 已完成。
+
+## P6 — NEC 节点执行契约（2026-06-02）
+
+- [x] [NODE-EXECUTION-CONTRACT.md](../standards/NODE-EXECUTION-CONTRACT.md)
+- [x] `schema/node-completion.schema.json` + `engine/scripts/node_completion.py`
+- [x] Phase 0 样板：`novel-market-scan` 分派表 + `intel scan` 写 `*.completion.json`
+- [x] Phase 1–9 + 视频 V0–V2：`references/node-dispatch.md` v1
+- [x] `novel node validate` · gate phase 1 校验 project phase-0 manifest
+- [x] 目录导航：`docs/workflow/README.md` · `skills/README.md`
+
+**状态：** P6 NEC-0/1 + 分派表 v1 已完成。
+
+**批量执行：** [NEC-10-batch-execution.md](./NEC-10-batch-execution.md)（**NEC-10 全部批次 A–E ✅** 2026-06-03）。
+
+## P7 — 目录架构 2.0（2026-06-03）
+
+- [x] [DIRECTORY-ARCHITECTURE.md](../standards/DIRECTORY-ARCHITECTURE.md) + [layout-phase-map.json](../standards/layout-phase-map.json)
+- [x] `.novel-suite-root` 增加 `layout-version` / `nec-version`
+- [x] `suite doctor` → `layout_version` 检查
+- [x] `novel-suite.code-workspace` 多根视图；隐藏 `.agents/.qoder/.trae`
+- [x] 批次 B：`novel node sync` phase 1–3 + demo `canon/nodes/phase-*.completion.json`
+- [x] 批次 C–E：phase 4–9 sync、video `node.completion.json`、NEC-smoke-matrix

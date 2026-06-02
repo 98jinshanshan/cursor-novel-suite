@@ -48,11 +48,17 @@ Agent **必须先 Read** `novel-market-scan/SKILL.md`，再跑 `novel intel scan
 ## 安装命令
 
 ```powershell
-# 全平台（在 Novel Suite 根）
-powershell -File platforms/install-skills.ps1
+# Cursor（推荐单路径）
+powershell -File platforms/install-skills.ps1 -Agents cursor
+
+# 全平台
+powershell -File platforms/install-skills.ps1 -Agents cursor,qoder,trae-cn
 
 # 仅 TRAE / SOLO
 powershell -File platforms/install-skills.ps1 -Agents trae-cn
+
+# 兼容旧习惯：同时装 .agents/skills
+powershell -File platforms/install-skills.ps1 -Agents cursor -AlsoAgents
 ```
 
 ---

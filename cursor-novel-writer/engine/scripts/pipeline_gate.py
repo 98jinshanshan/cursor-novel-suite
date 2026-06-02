@@ -234,10 +234,48 @@ def prior_phase_checks(project: Path, phase: int) -> list[str]:
     errors: list[str] = []
     if phase >= 1 and not phase0_complete(project):
         errors.append("Phase 0 not complete — mark Phase 0 [x] in task_plan.md or init with --concept")
+    from scripts import node_completion as nec  # noqa: PLC0415
+
+    if phase >= 1 and phase0_complete(project):
+        errors.extend(nec.validate_phase0_project_gate(project))
     for p in range(1, min(phase, 9)):
         if not phase_done(project, p):
             errors.append(f"task_plan.md: Phase {p} not marked [x]")
+    if phase >= 3:
+        errors.extend(nec.validate_project_phase_gate(project, 2))
+    if phase >= 4:
+        errors.extend(nec.validate_project_phase_gate(project, 3))
+    if phase >= 5:
+        errors.extend(nec.validate_project_phase_gate(project, 4))
+    if phase >= 6:
+        errors.extend(nec.validate_project_phase_gate(project, 5))
+    if phase >= 7:
+        errors.extend(nec.validate_project_phase_gate(project, 6))
+    if phase >= 8:
+        errors.extend(nec.validate_project_phase_gate(project, 7))
+    if phase >= 9:
+        errors.extend(nec.validate_project_phase_gate(project, 8))
     return errors
+
+
+def gate_entry_ok(project: Path, phase: int) -> tuple[bool, list[str]]:
+    """Whether entering `phase` is satisfied on disk + task_plan (no manifest recursion)."""
+    errors: list[str] = []
+    phase = int(phase or 1)
+    if phase >= 1 and not phase0_complete(project):
+        errors.append("Phase 0 not complete in task_plan.md")
+    for p in range(1, min(phase, 9)):
+        if not phase_done(project, p):
+            errors.append(f"task_plan.md: Phase {p} not marked [x]")
+    errors.extend(artifact_checks(project, phase))
+    errors.extend(validate_project_schemas(project))
+    if phase >= 7:
+        review = latest_review_report(project)
+        if review is None:
+            errors.append("no review report in reviews/chNN-review.md")
+        elif has_open_blockers(review):
+            errors.append(f"open blockers in {review.name}")
+    return len(errors) == 0, errors
 
 
 def validate_gate(project: Path, phase: int) -> tuple[bool, list[str]]:

@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "phase": 6,
+  "skill": "novel-review",
+  "project_slug": "demo-novel",
+  "status": "complete",
+  "started_at": "2026-06-02T16:15:53+00:00",
+  "artifacts": {
+    "review": "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\reviews\\ch01-review.md"
+  },
+  "subtasks": [
+    {
+      "id": "P6-S1",
+      "title": "forge 1-3 + review 报告",
+      "executor": "agent",
+      "reference": "novel-review/node-dispatch.md",
+      "status": "done",
+      "output_paths": [
+        "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\reviews\\ch01-review.md"
+      ]
+    },
+    {
+      "id": "P6-S3",
+      "title": "pipeline gate phase 7",
+      "executor": "cli",
+      "command": "novel pipeline gate --phase 7",
+      "status": "done",
+      "output_paths": []
+    }
+  ],
+  "completed_at": "2026-06-02T16:15:53+00:00"
+}

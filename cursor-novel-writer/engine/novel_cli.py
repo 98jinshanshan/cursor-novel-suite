@@ -88,6 +88,15 @@ def scaffold_project(
     task_plan_path = output / "task_plan.md"
     if concept_path and concept_path.is_file():
         shutil.copy(concept_path, output / "canon" / "concept-brief.md")
+        from scripts import intel_paths as intel  # noqa: PLC0415
+        from scripts import node_completion as nec  # noqa: PLC0415
+
+        radar = intel.radar_path_for_week()
+        nec.write_project_phase0_manifest(
+            output,
+            concept_path=concept_path,
+            radar_md=radar if radar.is_file() else None,
+        )
         if task_plan_path.is_file():
             tp = task_plan_path.read_text(encoding="utf-8")
             tp = tp.replace(
@@ -144,6 +153,10 @@ def scaffold_project(
     (output / "canon/project.json").write_text(
         json.dumps(proj_meta, ensure_ascii=False, indent=2), encoding="utf-8"
     )
+
+    from scripts import node_completion as nec  # noqa: PLC0415
+
+    nec.write_project_phase1_manifest(output)
 
     subprocess.run(
         [
@@ -365,6 +378,54 @@ def cmd_intel_scan(args: argparse.Namespace) -> int:
     return subprocess.call(cmd)
 
 
+def cmd_node_sync(args: argparse.Namespace) -> int:
+    from scripts import node_completion as nec  # noqa: PLC0415
+
+    project = resolve_project(args)
+    phase = int(args.phase)
+    if phase < 1 or phase > nec.SYNC_PHASE_MAX:
+        print(
+            f"ERROR: node sync supports phase 1-{nec.SYNC_PHASE_MAX} only (got {phase})",
+            file=sys.stderr,
+        )
+        return 1
+    path = nec.sync_project_phase_manifest(project, phase)
+    print(f"OK: synced -> {path}")
+    return 0
+
+
+def cmd_node_validate(args: argparse.Namespace) -> int:
+    from scripts import intel_paths as intel  # noqa: PLC0415
+    from scripts import node_completion as nec  # noqa: PLC0415
+
+    phase = int(args.phase)
+    errors: list[str] = []
+    if phase == 0 and args.project is None:
+        errors.extend(nec.validate_phase0_intel())
+    elif phase == 0:
+        project = resolve_project(args)
+        errors.extend(nec.validate_phase0_project_gate(project))
+    else:
+        project = resolve_project(args)
+        path = nec.completion_path_for_project(project, phase)
+        errors.extend(nec.validate_manifest_file(path))
+        if path.is_file():
+            manifest = nec.load_manifest(path)
+            if manifest:
+                if manifest.get("status") != "complete":
+                    errors.append(f"{path.name}: status must be complete")
+                errors.extend(nec.validate_manifest_semantics(manifest))
+    if errors:
+        for msg in errors:
+            print(f"NODE VALIDATE FAIL: {msg}", file=sys.stderr)
+        return 1
+    if phase == 0 and not getattr(args, "project", None):
+        print(f"NODE VALIDATE OK: intel week={intel.iso_week_id()}")
+    else:
+        print(f"NODE VALIDATE OK: phase={phase} project={resolve_project(args)}")
+    return 0
+
+
 def cmd_pipeline_status(args: argparse.Namespace) -> int:
     project = resolve_project(args)
     task_plan = project / "task_plan.md"
@@ -558,6 +619,17 @@ def main() -> int:
     intel_scan.add_argument("--concept-top", type=int, default=3, dest="concept_top")
     intel_scan.add_argument("--no-concepts", action="store_true", dest="no_concepts")
     intel_scan.set_defaults(func=cmd_intel_scan)
+
+    node_p = sub.add_parser("node", help="NEC completion manifest validation")
+    node_val = node_p.add_subparsers(dest="node_cmd", required=True)
+    node_sync = node_val.add_parser("sync", help="Rebuild phase completion manifest from artifacts")
+    add_project_arg(node_sync)
+    node_sync.add_argument("--phase", type=int, required=True, help="Pipeline phase 1-9")
+    node_sync.set_defaults(func=cmd_node_sync)
+    node_v = node_val.add_parser("validate", help="Validate phase completion manifest")
+    add_project_arg(node_v)
+    node_v.add_argument("--phase", type=int, required=True, help="Pipeline phase 0-9")
+    node_v.set_defaults(func=cmd_node_validate)
 
     g = sub.add_parser("graphify", help="Direct graphify bridge")
     add_project_arg(g)

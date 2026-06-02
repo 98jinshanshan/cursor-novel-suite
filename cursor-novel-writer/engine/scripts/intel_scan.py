@@ -195,6 +195,34 @@ def render_radar(
     lines.extend(
         [
             "",
+            "## 平台快照",
+            "",
+            "> Agent（P0-S2）：按 platform-scan-guide 补全表格；无法验证标 `(unverified)`",
+            "",
+            "### 番茄小说",
+            "",
+            "| 排名区间 | 类型/标签 | 高频设定 | 来源 |",
+            "| --- | --- | --- | --- |",
+            "| (待补全) | | | |",
+            "",
+            "### 起点中文网",
+            "",
+            "| 排名区间 | 类型/标签 | 高频设定 | 来源 |",
+            "| --- | --- | --- | --- |",
+            "| (待补全) | | | |",
+            "",
+            "### 晋江文学城",
+            "",
+            "| 排名区间 | 类型/标签 | 高频设定 | 来源 |",
+            "| --- | --- | --- | --- |",
+            "| (待补全) | | | |",
+            "",
+            "### 知乎盐选（短篇）",
+            "",
+            "| 热度信号 | 类型 | 钩子模式 | 来源 |",
+            "| --- | --- | --- | --- |",
+            "| (待补全) | | | |",
+            "",
             "## 题材热度榜（短视频导向）",
             "",
             "| 排名 | 题材 | 热度分 | 平台覆盖 |",
@@ -356,6 +384,18 @@ def main() -> int:
     radar_path.write_text(radar_text, encoding="utf-8")
     print(f"OK: radar -> {radar_path}")
 
+    from scripts import node_completion as nec  # noqa: PLC0415
+
+    tag = intel.iso_week_id() if args.period == "week" else datetime.now().strftime("%Y-%m")
+    concepts_dir = args.concepts_dir or intel.CONCEPTS_DIR
+    completion = nec.mark_phase0_cli_done(
+        radar_md=radar_path,
+        period_id=tag,
+        concepts_dir=concepts_dir if not args.no_concepts else None,
+        no_concepts=args.no_concepts,
+    )
+    print(f"OK: completion -> {completion}")
+
     if args.no_concepts:
         return 0
 
@@ -372,6 +412,11 @@ def main() -> int:
         print(f"OK: concept -> {out}")
     if created == 0:
         print("WARN: no concept briefs generated because no topic score > 0", file=sys.stderr)
+    manifest = nec.load_manifest(completion)
+    if manifest:
+        nec.recompute_phase0_status(manifest, radar_path)
+        nec.write_manifest(completion, manifest)
+    nec.promote_phase0_if_demo_project_linked(radar_path)
     return 0
 
 

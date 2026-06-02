@@ -28,6 +28,13 @@
 | [standards/DECISION-PRINCIPLE.md](./standards/DECISION-PRINCIPLE.md) | 决策呈现原则（Agent 推荐、用户确认） |
 | [standards/SKILLS-INSTALL.md](./standards/SKILLS-INSTALL.md) | Skill 清单与 Phase 0 对照 |
 | [standards/POST-CODE-VERIFICATION.md](./standards/POST-CODE-VERIFICATION.md) | 代码交付前 Problems/linter 检查（强制） |
+| [standards/NODE-EXECUTION-CONTRACT.md](./standards/NODE-EXECUTION-CONTRACT.md) | 节点执行契约（NEC）：分派表 + 完成清单 |
+| [standards/DIRECTORY-ARCHITECTURE.md](./standards/DIRECTORY-ARCHITECTURE.md) | **目录架构 2.0** + 版本迭代规则 |
+| [standards/layout-phase-map.json](./standards/layout-phase-map.json) | Phase→路径机器可读映射 |
+| [standards/WORKSPACE-LAYOUT.md](./standards/WORKSPACE-LAYOUT.md) | 左侧目录速查 |
+| [../novel-suite.code-workspace](../novel-suite.code-workspace) | 可选多根工作区视图 |
+| [workflow/README.md](./workflow/README.md) | Phase 0–9 + 视频工作流导航 |
+| [plans/NEC-10-enrichment-matrix.md](./plans/NEC-10-enrichment-matrix.md) | 节点加厚成熟度矩阵 |
 | [standards/GITHUB-RELEASE.md](./standards/GITHUB-RELEASE.md) | GitHub 创建仓库、上传与标准排版 |
 | [plans/ROADMAP.md](./plans/ROADMAP.md) | 合并审计后的完善路线图 |
 | [audit/2026-05-31-structure-compliance.md](./audit/2026-05-31-structure-compliance.md) | 第三层：目录与文档存放合规审计 |
@@ -47,3 +54,4 @@
 | Qoder | [verification/qoder.md](./verification/qoder.md) |
 | TRAE CN | [verification/trae-cn.md](./verification/trae-cn.md) |
 | SOLO 克隆 | [verification/solo-clone-checklist.md](./verification/solo-clone-checklist.md) |
+| NEC 三端验收 | [verification/NEC-smoke-matrix.md](./verification/NEC-smoke-matrix.md) |

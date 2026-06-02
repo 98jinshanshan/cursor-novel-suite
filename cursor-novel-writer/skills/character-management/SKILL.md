@@ -11,6 +11,10 @@ metadata:
 
 # Character Management
 
+## Node Execution Contract (NEC)
+
+**执行前必读：** [references/node-dispatch.md](./references/node-dispatch.md)。与 worldbuilding 同属 Phase 2；完成后 `novel node sync --phase 2`。
+
 From story-skills: rich profiles + bidirectional relationship links.
 
 ## Steps

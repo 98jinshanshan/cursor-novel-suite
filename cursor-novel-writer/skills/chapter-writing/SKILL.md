@@ -13,6 +13,10 @@ metadata:
 
 Fuses story-skills chapter workflow + Novel Master snapshots + novel-skill Chinese format.
 
+## Node Execution Contract (NEC)
+
+**执行前必读：** [references/node-dispatch.md](./references/node-dispatch.md)。落盘章节 + `canon/snapshots/chNN-after.md` + `phase-5.completion.json`；对话框仅摘要。
+
 ## Project Resolution（P4）
 
 **Before writing:** confirm active novel:

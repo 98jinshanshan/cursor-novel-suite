@@ -127,7 +127,7 @@ def test_novel_cli_pipeline_status():
     )
     assert r.returncode == 0
     assert "Phase" in r.stdout
-    assert "Next:" in r.stdout
+    assert "Next:" in r.stdout or "Pipeline phases complete." in r.stdout
 
 
 def test_project_registry_slug():
@@ -262,9 +262,228 @@ def test_novel_cli_intel_scan_demo(tmp_path: Path):
     assert "WARN: --demo" in r.stderr
     assert radar.is_file()
     assert "题材热度榜" in radar.read_text(encoding="utf-8")
+    completion = radar.with_suffix(".completion.json")
+    assert completion.is_file(), "intel scan must write NEC completion manifest"
+    data = json.loads(completion.read_text(encoding="utf-8"))
+    assert data.get("phase") == 0
+    assert data.get("skill") == "novel-market-scan"
+    done_ids = {st["id"] for st in data["subtasks"] if st.get("status") == "done"}
+    assert "P0-S1" in done_ids
 
 
-def test_pipeline_gate_demo_phase7_blocked():
+def test_batch_b_node_sync_phase2_3_demo():
+    for phase in (1, 2, 3):
+        r = subprocess.run(
+            [
+                sys.executable,
+                str(ENGINE / "novel_cli.py"),
+                "node",
+                "sync",
+                "--phase",
+                str(phase),
+                "--project",
+                str(DEMO),
+            ],
+            capture_output=True,
+            text=True,
+            cwd=str(ROOT),
+        )
+        assert r.returncode == 0, r.stderr + r.stdout
+    for phase in (1, 2, 3):
+        path = DEMO / "canon" / "nodes" / f"phase-{phase}.completion.json"
+        assert path.is_file(), f"missing {path}"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        assert data["status"] == "complete", phase
+    r = subprocess.run(
+        [
+            sys.executable,
+            str(ENGINE / "novel_cli.py"),
+            "pipeline",
+            "gate",
+            "--phase",
+            "4",
+            "--project",
+            str(DEMO),
+        ],
+        capture_output=True,
+        text=True,
+        cwd=str(ROOT),
+    )
+    assert r.returncode == 0, r.stderr + r.stdout
+    assert "GATE OK" in r.stdout
+
+
+def test_batch_c_node_sync_phase4_8_demo():
+    for phase in (4, 5, 6, 7, 8):
+        r = subprocess.run(
+            [
+                sys.executable,
+                str(ENGINE / "novel_cli.py"),
+                "node",
+                "sync",
+                "--phase",
+                str(phase),
+                "--project",
+                str(DEMO),
+            ],
+            capture_output=True,
+            text=True,
+            cwd=str(ROOT),
+        )
+        assert r.returncode == 0, r.stderr + r.stdout
+        path = DEMO / "canon" / "nodes" / f"phase-{phase}.completion.json"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        assert data["status"] == "complete", f"phase {phase}"
+    r = subprocess.run(
+        [
+            sys.executable,
+            str(ENGINE / "novel_cli.py"),
+            "pipeline",
+            "gate",
+            "--phase",
+            "6",
+            "--project",
+            str(DEMO),
+        ],
+        capture_output=True,
+        text=True,
+        cwd=str(ROOT),
+    )
+    assert r.returncode == 0, r.stderr + r.stdout
+    assert "GATE OK" in r.stdout
+
+
+def test_batch_d_export_sync_phase9_demo():
+    (DEMO / "dist").mkdir(parents=True, exist_ok=True)
+    for phase in range(1, 9):
+        subprocess.run(
+            [
+                sys.executable,
+                str(ENGINE / "novel_cli.py"),
+                "node",
+                "sync",
+                "--phase",
+                str(phase),
+                "--project",
+                str(DEMO),
+            ],
+            check=True,
+            cwd=str(ROOT),
+        )
+    r = subprocess.run(
+        [
+            sys.executable,
+            str(ENGINE / "novel_cli.py"),
+            "export",
+            "--format",
+            "epub",
+            "--project",
+            str(DEMO),
+        ],
+        capture_output=True,
+        text=True,
+        cwd=str(ROOT),
+    )
+    assert r.returncode == 0, r.stderr + r.stdout
+    assert list((DEMO / "dist").glob("*.epub")), "epub should be created"
+    for phase in range(1, 10):
+        r = subprocess.run(
+            [
+                sys.executable,
+                str(ENGINE / "novel_cli.py"),
+                "node",
+                "sync",
+                "--phase",
+                str(phase),
+                "--project",
+                str(DEMO),
+            ],
+            capture_output=True,
+            text=True,
+            cwd=str(ROOT),
+        )
+        assert r.returncode == 0, r.stderr + r.stdout
+    p9 = DEMO / "canon" / "nodes" / "phase-9.completion.json"
+    assert json.loads(p9.read_text(encoding="utf-8"))["status"] == "complete"
+
+
+def test_batch_d_gate_phase9_demo():
+    tp = DEMO / "task_plan.md"
+    text = tp.read_text(encoding="utf-8")
+    if "- [ ] Phase 9:" in text:
+        tp.write_text(
+            text.replace("- [ ] Phase 9:", "- [x] Phase 9:", 1),
+            encoding="utf-8",
+        )
+    r = subprocess.run(
+        [
+            sys.executable,
+            str(ENGINE / "novel_cli.py"),
+            "pipeline",
+            "gate",
+            "--phase",
+            "9",
+            "--project",
+            str(DEMO),
+        ],
+        capture_output=True,
+        text=True,
+        cwd=str(ROOT),
+    )
+    assert r.returncode == 0, r.stderr + r.stdout
+
+
+def test_node_validate_demo_phase0_project():
+    r = subprocess.run(
+        [
+            sys.executable,
+            str(ENGINE / "novel_cli.py"),
+            "node",
+            "validate",
+            "--phase",
+            "0",
+            "--project",
+            str(DEMO),
+        ],
+        capture_output=True,
+        text=True,
+        cwd=str(ROOT),
+    )
+    assert r.returncode == 0, r.stderr + r.stdout
+    assert "NODE VALIDATE OK" in r.stdout
+
+
+def test_pipeline_gate_phase7_blocked_without_review(tmp_path: Path):
+    project = tmp_path / "gate7-block"
+    project.mkdir()
+    (project / "canon" / "nodes").mkdir(parents=True)
+    (project / "task_plan.md").write_text(
+        "\n".join(f"- [x] Phase {i}: done" for i in range(0, 7)),
+        encoding="utf-8",
+    )
+    (project / "canon" / "concept-brief.md").write_text(
+        "## 元信息\n\n## 题材摘要\n\n## 故事内核\n",
+        encoding="utf-8",
+    )
+    stub_task = {
+        "id": "P1-S0",
+        "title": "stub",
+        "executor": "cli",
+        "status": "done",
+    }
+    for phase in range(0, 7):
+        (project / "canon" / "nodes" / f"phase-{phase}.completion.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": "1.0",
+                    "phase": phase,
+                    "skill": "x",
+                    "status": "complete",
+                    "subtasks": [stub_task],
+                }
+            ),
+            encoding="utf-8",
+        )
     r = subprocess.run(
         [
             sys.executable,
@@ -274,7 +493,7 @@ def test_pipeline_gate_demo_phase7_blocked():
             "--phase",
             "7",
             "--project",
-            str(DEMO),
+            str(project),
         ],
         capture_output=True,
         text=True,
@@ -282,7 +501,6 @@ def test_pipeline_gate_demo_phase7_blocked():
     )
     assert r.returncode != 0
     assert "GATE FAIL" in r.stderr
-    assert "Phase 6" in r.stderr
 
 
 def test_pipeline_validate_demo():
@@ -357,14 +575,22 @@ def test_pipeline_gate_demo():
     assert "GATE OK" in r.stdout
 
 
-def test_export_is_blocked_before_phase9():
+def test_export_blocked_when_gate9_fails(tmp_path: Path):
+    project = tmp_path / "no-export"
+    project.mkdir()
+    (project / "canon").mkdir()
+    (project / "task_plan.md").write_text("- [x] Phase 0: x\n- [ ] Phase 8: x\n", encoding="utf-8")
+    (project / "canon" / "concept-brief.md").write_text(
+        "## 元信息\n\n## 题材摘要\n\n## 故事内核\n",
+        encoding="utf-8",
+    )
     r = subprocess.run(
         [
             sys.executable,
             str(ENGINE / "novel_cli.py"),
             "export",
             "--project",
-            str(DEMO),
+            str(project),
         ],
         capture_output=True,
         text=True,

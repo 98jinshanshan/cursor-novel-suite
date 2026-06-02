@@ -12,14 +12,23 @@
 | 知乎盐选 | 知乎盐选 短篇 热 | 盐选榜单、高赞短篇 |
 | 抖音/快手推书 | 推书 爆款 类型 | 短视频带书常见类型（辅助） |
 
-## Agent 执行步骤
+## 与 CLI 分工（NEC P0-S1 / P0-S2）
 
-1. 确认周期：**当周**（ISO 周）或 **当月**
-2. 对每个平台执行 2–3 次定向搜索（含日期/「最新」）
+| 平台类型 | 子任务 | 执行体 |
+| --- | --- | --- |
+| 抖音/B站/快手/小红书/微博 | P0-S1 | `novel intel scan`（`intel_scan.py`） |
+| 番茄/起点/晋江/盐选 | P0-S2 | **Agent** 按本指南搜索，填入 radar `## 平台快照` |
+
+CLI 扫描后 radar 已含「平台快照」骨架表；Agent **必须**替换 `(待补全)` 行并标注来源与 `(unverified)`。
+
+## Agent 执行步骤（P0-S2）
+
+1. 确认周期：**当周**（ISO 周）或 **当月**（与 `intel paths` 一致）
+2. 对 **文字平台** 各执行 2–3 次定向搜索（含日期/「最新」）
 3. 提取：**类型标签、高频设定、标题模式、开篇钩子类型**
-4. 合并去重 → 输出 Top 10 题材簇（非单书名抄袭）
+4. 合并去重 → 补全 Top 10 题材簇（与 CLI 热度榜对照）
 5. 对每个簇用 [short-video-fit-rubric.md](./short-video-fit-rubric.md) 粗评
-6. 写入 `intel/radar/YYYY-Www.md`（模板见 [radar-report-template.md](./radar-report-template.md)）
+6. 更新 `intel/radar/YYYY-Www.md` 并刷新 `*.completion.json` 中 P0-S2/P0-S3 为 `done`
 
 ## 数据质量
 

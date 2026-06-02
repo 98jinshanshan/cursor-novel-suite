@@ -26,8 +26,8 @@ py -3 cursor-novel-writer/engine/novel_cli.py suite doctor
 Windows 也可用：
 
 ```powershell
-powershell -File platforms/install-skills.ps1
-powershell -File platforms/patch-update.ps1   # git clone 后拉补丁
+powershell -File platforms/install-skills.ps1 -Agents cursor
+powershell -File platforms/patch-update.ps1 -Agents cursor   # git pull 后拉补丁
 powershell -File platforms/solo-sync.ps1 -UseZip -Agents trae-cn   # SOLO / 无 git
 ```
 
@@ -117,6 +117,7 @@ Agent 读技能时**必须先 Read `novel-market-scan`**，再执行 Phase 1+。
 
 ## Agent 执行约定
 
+0. 进入 Phase N 前：**Read** 该 Skill 的 `references/node-dispatch.md`（[NEC 契约](docs/standards/NODE-EXECUTION-CONTRACT.md)）
 1. 开始任何写入前：`novel active` 或 `--project novels/<slug>`
 2. Phase 0 未完成 → 禁止实质写作（`pipeline gate --phase 1`）
 3. 有 blocker → 禁止导出（`pipeline gate --phase 9`）

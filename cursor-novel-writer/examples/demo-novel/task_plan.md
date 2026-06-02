@@ -8,10 +8,10 @@
 - [x] Phase 3: 大纲（plot-structure）
 - [x] Phase 4: 文风契约（canon/voice-brief.md）
 - [x] Phase 5: 逐章写作（chapter-writing）— 第1章试章
-- [ ] Phase 6: 验证（novel-review — blocker 清零）
-- [ ] Phase 7: 去 AI 味（Sable + deai-checklist）
-- [ ] Phase 8: 再验证（re-review，最多 2 轮）
-- [ ] Phase 9: 导出（novel-export）
+- [x] Phase 6: 验证（novel-review — blocker 清零）
+- [x] Phase 7: 去 AI 味（Sable + deai-checklist）
+- [x] Phase 8: 再验证（re-review，最多 2 轮）
+- [x] Phase 9: 导出（novel-export）
 
 ## 章节进度
 

@@ -11,6 +11,11 @@ metadata:
 
 # Novel Export
 
+## Node Execution Contract (NEC)
+
+**执行前必读：** [references/node-dispatch.md](./references/node-dispatch.md)。  
+导出后 `novel node sync --phase 9` → `canon/nodes/phase-9.completion.json`。
+
 From novel-skill EPUB pipeline, generalized for Chinese typography.
 
 ## CLI

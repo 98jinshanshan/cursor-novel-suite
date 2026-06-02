@@ -32,7 +32,7 @@ SKILL_INSTALL_DIRS = {
     "trae-cn": [".trae/skills"],
 }
 
-MIN_SUITE_VERSION = "2026.06.02-sync"
+MIN_SUITE_VERSION = "2026.06.03-nec"
 
 REQUIRED_SYNC_PATHS = (
     "platforms/solo-sync.ps1",
@@ -55,15 +55,40 @@ def _skill_names(path: Path) -> set[str]:
     return {p.name for p in path.iterdir() if p.is_dir() and (p / "SKILL.md").is_file()}
 
 
-def _read_suite_version(root: Path) -> str:
+def _read_marker_value(root: Path, key: str) -> str:
     marker = root / sp.MARKER
     if not marker.is_file():
         return ""
+    prefix = f"{key}="
     for line in marker.read_text(encoding="utf-8").splitlines():
         line = line.strip()
-        if line.startswith("suite-version="):
+        if line.startswith(prefix):
             return line.split("=", 1)[1].strip()
     return ""
+
+
+def _read_suite_version(root: Path) -> str:
+    return _read_marker_value(root, "suite-version")
+
+
+def _check_layout_version(root: Path) -> tuple[bool, str]:
+    map_path = root / "docs" / "standards" / "layout-phase-map.json"
+    if not map_path.is_file():
+        return False, f"missing {map_path.relative_to(root)}"
+    try:
+        data = json.loads(map_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        return False, f"layout-phase-map.json invalid: {exc.msg}"
+    expected = str(data.get("layout_version", ""))
+    current = _read_marker_value(root, "layout-version")
+    if not current:
+        return False, "missing layout-version= in .novel-suite-root"
+    if current != expected:
+        return False, f"layout-version {current} != map {expected}; see DIRECTORY-ARCHITECTURE.md"
+    arch = root / "docs" / "standards" / "DIRECTORY-ARCHITECTURE.md"
+    if not arch.is_file():
+        return False, "missing DIRECTORY-ARCHITECTURE.md"
+    return True, f"layout {current} OK"
 
 
 def _version_at_least(current: str, minimum: str) -> bool:
@@ -100,6 +125,8 @@ def run_doctor(*, core_only: bool = False, agents: list[str] | None = None) -> t
             version or f"missing suite-version= in {sp.MARKER}",
         )
     )
+    layout_ok, layout_msg = _check_layout_version(root)
+    checks.append(_check("layout_version", layout_ok, layout_msg))
     missing_sync: list[str] = []
     for rel in REQUIRED_SYNC_PATHS:
         if not (root / rel).is_file():
@@ -158,6 +185,18 @@ def run_doctor(*, core_only: bool = False, agents: list[str] | None = None) -> t
                     + (f"; missing: {sorted(missing)}" if missing else ""),
                 )
             )
+
+    if not core_only and (agent_filter is None or "cursor" in (agent_filter or set())):
+        agents_dir = root / ".agents" / "skills"
+        cursor_dir = root / ".cursor" / "skills"
+        if agents_dir.is_dir() and cursor_dir.is_dir():
+            na = _skill_names(agents_dir)
+            nc = _skill_names(cursor_dir)
+            diff = sorted((na ^ nc) | (EXPECTED_WRITER_SKILLS - na) | (EXPECTED_WRITER_SKILLS - nc))
+            detail = "duplicate Cursor installs (.agents + .cursor); prefer .cursor/skills only"
+            if diff:
+                detail += f"; name diff: {diff[:8]}"
+            checks.append(_check("skills_cursor_dual_install", True, f"WARN: {detail}"))
 
     scan_wrapper = src_skills / "novel-market-scan" / "scripts" / "intel_scan.py"
     checks.append(_check("intel_scan_wrapper", scan_wrapper.is_file(), str(scan_wrapper)))

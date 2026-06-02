@@ -4,10 +4,10 @@ description: |
   Weekly/monthly trending web-fiction topic radar for Chinese platforms, with short-video fit scoring.
   Use for 扫榜、题材雷达、热门题材、选题、market scan, 短视频选题, 番茄起点晋江榜单, Phase 0 选品.
 license: MIT
-compatibility: Requires monorepo root (intel/ directory). V1.1 adds CLI scan (`novel intel scan`) for cross-platform public-web trend collection.
+compatibility: Requires monorepo root (intel/ directory). V1.2 NEC dispatch + completion manifest.
 metadata:
   author: cursor-novel-writer
-  version: "1.0.0"
+  version: "1.2.0"
 ---
 
 # Novel Market Scan（Phase 0 — P-1）
@@ -15,6 +15,16 @@ metadata:
 **上游选品 Skill**：在 `story-init` / `novel init` 之前，生成市场情报并驱动 `concept-brief` 立项。
 
 工作区须为 **Novel Suite 根**（含 `.novel-suite-root`）。不确定时先运行 `novel suite doctor`。
+
+## Node Execution Contract (NEC)
+
+**执行前必读：** [references/node-dispatch.md](./references/node-dispatch.md)（分派表 + 完成清单）。
+
+1. 将用户自然语言拆解为 `P0-S0` … `P0-S6`
+2. 按表调用 CLI / Agent，**禁止**仅在对话中输出表格
+3. 落盘 `intel/radar/YYYY-Www.md` + `intel/radar/YYYY-Www.completion.json`
+4. 用户确认后 `init --concept` → `canon/nodes/phase-0.completion.json`
+5. 对话框只报 **Top3 摘要 + 路径**（全文见落盘文件）
 
 ## When to Use
 
@@ -27,58 +37,53 @@ metadata:
 | 产物 | 路径 |
 | --- | --- |
 | 周雷达报告 | `intel/radar/YYYY-Www.md` |
+| 套件完成清单 | `intel/radar/YYYY-Www.completion.json` |
 | 概念立项包（立项前） | `intel/concepts/<slug>.md` |
 | 立项后副本 | `novels/<slug>/canon/concept-brief.md` |
+| 项目 Phase0 清单 | `novels/<slug>/canon/nodes/phase-0.completion.json` |
 
-## Workflow
+## Workflow（与分派表一致）
 
-1. 读 [platform-scan-guide.md](./references/platform-scan-guide.md) — 各平台搜索策略
-2. 运行 CLI 扫描：
+1. **P0-S0** `novel intel paths`
+2. **P0-S1** CLI 扫描（短视频平台）：
 
    ```bash
    python engine/novel_cli.py intel scan --period week
    ```
 
-   - 自动跨平台检索公开网页热点（抖音/B站/快手/小红书/微博）
-   - 写入 `intel/radar/YYYY-Www.md`
-   - 生成 Top 候选 `intel/concepts/*.md`（可关闭）
+   - Wrapper：`skills/novel-market-scan/scripts/intel_scan.py` → `engine/scripts/intel_scan.py`
+   - 写入 radar + `*.completion.json`
 
-3. 用户补充验证（必要时）→ 按 [radar-report-template.md](./references/radar-report-template.md) 修订报告
-4. 对每个候选题材用 [short-video-fit-rubric.md](./references/short-video-fit-rubric.md) 评分
-5. 推荐 Top 1–3；用户确认后：
-   - 复制 [templates/concept-brief.md](../../templates/concept-brief.md) → `intel/concepts/<slug>.md`
-   - 填表至 **approved**
-6. 引导立项：
-
-   ```bash
-   python engine/novel_cli.py init --title "..." --premise "..." --concept ../../intel/concepts/<slug>.md
-   python engine/novel_cli.py pipeline gate --phase 1 --project novels/<slug>
-   ```
+3. **P0-S2** Agent 按 [platform-scan-guide.md](./references/platform-scan-guide.md) 补全 radar 内 `## 平台快照`（番茄/起点/晋江/盐选）
+4. **P0-S3** 对齐 [radar-report-template.md](./references/radar-report-template.md)
+5. **P0-S4** [short-video-fit-rubric.md](./references/short-video-fit-rubric.md) + concepts
+6. **P0-S5** 用户确认 → concept `approved`
+7. **P0-S6** `novel init --concept` + `pipeline gate --phase 1`
 
 ## Gate（与 novel-pipeline）
 
-- **无** `canon/concept-brief.md` → 禁止进入 Phase 1 实质写作（世界观/章节）
-- `task_plan.md` Phase 0 须 `[x]`（`init --concept` 自动勾选）
+- **无** `canon/concept-brief.md` → 禁止 Phase 1+
+- `task_plan.md` Phase 0 须 `[x]`
+- `canon/nodes/phase-0.completion.json` 中 P0-S5、P0-S6 为 `done`
 
 ## CLI 辅助
 
 ```bash
-python engine/novel_cli.py intel paths          # 打印 intel/ 与当周 radar 路径
+python engine/novel_cli.py intel paths
 python engine/novel_cli.py intel scan --period week
-python engine/novel_cli.py intel scan --period month --no-concepts
-python engine/novel_cli.py intel scan --demo --period week   # 离线 smoke（非 live 数据）
+python engine/novel_cli.py intel scan --period week --platforms douyin,bilibili
+python engine/novel_cli.py intel scan --demo --period week
+python engine/novel_cli.py node validate --phase 0
 python engine/novel_cli.py pipeline gate --phase 1
 ```
 
-## 工业闭环（远期 P-1e）
-
-上传/播放数据 → 下一周 radar 权重调整（V2+；当前 V1 仅搜索报告）。
-
 ## References
 
+- [Node dispatch（NEC）](./references/node-dispatch.md)
 - [Platform scan guide](./references/platform-scan-guide.md)
 - [Short-video fit rubric](./references/short-video-fit-rubric.md)
 - [Radar report template](./references/radar-report-template.md)
 - [novel-pipeline Phase 0](../novel-pipeline/SKILL.md)
+- [NODE-EXECUTION-CONTRACT](../../../docs/standards/NODE-EXECUTION-CONTRACT.md)
 
-Do **not** scrape logged-in pages or violate platform ToS. CLI 仅检索公开网页结果，不登录平台账号。
+Do **not** scrape logged-in pages or violate platform ToS.

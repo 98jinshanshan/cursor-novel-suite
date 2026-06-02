@@ -2,7 +2,9 @@
 param(
     [string[]]$Agents = @("cursor", "qoder", "trae-cn"),
     [switch]$Global,
-    [switch]$Copy
+    [switch]$Copy,
+    [switch]$AlsoAgents,
+    [string]$CursorDest = ".cursor/skills"
 )
 
 $ErrorActionPreference = "Stop"
@@ -94,11 +96,18 @@ function Install-SkillDir {
     }
 }
 
+$cursorRoots = @()
+if ($Global) {
+    $cursorRoots += "$env:USERPROFILE\.cursor\skills"
+} else {
+    $cursorRoots += Join-Path $SuiteRoot $CursorDest
+    if ($AlsoAgents) {
+        $cursorRoots += Join-Path $SuiteRoot ".agents\skills"
+    }
+}
+
 $AgentPathMap = @{
-    "cursor"  = @(
-        $(if ($Global) { "$env:USERPROFILE\.cursor\skills" } else { Join-Path $SuiteRoot ".agents\skills" }),
-        $(if (-not $Global) { Join-Path $SuiteRoot ".cursor\skills" })
-    )
+    "cursor"  = $cursorRoots
     "qoder"   = @($(if ($Global) { "$env:USERPROFILE\.qoder\skills" } else { Join-Path $SuiteRoot ".qoder\skills" }))
     "trae-cn" = @($(if ($Global) { "$env:USERPROFILE\.trae-cn\skills" } else { Join-Path $SuiteRoot ".trae\skills" }))
 }
