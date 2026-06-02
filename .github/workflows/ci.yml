@@ -51,7 +51,7 @@ jobs:
           python -m compileall -q cursor-novel-writer/engine cursor-novel-video/engine
       - name: pytest (no ffmpeg)
         run: pytest -m "not ffmpeg" -q
-      - name: suite doctor
+      - name: suite doctor (core-only, matches CI checkout)
         run: python cursor-novel-writer/engine/novel_cli.py suite doctor --core-only
       - name: NEC smoke (writer + video)
         run: |

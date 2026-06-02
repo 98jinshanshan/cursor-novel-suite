@@ -24,9 +24,12 @@ py -3 cursor-novel-writer/engine/novel_cli.py node sync --phase 9 --project curs
 ## 引擎一键 smoke
 
 ```powershell
+py -3 cursor-novel-writer/engine/novel_cli.py suite doctor --core-only
 py -3 cursor-novel-writer/engine/scripts/nec_cursor_smoke.py
 py -3 cursor-novel-video/engine/scripts/nec_video_smoke.py
 ```
+
+CI 与 smoke 均使用 `suite doctor --core-only`（不检查 `.cursor/skills` 安装目录）。
 
 ---
 

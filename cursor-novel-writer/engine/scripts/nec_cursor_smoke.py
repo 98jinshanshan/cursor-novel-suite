@@ -25,12 +25,21 @@ def run(cmd: list[str], cwd: Path | None = None) -> dict:
         encoding="utf-8",
         errors="replace",
     )
-    return {
+    out = {
         "cmd": " ".join(cmd),
         "exit": r.returncode,
         "stdout": r.stdout.strip(),
         "stderr": r.stderr.strip(),
     }
+    return out
+
+
+def doctor_cmd(*, core_only: bool = True) -> list[str]:
+    """CI has no IDE skill install dirs; always use --core-only in smoke."""
+    cmd = [sys.executable, str(CLI), "suite", "doctor"]
+    if core_only:
+        cmd.append("--core-only")
+    return cmd
 
 
 def manifest_summary(path: Path) -> dict | None:
@@ -65,7 +74,11 @@ def main() -> int:
         "gaps": [],
     }
 
-    report["steps"].append({"name": "suite_doctor", **run([sys.executable, str(CLI), "suite", "doctor"])})
+    report["steps"].append({"name": "suite_doctor_core", **run(doctor_cmd(core_only=True))})
+    if (ROOT / ".cursor" / "skills").is_dir():
+        report["steps"].append(
+            {"name": "suite_doctor_cursor_install", **run(doctor_cmd(core_only=False) + ["--agents", "cursor"])}
+        )
 
     report["steps"].append(
         {"name": "phase0_intel_scan_demo", **run([sys.executable, str(INTEL), "--demo"])}
@@ -163,7 +176,12 @@ def main() -> int:
 
     for step in report["steps"]:
         if step.get("exit", 0) != 0:
-            report["gaps"].append(f"CLI failed: {step['name']} exit={step['exit']}")
+            detail = step.get("stderr") or step.get("stdout") or ""
+            snippet = detail.splitlines()[-3:] if detail else []
+            msg = f"CLI failed: {step['name']} exit={step['exit']}"
+            if snippet:
+                msg += " — " + " | ".join(snippet)
+            report["gaps"].append(msg)
 
     for key, m in report["manifests"].items():
         if m and m.get("status") != "complete":
