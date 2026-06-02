@@ -14,7 +14,8 @@ metadata:
 
 ## Node Execution Contract (NEC)
 
-**管线外可选节点** — 不绑定 Phase 0–9，无 `canon/nodes/phase-*.completion.json`。用户明确要求营销文案时再启用；导出后可 delegate 本 Skill（见 `novel-export` Chat Summary）。
+**管线外可选节点** — 不绑定 Phase 0–9，无 `canon/nodes/phase-*.completion.json`。  
+用户明确要求营销文案时再启用；导出后可 delegate 本 Skill（见 `novel-export` Chat Summary）。
 
 From Novel Master: turn `story.md` + arc into platform-ready copy. **Only when user asks.**
 

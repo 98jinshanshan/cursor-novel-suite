@@ -7,7 +7,8 @@
 **SOLO 同步：** `platforms/solo-sync.ps1` · **Phase 0：** [SKILLS-INSTALL.md](docs/standards/SKILLS-INSTALL.md)
 
 **文档导航：** [docs/INDEX.md](docs/INDEX.md) · **[Agent 对话入口（主路径）](AGENTS.md)**  
-**目录架构 2.0：** [DIRECTORY-ARCHITECTURE.md](docs/standards/DIRECTORY-ARCHITECTURE.md) · 可选 [novel-suite.code-workspace](novel-suite.code-workspace) 打开
+**目录架构 2.0：** [DIRECTORY-ARCHITECTURE.md](docs/standards/DIRECTORY-ARCHITECTURE.md) ·  
+可选 [novel-suite.code-workspace](novel-suite.code-workspace) 打开
 
 | 项目 | 说明 |
 | --- | --- |

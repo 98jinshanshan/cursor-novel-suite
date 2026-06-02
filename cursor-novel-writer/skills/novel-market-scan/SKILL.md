@@ -2,7 +2,7 @@
 name: novel-market-scan
 description: |
   Weekly/monthly trending web-fiction topic radar for Chinese platforms, with short-video fit scoring.
-  Use for 扫榜、题材雷达、热门题材、选题、market scan, 短视频选题, 番茄起点晋江榜单, Phase 0 选品.
+  Use for 扫榜、题材雷达、选题、market scan, 短视频选题, Phase 0 选品.
 license: MIT
 compatibility: Requires monorepo root (intel/ directory). V1.2 NEC dispatch + completion manifest.
 metadata:
@@ -14,7 +14,11 @@ metadata:
 
 **上游选品 Skill**：在 `story-init` / `novel init` 之前，生成市场情报并驱动 `concept-brief` 立项。
 
-工作区须为 **Novel Suite 根**（含 `.novel-suite-root`）。不确定时先运行 `novel suite doctor`。
+工作区须为 **Novel Suite 根**（含 `.novel-suite-root`）。不确定时先运行：
+
+```text
+novel suite doctor
+```
 
 ## Node Execution Contract (NEC)
 

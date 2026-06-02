@@ -1,9 +1,12 @@
 # 仓库目录与文档存放规范
 
 **版本：** 1.1（2026-06-03）  
-**目录架构权威（layout 2.0）：** [DIRECTORY-ARCHITECTURE.md](./DIRECTORY-ARCHITECTURE.md) · [layout-phase-map.json](./layout-phase-map.json)  
+**目录架构权威（layout 2.0）：** [DIRECTORY-ARCHITECTURE.md](./DIRECTORY-ARCHITECTURE.md)、  
+[layout-phase-map.json](./layout-phase-map.json)  
 **适用范围：** Monorepo 根 `CURSOR/`、`cursor-novel-writer/`、`cursor-novel-video/`  
-**依据：** [agentskills.io](https://agentskills.io)、[story-skills](https://github.com/danjdewhurst/story-skills)、[novel-skill](https://github.com/mave99a/novel-skill)、[video_skills](https://github.com/hexiaochun/video_skills)、[super-video-maker-skill](https://github.com/Bomx/super-video-maker-skill)、[vercel-labs/skills](https://github.com/vercel-labs/skills)
+**依据：** [agentskills.io](https://agentskills.io)、[story-skills](https://github.com/danjdewhurst/story-skills)、  
+[novel-skill](https://github.com/mave99a/novel-skill)、[video_skills](https://github.com/hexiaochun/video_skills)、  
+[super-video-maker-skill](https://github.com/Bomx/super-video-maker-skill)、[vercel-labs/skills](https://github.com/vercel-labs/skills)
 
 ---
 
