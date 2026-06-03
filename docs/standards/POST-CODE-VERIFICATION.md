@@ -15,11 +15,17 @@
 
 ```text
 代码改动完成
+    → powershell -File platforms/final-verify.ps1
     → ReadLints / Problems（改动路径）
-    → 相关 pytest（若适用）
+    → 相关 pytest（若适用；final-verify 已含则以其为准）
     → 有问题？修复 → 再验
-    → 无问题（或已说明阻塞）→ 才可结束任务
+    → 收尾粘贴 Final Verification 块 → 才可结束任务
 ```
+
+详见 [FINAL-VERIFICATION.md](./FINAL-VERIFICATION.md)。
+
+**CI 双保险：** `.github/workflows/ci.yml` 的 `lint` job 已包含 `intel/**/*.md`；`test` job 跑
+`tests/test_intel_radar_markdown.py`，保证 `writer scan` 雷达 Markdown 合规（radar 可 gitignore）。
 
 ---
 

@@ -50,11 +50,13 @@ CI 与 smoke 均使用 `suite doctor --core-only`（不检查 `.cursor/skills` �
 
 | 步骤 | Cursor | Qoder | TRAE-CN |
 | --- | --- | --- | --- |
-| install-skills.ps1 | ✅ `.cursor/skills` 13；`2026-06-03` | 待填 | 待填 |
-| Phase0 intel --demo | ✅ complete（demo 回写）；`2026-06-03` | 待填 | 待填 |
-| node sync 1–9 | ✅ gaps 空；`2026-06-03` | 待填 | 待填 |
-| pipeline gate 6 | ✅ GATE OK；`2026-06-03` | 待填 | 待填 |
-| video summary job | ✅ `nec_video_smoke.py`；`2026-06-03` | 待填 | 待填 |
+| `novel-suite` 2.0 (`pip install -e .`) | ✅ doctor/scan/init/gate/chapter `--json`；`2026-06-03` | 待填 | 待填 |
+| install-skills.ps1 | ✅ `.cursor/skills` 13；`2026-06-03` | 待填 | ✅ `.trae/skills` 13；`2026-06-03` |
+| Phase0 intel --demo | ✅ complete（demo 回写）；`2026-06-03` | 待填 | ✅ radar complete；`2026-06-03` |
+| node sync 1–9 | ✅ gaps 空；`2026-06-03` | 待填 | ✅ gaps `[]`；`2026-06-03` |
+| pipeline gate 6 | ✅ GATE OK；`2026-06-03` | 待填 | ✅ GATE OK；`2026-06-03` |
+| video summary job | ✅ `nec_video_smoke.py`；`2026-06-03` | 待填 | ✅ complete；`2026-06-03` |
+| Agent Read + 路径摘要 | ✅ | 待填 | ✅ 2026-06-03 |
 
 **Cursor 记录：** [cursor-nec-run-latest.json](./cursor-nec-run-latest.json) · [cursor.md](./cursor.md)
 
@@ -65,4 +67,5 @@ CI 与 smoke 均使用 `suite doctor --core-only`（不检查 `.cursor/skills` �
 - [cursor.md](./cursor.md)
 - [qoder.md](./qoder.md)
 - [trae-cn.md](./trae-cn.md)
-- [solo-clone-checklist.md](./solo-clone-checklist.md)（仅 TRAE 部署变体）
+- [solo-clone-checklist.md](./solo-clone-checklist.md)（TRAE 安装）
+- [solo-nec-dialogue.md](./solo-nec-dialogue.md)（**SOLO 测试对话**）

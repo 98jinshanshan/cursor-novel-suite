@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[project]
+name = "novel-suite"
+version = "2.0.0"
+description = "Novel Suite 2.0 — writer/video CLI with JSON Result Contract for agents"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+  "jsonschema>=4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "jsonschema>=4.0",
+  "ebooklib>=0.18",
+]
+
+[project.scripts]
+novel-suite = "novel_suite.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/novel_suite"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/src/novel_suite",
+  "/skills/openclaw-novel-suite",
+]
+
+[tool.pytest.ini_options]
+markers = [
+  "ffmpeg: tests that require FFmpeg on PATH",
+]
+testpaths = [
+  "tests",
+  "cursor-novel-writer/tests",
+  "cursor-novel-video/tests",
+]

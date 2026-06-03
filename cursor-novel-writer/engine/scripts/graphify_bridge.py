@@ -75,8 +75,8 @@ def cmd_init(project: Path, premise: str) -> int:
     (project / "graphify-out" / "meta.json").write_text(
         json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-    print(f"OK: bible scaffold at {project / 'bible'} (graphify-novel layout)")
-    print("Tip: run `update --from-chapters` to build graphify-out/graph.json")
+    print(f"OK: bible scaffold at {project / 'bible'} (graphify-novel layout)", file=sys.stderr)
+    print("Tip: run `update --from-chapters` to build graphify-out/graph.json", file=sys.stderr)
     return 0
 
 

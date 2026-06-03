@@ -4,7 +4,7 @@
   "skill": "novel-review",
   "project_slug": "demo-novel",
   "status": "complete",
-  "started_at": "2026-06-02T16:15:53+00:00",
+  "started_at": "2026-06-03T14:55:19+00:00",
   "artifacts": {
     "review": "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\reviews\\ch01-review.md"
   },
@@ -28,5 +28,5 @@
       "output_paths": []
     }
   ],
-  "completed_at": "2026-06-02T16:15:53+00:00"
+  "completed_at": "2026-06-03T14:55:19+00:00"
 }

@@ -14,7 +14,16 @@ jobs:
         with:
           node-version: "20"
       - name: markdownlint
-        run: npx --yes markdownlint-cli2 "cursor-novel-writer/**/*.md" "cursor-novel-video/**/*.md" "docs/**/*.md" "*.md"
+        run: |
+          npx --yes markdownlint-cli2 \
+            "cursor-novel-writer/**/*.md" \
+            "cursor-novel-video/**/*.md" \
+            "docs/**/*.md" \
+            "intel/**/*.md" \
+            "skills/**/*.md" \
+            ".cursor/rules/**/*.mdc" \
+            "novels/README.md" \
+            "*.md"
 
   typecheck:
     runs-on: ubuntu-latest
@@ -46,11 +55,16 @@ jobs:
           pip install -r requirements-dev.txt
           pip install -r cursor-novel-writer/requirements.txt
           pip install -r cursor-novel-video/requirements.txt
+          pip install -e .
       - name: compileall
         run: |
-          python -m compileall -q cursor-novel-writer/engine cursor-novel-video/engine
+          python -m compileall -q src/novel_suite cursor-novel-writer/engine cursor-novel-video/engine
+      - name: novel-suite doctor (JSON)
+        run: python -m novel_suite.cli doctor --core-only --json
       - name: pytest (no ffmpeg)
         run: pytest -m "not ffmpeg" -q
+      - name: intel radar markdown (generator contract)
+        run: pytest tests/test_intel_radar_markdown.py -q
       - name: suite doctor (core-only, matches CI checkout)
         run: python cursor-novel-writer/engine/novel_cli.py suite doctor --core-only
       - name: NEC smoke (writer + video)

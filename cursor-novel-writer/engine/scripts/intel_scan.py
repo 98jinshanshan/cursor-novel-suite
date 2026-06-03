@@ -149,6 +149,12 @@ def default_radar_path(period: str) -> Path:
     return intel.RADAR_DIR / f"{now.year}-{now.month:02d}.md"
 
 
+def _finalize_markdown(lines: list[str]) -> str:
+    while lines and not lines[-1].strip():
+        lines.pop()
+    return "\n".join(lines) + "\n"
+
+
 def render_radar(
     *,
     period: str,
@@ -190,7 +196,8 @@ def render_radar(
     )
     for h in hits[:20]:
         title = h.title.replace("|", "/")
-        lines.append(f"| {PLATFORM_SITES[h.platform][0]} | {title} | {h.url} |")
+        link = f"[链接]({h.url})" if h.url else "—"
+        lines.append(f"| {PLATFORM_SITES[h.platform][0]} | {title} | {link} |")
 
     lines.extend(
         [
@@ -235,7 +242,7 @@ def render_radar(
     lines.extend(["", "## 立项候选（Top 3）", ""])
     if not top_topics:
         lines.append("- 暂无有效热点，建议提高 `--max-results` 或改为 `--input` 导入人工搜集样本。")
-        return "\n".join(lines) + "\n"
+        return _finalize_markdown(lines)
 
     for idx, topic in enumerate(top_topics[:3], start=1):
         sample = next((h.text for h in hits if any(kw in h.text for kw in THEME_KEYWORDS[topic])), topic)
@@ -244,13 +251,14 @@ def render_radar(
         lines.extend(
             [
                 f"### {idx}. {topic}",
+                "",
                 f"- 短视频适配：{total}/25（钩子{hook} 可视化{visual} 可剪性{clip} 反转{twist} 合规{compliance}）",
                 f"- 一句话方向：围绕“{topic}”设计首章强钩子，优先可视化冲突与反转。",
                 "",
             ]
         )
 
-    return "\n".join(lines) + "\n"
+    return _finalize_markdown(lines)
 
 
 def parse_platforms(raw: str) -> list[str]:

@@ -37,6 +37,8 @@
 | [plans/NEC-10-enrichment-matrix.md](./plans/NEC-10-enrichment-matrix.md) | 节点加厚成熟度矩阵 |
 | [standards/GITHUB-RELEASE.md](./standards/GITHUB-RELEASE.md) | GitHub 创建仓库、上传与标准排版 |
 | [plans/ROADMAP.md](./plans/ROADMAP.md) | 合并审计后的完善路线图 |
+| [RELEASE-READINESS.md](./RELEASE-READINESS.md) | **发布就绪**：E2E 示例、清理脚本、验收表 |
+| [RELEASE-NOTES-2.0.md](./RELEASE-NOTES-2.0.md) | **2.0.0** 版本说明（功能冻结） |
 | [audit/2026-05-31-structure-compliance.md](./audit/2026-05-31-structure-compliance.md) | 第三层：目录与文档存放合规审计 |
 
 ## 子项目
@@ -54,4 +56,6 @@
 | Qoder | [verification/qoder.md](./verification/qoder.md) |
 | TRAE CN | [verification/trae-cn.md](./verification/trae-cn.md) |
 | SOLO 克隆 | [verification/solo-clone-checklist.md](./verification/solo-clone-checklist.md) |
+| SOLO NEC 测试对话 | [verification/solo-nec-dialogue.md](./verification/solo-nec-dialogue.md) |
+| SOLO 选题→第一章 | [verification/solo-phase0-to-ch01-dialogue.md](./verification/solo-phase0-to-ch01-dialogue.md) |
 | NEC 三端验收 | [verification/NEC-smoke-matrix.md](./verification/NEC-smoke-matrix.md) |

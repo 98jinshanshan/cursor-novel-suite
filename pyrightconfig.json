@@ -1,8 +1,14 @@
 {
   "typeCheckingMode": "basic",
   "include": [
+    "src/novel_suite",
     "cursor-novel-writer/engine",
     "cursor-novel-video/engine"
+  ],
+  "extraPaths": [
+    "src",
+    "cursor-novel-writer/engine/scripts",
+    "cursor-novel-video/engine/scripts"
   ],
   "venvPath": ".",
   "venv": ".venv",
@@ -11,10 +17,6 @@
     "**/.venv",
     "**/tmp",
     "**/graphify-out"
-  ],
-  "extraPaths": [
-    "cursor-novel-writer/engine/scripts",
-    "cursor-novel-video/engine/scripts"
   ],
   "reportMissingImports": "warning"
 }

@@ -1,0 +1,6 @@
+# Novel Suite 2.0 workspace config (optional overrides)
+# Env NOVEL_SUITE_ROOT takes precedence over auto-discovery.
+
+[workspace]
+layout_version = "2.0.0"
+min_suite_version = "2026.06.03-nec"

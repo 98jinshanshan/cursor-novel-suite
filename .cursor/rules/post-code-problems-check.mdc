@@ -19,29 +19,46 @@ alwaysApply: true
 
 ## 必须执行的检查
 
+0. **Final Verification 脚本（代码任务结束前必跑）**
+
+   ```powershell
+   powershell -File platforms/final-verify.ps1
+   ```
+
+   等价于聚合：改动文件列表、pytest、pyright、markdownlint（含 **`intel/**/*.md`**，与 CI 同 glob）、
+   `tests/test_intel_radar_markdown.py`。**禁止**为省事加 `-SkipMarkdown`。
+   未运行该脚本（或未在收尾说明等价步骤与原因）→ **不得声明「完成」**。
+
+0b. **IDE Problems（必做，不可只跑脚本）**
+
+- 对**仓库内当前可见的 Problems**（含 `intel/`、`novels/` 等）调用 `ReadLints` 或 `markdownlint-cli2` 直到清零
+- 仅改 Python 也须扫本轮触及的 `.md`；`writer scan` 写出的 `intel/radar/*.md` 收尾前必须 lint 并修掉
+
 1. **Problems / Linter**
    - 对**本轮改动过的路径**调用 IDE linter（如 `ReadLints`）或等价手段
    - 覆盖：Python（pyright/basedpyright）、Markdown（markdownlint）及改动触发的其他诊断
 
 2. **相关自动化测试**（若存在且与改动相关）
-   - 例：`cursor-novel-writer/tests/`、`cursor-novel-video/tests/`
+   - 例：`tests/`、`cursor-novel-writer/tests/`、`cursor-novel-video/tests/`
    - 改了 engine/CLI → 跑 smoke pytest；仅改 Skill 文档 → 可省略 pytest
 
 3. **修复循环**
-   - 有问题 → 在本轮内修复 → **再次检查**
+   - 有问题 → 在本轮内修复 → **再次检查**（含重跑 `final-verify.ps1`）
    - 重复直到：Problems 中与本次改动相关的项清零，或测试通过
 
 4. **无法本轮解决的阻塞**
    - 须在结束语中**明确列出**（环境缺依赖、需用户授权、上游 bug 等）
    - 不得静默忽略仍存在的错误
 
-## 结束汇报（必须一句）
+## 交付前必须输出以下块，否则任务未完成
 
-任务收尾时简要说明验证结果，例如：
+### Final Verification
 
-- `Problems：已清零（改动路径）`
-- `pytest：14 passed`
-- 或 `遗留：…（原因）`
+- **Problems:** 已检查 / 清零 / 遗留项：…
+- **Script:** `powershell -File platforms/final-verify.ps1` → 结果摘要
+- **Tests:** 命令 + 结果（例 `py -3 -m pytest -m "not ffmpeg" -q` → N passed）
+- **Files changed:** 主要路径列表
+- **Remaining blockers:** 无 / …
 
 ## 反模式
 
@@ -51,4 +68,6 @@ alwaysApply: true
 
 ## 文档
 
-人类可读说明：[docs/standards/POST-CODE-VERIFICATION.md](../../docs/standards/POST-CODE-VERIFICATION.md)
+- [docs/standards/POST-CODE-VERIFICATION.md](../../docs/standards/POST-CODE-VERIFICATION.md)
+- [docs/standards/FINAL-VERIFICATION.md](../../docs/standards/FINAL-VERIFICATION.md)
+- 脚本：[platforms/final-verify.ps1](../../platforms/final-verify.ps1)

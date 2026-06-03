@@ -607,11 +607,20 @@ def test_init_under_novels(tmp_path: Path, monkeypatch):
     scaffold_project = cli.scaffold_project
 
     novels = tmp_path / "novels"
-    monkeypatch.setattr(reg, "NOVELS_DIR", novels)
-    monkeypatch.setattr(reg, "REGISTRY_PATH", novels / "_registry.json")
-    monkeypatch.setattr(reg, "ACTIVE_PATH", novels / ".active")
-    monkeypatch.setattr(reg, "MONOREPO_ROOT", tmp_path)
     novels.mkdir(parents=True, exist_ok=True)
+    try:
+        import novel_suite.writer.registry as ns_reg
+    except ImportError:
+        ns_reg = reg
+    monkeypatch.setattr(ns_reg, "NOVELS_DIR", novels)
+    monkeypatch.setattr(ns_reg, "REGISTRY_PATH", novels / "_registry.json")
+    monkeypatch.setattr(ns_reg, "ACTIVE_PATH", novels / ".active")
+    monkeypatch.setattr(ns_reg, "MONOREPO_ROOT", tmp_path)
+    if reg is not ns_reg:
+        monkeypatch.setattr(reg, "NOVELS_DIR", novels)
+        monkeypatch.setattr(reg, "REGISTRY_PATH", novels / "_registry.json")
+        monkeypatch.setattr(reg, "ACTIVE_PATH", novels / ".active")
+        monkeypatch.setattr(reg, "MONOREPO_ROOT", tmp_path)
 
     out = novels / "test-book"
     scaffold_project(out, "Test Book", "premise", slug="test-book", register=True)

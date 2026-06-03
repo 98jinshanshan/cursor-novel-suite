@@ -4,7 +4,7 @@
   "skill": "worldbuilding+character-management",
   "project_slug": "demo-novel",
   "status": "complete",
-  "started_at": "2026-06-02T16:15:49+00:00",
+  "started_at": "2026-06-03T14:55:17+00:00",
   "artifacts": {
     "characters": [
       "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\characters\\chen-wei.md",
@@ -52,5 +52,5 @@
       "output_paths": []
     }
   ],
-  "completed_at": "2026-06-02T16:15:49+00:00"
+  "completed_at": "2026-06-03T14:55:18+00:00"
 }

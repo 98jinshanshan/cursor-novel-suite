@@ -142,10 +142,19 @@ def test_record_video_job_in_registry(tmp_path: Path, monkeypatch):
     assert binding["in_registry"] is True
     job_dir = tmp_path / "cursor-novel-video" / "tmp" / "video_jobs" / "job1"
     job_dir.mkdir(parents=True)
+    novel_bind._REG = None
     reg = novel_bind._registry_module()
-    monkeypatch.setattr(reg, "REGISTRY_PATH", reg_path)
-    monkeypatch.setattr(reg, "MONOREPO_ROOT", tmp_path)
-    monkeypatch.setattr(reg, "NOVELS_DIR", novels)
+    try:
+        import novel_suite.writer.registry as ns_reg
+    except ImportError:
+        ns_reg = reg
+    monkeypatch.setattr(ns_reg, "REGISTRY_PATH", reg_path)
+    monkeypatch.setattr(ns_reg, "MONOREPO_ROOT", tmp_path)
+    monkeypatch.setattr(ns_reg, "NOVELS_DIR", novels)
+    if reg is not ns_reg:
+        monkeypatch.setattr(reg, "REGISTRY_PATH", reg_path)
+        monkeypatch.setattr(reg, "MONOREPO_ROOT", tmp_path)
+        monkeypatch.setattr(reg, "NOVELS_DIR", novels)
     monkeypatch.setattr(novel_bind, "_REG", reg)
 
     assert novel_bind.record_video_job(

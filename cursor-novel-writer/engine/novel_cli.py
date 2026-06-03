@@ -11,6 +11,13 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+_MONOREPO = Path(__file__).resolve().parents[2]
+_SRC = _MONOREPO / "src"
+if (_SRC / "novel_suite").is_dir():
+    _src_s = str(_SRC)
+    if _src_s not in sys.path:
+        sys.path.insert(0, _src_s)
+
 ROOT = Path(__file__).resolve().parent
 TEMPLATES = ROOT.parent / "templates"
 SCRIPTS = ROOT / "scripts"
@@ -248,6 +255,13 @@ def cmd_active(_args: argparse.Namespace) -> int:
 
 def cmd_promote(args: argparse.Namespace) -> int:
     project = resolve_project(args)
+    try:
+        from novel_suite.writer.chapter import run_chapter_promote
+        from novel_suite.core.result import emit
+
+        return emit(run_chapter_promote(project, chapter_file=args.chapter), json_out=False)
+    except ImportError:
+        pass
     draft = project / "chapters" / ".drafts" / args.chapter
     if not draft.is_file():
         print(f"Draft not found: {draft}", file=sys.stderr)

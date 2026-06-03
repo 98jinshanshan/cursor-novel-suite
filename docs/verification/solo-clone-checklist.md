@@ -68,7 +68,8 @@ powershell -File platforms/solo-sync.ps1 -Source G:\CURSOR -Agents trae-cn
 powershell -File platforms/solo-sync.ps1 -UseGit -Agents trae-cn
 ```
 
-同步后跑 **方案 A** 验收（下文「SOLO Agent 对话模板」）。
+同步后跑 **方案 A** 验收（下文「SOLO Agent 对话模板」）。  
+**NEC 专业测试对话：** [solo-nec-dialogue.md](./solo-nec-dialogue.md)（对齐 Cursor/GitHub CI）。
 
 ### SOLO 实测对照（避免假绿）
 
@@ -239,7 +240,7 @@ Phase 0 没有 phase-0/ 目录，对应 Skill 是 novel-market-scan。请：
 py -3 -m pytest cursor-novel-writer/tests cursor-novel-video/tests -m "not ffmpeg" -q
 ```
 
-**通过标准：** **32 passed**（2026-06 起）。
+**通过标准：** **38 passed, 1 deselected**（2026-06-03-nec 起）。
 
 ---
 
