@@ -1,8 +1,9 @@
 # SOLO / TRAE — NEC 专业对话设计（测试用）
 
-**版本：** 2026-06-03（对齐 `suite-version=2026.06.03-nec`、GitHub CI 已通过）  
+**版本：** 2026-06-03（NEC 对话；引擎命令以 2.0 为准）  
+**2.0 命令总表（推荐）：** [solo-2.0-test-commands.md](./solo-2.0-test-commands.md)  
 **前置：** [solo-clone-checklist.md](./solo-clone-checklist.md) · [NEC-smoke-matrix.md](./NEC-smoke-matrix.md)  
-**仓库：** <https://github.com/98jinshanshan/cursor-novel-suite>（`main` ≥ `6bf706a`）
+**仓库：** <https://github.com/98jinshanshan/cursor-novel-suite>（`main` ≥ `ba5883e`，`novel-suite==2.0.0`）
 
 ---
 

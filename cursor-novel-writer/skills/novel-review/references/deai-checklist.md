@@ -1,6 +1,7 @@
 # 中文小说去 AI 味清单
 
-> 阶段 7（Sable pass）必查。来源：zencoder Sable copy edit + postwriter soft critics + 中文网文编辑惯例。
+> 阶段 7（Sable pass）必查。来源：zencoder Sable copy edit + postwriter soft critics + 中文网文编辑惯例。  
+> **章节 Markdown 格式（`# 第N章`、`## 一/二/三`）在 Phase 6 硬校验，不在本表重复。**
 
 ## A. 句式与连接词
 

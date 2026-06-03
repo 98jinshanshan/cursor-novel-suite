@@ -27,8 +27,9 @@
 1. 写小说/开书前：若无 canon/concept-brief.md，必须先走 Phase 0（Read novel-market-scan）。
 2. 收到任何 skill 任务 → 先 Read 对应 SKILL.md，再执行 CLI。
 2. 开始写入前确认 active novel（novel active 或 --project novels/<slug>）。
-3. 需要确定性检查时运行：py -3 cursor-novel-writer/engine/novel_cli.py suite doctor --agents trae-cn
-4. NEC 验收：nec_cursor_smoke.py / nec_video_smoke.py（见 docs/verification/solo-nec-dialogue.md）
+3. 需要确定性检查时优先：novel-suite doctor --core-only --json（或 legacy suite doctor --agents trae-cn）
+4. 2.0 验收：pip install -e . 后 platforms/final-verify.ps1；见 docs/verification/solo-2.0-test-commands.md
+5. NEC 验收：nec_cursor_smoke.py / nec_video_smoke.py（见 docs/verification/solo-nec-dialogue.md）
 5. 若报「找不到 skill」→ 先 doctor，提示用户重装 install-skills.ps1 -Agents trae-cn，不要幻觉编造 skill 名。
 
 【禁止】

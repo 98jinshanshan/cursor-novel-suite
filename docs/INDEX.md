@@ -10,6 +10,7 @@
 | [audit/2026-05-31-reference-crosswalk.md](./audit/2026-05-31-reference-crosswalk.md) | 第二层 | 12 个 GitHub 参考项目交叉指标 |
 | [audit/2026-06-01-workflow-validation-synthesis.md](./audit/2026-06-01-workflow-validation-synthesis.md) | 第三层 | Workflow 编排与验证/去 AI 合成 |
 | [audit/2026-06-02-full-reference-gap-matrix.md](./audit/2026-06-02-full-reference-gap-matrix.md) | 第四层 | 十二项目全维度差距矩阵（含 D11/P-1） |
+| [audit/2026-06-03-solo-ch01-入府-audit.md](./audit/2026-06-03-solo-ch01-入府-audit.md) | 试写审稿 | SOLO 第1章《入府》+ 一二三节拍格式说明 |
 | [../intel/README.md](../intel/README.md) | P-1 | 市场情报目录（radar / concepts） |
 
 ## Agent 入口
@@ -58,4 +59,6 @@
 | SOLO 克隆 | [verification/solo-clone-checklist.md](./verification/solo-clone-checklist.md) |
 | SOLO NEC 测试对话 | [verification/solo-nec-dialogue.md](./verification/solo-nec-dialogue.md) |
 | SOLO 选题→第一章 | [verification/solo-phase0-to-ch01-dialogue.md](./verification/solo-phase0-to-ch01-dialogue.md) |
+| **SOLO 2.0 命令状态（复制粘贴）** | [verification/solo-2.0-命令状态.md](./verification/solo-2.0-命令状态.md) |
+| **SOLO 2.0 测试命令（详解）** | [verification/solo-2.0-test-commands.md](./verification/solo-2.0-test-commands.md) |
 | NEC 三端验收 | [verification/NEC-smoke-matrix.md](./verification/NEC-smoke-matrix.md) |

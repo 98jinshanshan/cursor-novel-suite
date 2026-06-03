@@ -9,6 +9,13 @@
 | platform_target | （番茄小说 / 晋江文学城 / 起点中文网 / 通用） |
 | 合规参考 | [platform-compliance.md](../skills/novel-review/references/platform-compliance.md) |
 
+## 章节结构
+
+| 项 | 约定 |
+| --- | --- |
+| chapter_structure | `scene-beats`（默认：`## 一/二/三` 三节拍）/ `continuous` / `platform-sections` |
+| 说明 | 见 [chapter-format.md](../skills/chapter-writing/references/chapter-format.md)；非 `scene-beats` 时禁止 Agent 擅自用纯文本「一」「二」 |
+
 ## 叙述
 
 | 项 | 约定 |

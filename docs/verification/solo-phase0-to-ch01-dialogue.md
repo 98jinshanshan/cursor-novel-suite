@@ -1,8 +1,9 @@
 # SOLO 话术模板：从选题到第一章
 
 **适用：** TRAE / SOLO Agent 对话（PowerShell 已由你或 Agent 代跑）  
-**前提：** `suite-version ≥ 2026.06.03-nec`，`.trae/skills` 13 个已装  
-**工作区：** Novel Suite 根（含 `.novel-suite-root`；你当前可为 `...\cursor-novel-writer`）
+**2.0 CLI 对照：** [solo-2.0-test-commands.md](./solo-2.0-test-commands.md)（`novel-suite writer * --json`）  
+**前提：** `suite-version ≥ 2026.06.03-nec`，`.trae/skills` 13 个已装，`pip install -e .`  
+**工作区：** Novel Suite **monorepo 根**（含 `.novel-suite-root`，不要只开 `cursor-novel-writer/`）
 
 **不要**把下面中文说明贴进 PowerShell；只贴进 **SOLO 聊天框**。
 

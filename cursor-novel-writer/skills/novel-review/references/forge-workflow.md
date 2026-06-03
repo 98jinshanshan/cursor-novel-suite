@@ -8,6 +8,11 @@ Persona 详细 prompt：[personas/](./personas/)
 
 ## 阶段 1：硬校验（blocker）
 
+**Format** 小节（先于 Blockers 填写）：对照 [chapter-format.md](../../chapter-writing/references/chapter-format.md)
+
+- `# 第N章`、章首章尾 `---`、`## 一/二/三` 或 voice-brief 声明的替代结构、`（第N章完）`
+- 纯文本 `一` `二` `三` 行 → **blocker**
+
 对照 postwriter 清单，任一失败即 **blocker**：
 
 - POV 与 `story.md` 一致
