@@ -1,16 +1,25 @@
 # SOLO 2.0 — 命令状态（只复制，不读长文）
 
-按顺序做：**状态 0（你）→ 状态 1（发给 SOLO）→ 状态 2（发给 SOLO）**。  
-每段从 `---` 到 `---` 整段复制。
+**你当前进度（侯府春深 `novel-f5026010`）：**
+
+| 状态 | 内容 | 你的情况 |
+| --- | --- | --- |
+| 0 | 同步 + 验收 | ✅ 已完成 |
+| 1 | 引擎验收 | ✅ 状态1通过 |
+| 2 | 新书冒烟 | ⏭ 跳过（书已存在） |
+| 2-pre | 修第1章 Markdown | ✅ 建议已完成 |
+| 3 | 写第2章《暗格》 | ✅ **状态3通过** |
+| **5** | **审稿第2章** | 👉 **现在发这条** |
+| 3-next | 写第3章 | 状态5 后再发 |
+| 4 | demo 视频 | 可选 |
+
+**路径：** `G:\SOLO小说项目\cursor-novel-writer`（不是 `cursor-novel-suite`）。
 
 ---
 
-## 状态 0｜你在 SOLO 电脑 PowerShell 执行（只做一次）
-
-工作区必须是 **monorepo 根**（有 `.novel-suite-root`），不要只开 `cursor-novel-writer` 子文件夹。
+## 状态 0｜你在 SOLO 电脑 PowerShell（已完成可跳过）
 
 ```powershell
-# 以本机为准：cd 到含 .novel-suite-root 的目录（常见 G:\SOLO小说项目\cursor-novel-writer，不是 cursor-novel-suite）
 cd G:\SOLO小说项目\cursor-novel-writer
 $env:NOVEL_SUITE_ROOT = (Get-Location).Path
 powershell -File platforms/solo-sync.ps1 -UseZip -Agents trae-cn
@@ -18,195 +27,139 @@ pip install -e .
 powershell -File platforms/final-verify.ps1
 ```
 
-**SOLO 环境常见例外（仍可做状态 1）：**
-
-| 步骤 | 失败原因 | 是否阻塞状态 1 |
-| --- | --- | --- |
-| `pip install -e .` | 沙箱无 `_socket` | 否 → 用下面「状态 1 SOLO」里的 `py -3 -m novel_suite.cli` |
-| `final-verify.ps1` | 无 `.git` / 无 `npx` | 否 → 用 doctor + pytest 代替 |
-| `solo-sync` patch 报错 | chapter-writing 幽灵目录 | 否 → 修好 skills 且 doctor 15/15 即可 |
-
-**状态 0 通过（SOLO 简化签收）：** `suite doctor` 全绿 + `pytest -m "not ffmpeg"` 约 **99 passed**（你当前已满足）。
-
-### 状态 0 每一行在干什么（含 Skills 更新）
-
-| 你敲的命令 | 实际做了什么 |
-| --- | --- |
-| `cd` + `$env:NOVEL_SUITE_ROOT` | 进入套件根并告诉引擎「根目录在哪」 |
-| **`solo-sync.ps1 -UseZip -Agents trae-cn`** | 见下方「solo-sync 展开」 |
-| `pip install -e .` | 安装 **2.0 统一 CLI** `novel-suite`（`solo-sync` 里的 patch **不会**做这一步） |
-| `final-verify.ps1` | **2.0 发布级验收**：全仓 `pytest` + pyright + markdownlint（比 solo-sync 末尾的 pytest 更严） |
-
-**solo-sync 展开（一条命令里已包含 Skills 更新）：**
-
-1. **拉新代码**：`-UseZip` → `zip-refresh.ps1` 从 GitHub 下最新包（保留 `novels/`、`intel/`、`.trae/` 等）
-2. **patch-update**（自动调用）：
-   - `install-skills.ps1 -Agents trae-cn` → 技能 junction 到 **`.trae/skills/`**
-   - `pip install -r` writer / video / dev 依赖
-   - `suite doctor`（含检查 Phase0 技能 `novel-market-scan`）
-   - `pytest`（writer + video，`-m "not ffmpeg"`）
-
-**结论：** Skills 更新**已经包含在** `solo-sync` 里，不需要再单独敲 `install-skills.ps1`；若你只想刷新技能、不拉 zip，可单独执行：
-
-```powershell
-powershell -File platforms/install-skills.ps1 -Agents trae-cn
-```
-
-**通过（完整机）：** `Patch update complete` + `final-verify` → `OK: all checks passed`。  
-**通过（SOLO 机）：** 上表「简化签收」两项已绿即可进入状态 1。
+SOLO 机：`pip install -e .` / `final-verify` 失败不阻塞；用状态 1 SOLO 版 + doctor + pytest 签收。
 
 ---
 
-## 状态 1｜复制下面整段 → 粘贴到 SOLO Agent 聊天框（引擎验收）
-
-### 状态 1 SOLO 版（`novel-suite` 命令不存在时用这段）
+## 状态 1 SOLO 版（已完成可跳过）
 
 ```text
 【Novel Suite 2.0 — 状态1 SOLO 引擎验收】
-工作区根目录含 .novel-suite-root（本机例如 G:\SOLO小说项目\cursor-novel-writer）。
-状态0已通过：suite doctor 15/15，pytest 99 passed。pip install -e . 若失败不要重试，用下面命令1b。
-
-命令1a（若终端能识别 novel-suite）：
-novel-suite doctor --core-only --json
-
-命令1b（若无 novel-suite 命令，在 monorepo 根执行）：
-$env:PYTHONPATH = (Join-Path $env:NOVEL_SUITE_ROOT "src")
-py -3 -m novel_suite.cli doctor --core-only --json
-
-命令2（若状态0已跑过且 99 passed，可汇报「命令2跳过-已验收」否则执行）：
-py -3 -m pytest -m "not ffmpeg" -q
-
-命令3：
-py -3 cursor-novel-writer/engine/scripts/nec_cursor_smoke.py
-
-命令4：
-py -3 cursor-novel-video/engine/scripts/nec_video_smoke.py
-
-JSON：整段 stdout 可 json.loads。命令3 gaps 为空。全部通过后回复：状态1通过
-```
-
-### 状态 1 标准版（本机已 pip install -e . 时用）
-
-```text
-【Novel Suite 2.0 — 状态1 引擎验收】
-工作区必须是 monorepo 根（含 .novel-suite-root），且已 pip install -e .。
-请在本机终端依次执行，每步汇报 exit code；失败贴完整 stderr。
-JSON 命令：整段 stdout 必须能 json.loads，不要截取「首个 {」。
-
-命令1：
-novel-suite doctor --core-only --json
-
-命令2：
-py -3 -m pytest -m "not ffmpeg" -q
-
-命令3：
-py -3 cursor-novel-writer/engine/scripts/nec_cursor_smoke.py
-
-命令4：
-py -3 cursor-novel-video/engine/scripts/nec_video_smoke.py
-
-通过标准：
-- 命令1：code 为 OK 或 SUCCESS
-- 命令2：约 99 passed, 1 deselected
-- 命令3：gaps 为空数组
-- 命令4：无 ERROR
-全部通过后回复：状态1通过
-```
-
-**可选（本机有 FFmpeg 时，另开一轮发给 SOLO）：**
-
-```text
-【Novel Suite 2.0 — 状态1b 视频 pytest】
-py -3 -m pytest cursor-novel-video/tests -m ffmpeg -q
-通过：1 passed。回复：状态1b通过
+（略，见历史记录。通过后回复：状态1通过）
 ```
 
 ---
 
-## 状态 2｜复制下面整段 → 粘贴到 SOLO Agent（Phase0→立项→门控）
-
-扫榜后 SOLO 会问你选哪个 concept；你回复 concept 文件名后再让它继续。
+## 状态 2｜新书冒烟（无书时才用）
 
 ```text
 【Novel Suite 2.0 — 状态2 新书冒烟】
-工作区 monorepo 根，已 pip install -e .。每步 json.loads 整段 stdout，汇报 code、message、artifacts。
-
-命令A：
-novel-suite writer scan --demo --period week --json
-→ 列出可选 concept 路径，等我回复「用 intel/concepts/某某.md」
-
-（我确认 concept 后执行命令B，把下面三处占位符改成我给的值）
-命令B：
-novel-suite writer init --title "雾港试书" --premise "一封没有寄件人的信改变了一切" --concept intel/concepts/<我确认的文件名>.md --json
-→ 记下 details.slug
-
-命令C（把 <slug> 换成命令B的 slug）：
-novel-suite writer gate --phase 1 --project novels/<slug> --json
-
-全部通过后回复：状态2通过，slug=...
+（novel-f5026010 已存在则跳过）
 ```
 
 ---
 
-## 状态 3｜复制下面整段 → 粘贴到 SOLO Agent（写第二章，真书续写）
-
-**适用：** 状态 1 已通过；书目已有第一章（如 `novels/novel-f5026010/chapters/01_入府.md`），本次写 **第 2 章**，不要重复写第 1 章。
+## 状态 2-pre｜修第1章格式（写第2章前，已完成可跳过）
 
 ```text
-【Novel Suite 2.0 — 状态3 写第二章（续写侯府春深）】
-工作区 monorepo 根。项目 slug：novel-f5026010（路径 novels/novel-f5026010）。
+【修第1章格式】
+Read .trae/skills/chapter-writing/references/chapter-format.md
+只改 novels/novel-f5026010/chapters/01_入府.md：补 # 第1章、---、## 一/二/三、（第1章完），正文尽量不动。
+完成后回复：第1章格式已修
+```
+
+---
+
+## 状态 3｜写第 N 章（通用模板）
+
+**第 2 章已完成。** 写第 3 章时用下面模板，改 4 处：`3`、`第3章标题`、`ch03.md`、`02_暗格.md`。
+
+**SOLO 实测注意：**
+
+- **不要**写 `C:\Users\Public\`（常无权限）→ 草稿放 `novels/novel-f5026010/chapters/.drafts/ch03.md`
+- `--title` 必须与 `task_plan.md` 里该章标题一致（第2章为 `暗格`）
+- 落盘前必读 `chapter-format.md`（`## 一/二/三`，禁止纯文本「一」）
+- `--input` 用 SOLO 实际保存路径（与草稿路径相同即可）
+
+```text
+【Novel Suite 2.0 — 状态3 写第<N>章】
+项目：novels/novel-f5026010（侯府春深）。
 
 步骤：
 1) Read .trae/skills/chapter-writing/SKILL.md
-2) Read 已有第一章：novels/novel-f5026010/chapters/01_入府.md
-3) Read canon：novels/novel-f5026010/canon/concept-brief.md、voice-brief.md、progress.json
-4) 按 SKILL 写第2章正文，保存到 C:\Users\Public\ch02.md（勿覆盖 01_入府.md）
-   格式必读 chapter-writing/references/chapter-format.md：须 # 第2章、## 一/二/三、（第2章完），禁止纯文本「一」「二」行
+2) Read .trae/skills/chapter-writing/references/chapter-format.md
+3) Read novels/novel-f5026010/task_plan.md（确认本章标题与情节点）
+4) Read 上一章：novels/novel-f5026010/chapters/02_暗格.md
+5) Read canon：concept-brief.md、voice-brief.md、progress.json、plot/foreshadowing.md
+6) 写第<N>章草稿 → novels/novel-f5026010/chapters/.drafts/ch0<N>.md
+   须含 # 第<N>章：<标题>、## 一/二/三、（第<N>章完）；对照 voice-brief 禁用词
 
-命令（无 novel-suite 时用命令B，在根目录先设 PYTHONPATH=...\src）：
-命令A：
-novel-suite writer chapter draft --project novels/novel-f5026010 --chapter 2 --title "<第2章标题>" --input C:\Users\Public\ch02.md --json
-
-命令B：
+命令（monorepo 根）：
 $env:NOVEL_SUITE_ROOT = "G:\SOLO小说项目\cursor-novel-writer"
 $env:PYTHONPATH = (Join-Path $env:NOVEL_SUITE_ROOT "src")
-py -3 -m novel_suite.cli writer chapter draft --project novels/novel-f5026010 --chapter 2 --title "<第2章标题>" --input C:\Users\Public\ch02.md --json
+py -3 -m novel_suite.cli writer chapter draft `
+  --project novels/novel-f5026010 `
+  --chapter <N> `
+  --title "<与task_plan一致的章名>" `
+  --input novels/novel-f5026010/chapters/.drafts/ch0<N>.md `
+  --json
 
-通过：code OK，artifacts 含 chapters/02_*.md；01_入府.md 未被改动。回复：状态3通过
+通过：code 为 CHAPTER_DRAFT_OK；生成 chapters/0<N>_*.md；上一章文件未改动；
+      有 canon/snapshots/ch0<N>-after.md；progress 已更新。
+回复：状态3通过，章号=<N>
 ```
 
-`<第2章标题>` 由你指定（例如「暗流」）；不指定则 SOLO 自拟后与文件名一致。
+**写第 3 章时复制版（已填好占位）：**
+
+```text
+【Novel Suite 2.0 — 状态3 写第3章】
+项目：novels/novel-f5026010。第1–2章已存在，禁止改动 01_入府.md、02_暗格.md。
+
+步骤：Read chapter-writing SKILL + chapter-format.md + task_plan.md +
+  chapters/02_暗格.md + canon（concept/voice/progress）+ plot/foreshadowing.md
+草稿：novels/novel-f5026010/chapters/.drafts/ch03.md（格式同 chapter-format.md）
+章名：从 task_plan.md 第3章标题填写，填到下面 --title 与正文 # 第3章：
+
+$env:NOVEL_SUITE_ROOT = "G:\SOLO小说项目\cursor-novel-writer"
+$env:PYTHONPATH = (Join-Path $env:NOVEL_SUITE_ROOT "src")
+py -3 -m novel_suite.cli writer chapter draft `
+  --project novels/novel-f5026010 --chapter 3 --title "<第3章标题>" `
+  --input novels/novel-f5026010/chapters/.drafts/ch03.md --json
+
+回复：状态3通过，章号=3
+```
 
 ---
 
-## 状态 4｜复制下面整段 → 粘贴到 SOLO Agent（demo 视频，需 FFmpeg）
+## 状态 5｜审稿第2章（👉 现在发给 SOLO）
+
+```text
+【Novel Suite 2.0 — 状态5 审稿第2章】
+项目：novels/novel-f5026010。第2章文件：chapters/02_暗格.md（状态3已通过，勿重写正文除非 review 要求）。
+
+步骤：
+1) Read .trae/skills/novel-review/SKILL.md
+2) Read .trae/skills/novel-review/references/forge-workflow.md
+3) Read .trae/skills/novel-review/references/deai-checklist.md
+4) Read novels/novel-f5026010/canon/voice-brief.md
+5) 对照 chapter-format.md 检查 02_暗格.md，写入 reviews/ch02-review.md
+   须含小节：## Format、## Blockers、## De-AI、## Ghostlight（各条 ✅/❌）
+6) 无 Blocker 后执行：
+$env:NOVEL_SUITE_ROOT = "G:\SOLO小说项目\cursor-novel-writer"
+py -3 cursor-novel-writer/engine/novel_cli.py pipeline gate --phase 6 --project novels/novel-f5026010
+
+全部无 blocker 且 gate phase 6 通过 → 回复：状态5通过
+```
+
+---
+
+## 状态 4｜demo 视频（可选）
 
 ```text
 【Novel Suite 2.0 — 状态4 视频 job】
-命令1：
-novel-suite video create-summary --chapter 01_试章.md --project cursor-novel-writer/examples/demo-novel --json
-→ 记下 details.job_id
-
-命令2（把 <job_id> 换成上一步）：
-novel-suite video run --job <job_id> --json
-
-命令3：
-novel-suite video status --job <job_id> --json
-
-通过：status 成功且 artifacts 含 mp4。回复：状态4通过
+（demo-novel 试章，与侯府春深无关；需 FFmpeg）
+novel-suite video create-summary --chapter 01_试章.md `
+  --project cursor-novel-writer/examples/demo-novel --json
+→ run --job <id> → status --job <id>
+回复：状态4通过
 ```
 
 ---
 
-## 对照：上次 SOLO 结束 vs 现在
+## 流程（真书续写）
 
-| 上次（1.x） | 现在（2.0 本页） |
-| --- | --- |
-| `novel_cli.py suite doctor` | 状态0 + 状态1 命令1 `novel-suite doctor` |
-| `pytest ...` 约38条 | 状态0 `final-verify`；状态1 命令2 约99条 |
-| `intel_scan --demo` + `novel init` | 状态2 命令A/B |
-| `pipeline gate` | 状态2 命令C |
-| 手工写章 | 状态3 |
-| `video_cli summary` | 状态4 |
+```text
+0 → 1 → [2-pre] → 3(第2章✅) → 5(审稿第2章) → 3(第3章) → 5(审稿第3章) → …
+```
 
-详细说明见 [solo-2.0-test-commands.md](./solo-2.0-test-commands.md)。
+详见 [solo-2.0-test-commands.md](./solo-2.0-test-commands.md)、[chapter-format.md](../../cursor-novel-writer/skills/chapter-writing/references/chapter-format.md)。
