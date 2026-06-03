@@ -9,74 +9,61 @@
 | 2 | 新书冒烟 | ⏭ 跳过（书已存在） |
 | 2-pre | 修第1章 Markdown | ✅ 建议已完成 |
 | 3 | 写第2章《暗格》 | ✅ **状态3通过** |
-| **5** | **审稿第2章** | 👉 **现在发这条** |
-| 3-next | 写第3章 | 状态5 后再发 |
+| **任务单** | 审 ch2 + gate6 + 写 ch3 | 👉 **现在只发文档最上方一整块** |
 | 4 | demo 视频 | 可选 |
 
 **路径：** `G:\SOLO小说项目\cursor-novel-writer`（不是 `cursor-novel-suite`）。
 
 ---
 
-## 👉 合并命令（只复制下面一块发给 SOLO）
+## 👉 只复制下面【一整块】发给 SOLO（一条任务单，不要分 A/B）
 
-### 块 A — 现在发：审稿第2章 + gate（状态5）
+**你干什么：** 全选复制 → 粘贴 SOLO → 等一句 **`任务单完成`**。中间不要你再发第二条。
+
+**起点：** 第 2 章《暗格》已落盘（`02_暗格.md`）。本单连续做：审 ch2 → gate 6 → 写 ch3。
 
 ```text
-【合并任务 A — 审稿第2章并完成 Phase6 gate】
-根目录：G:\SOLO小说项目\cursor-novel-writer
-项目：novels/novel-f5026010
-勿改：chapters/01_入府.md、chapters/02_暗格.md 正文（除非 review 列出必须改项）
+【侯府春深·任务单】novel-f5026010
+根：G:\SOLO小说项目\cursor-novel-writer
+禁止：重写 01_入府.md、02_暗格.md（review 列 must-fix 除外）
+禁止：C:\Users\Public\ 写稿；草稿只用 novels/.../chapters/.drafts/
 
-=== 环境（终端先执行）===
+━━ 0 环境（先做）━━
 cd G:\SOLO小说项目\cursor-novel-writer
 $env:NOVEL_SUITE_ROOT = (Get-Location).Path
 $env:PYTHONPATH = (Join-Path $env:NOVEL_SUITE_ROOT "src")
 
-=== Read（按序读完再写报告）===
-.trae/skills/novel-review/SKILL.md
-.trae/skills/novel-review/references/forge-workflow.md
-.trae/skills/novel-review/references/deai-checklist.md
-.trae/skills/chapter-writing/references/chapter-format.md
-novels/novel-f5026010/canon/voice-brief.md
-novels/novel-f5026010/chapters/02_暗格.md
+━━ 1 审第2章 ━━
+Read：.trae/skills/novel-review/SKILL.md
+Read：.trae/skills/novel-review/references/forge-workflow.md
+Read：.trae/skills/novel-review/references/deai-checklist.md
+Read：.trae/skills/chapter-writing/references/chapter-format.md
+Read：novels/novel-f5026010/canon/voice-brief.md
+Read：novels/novel-f5026010/chapters/02_暗格.md
+Write：novels/novel-f5026010/reviews/ch02-review.md
+  必含 ## Format、## Blockers、## De-AI、## Ghostlight（✅/❌）
+若有 Blocker → 停，回复「任务单失败：blocker」并列出，不要执行 2、3
 
-=== 写入 ===
-novels/novel-f5026010/reviews/ch02-review.md
-必含小节：## Format、## Blockers、## De-AI、## Ghostlight（逐项 ✅/❌）
-
-=== 终端（无 Blocker 才执行）===
+━━ 2 gate（无 blocker 才做）━━
 py -3 cursor-novel-writer/engine/novel_cli.py pipeline gate --phase 6 --project novels/novel-f5026010
+失败 → 回复「任务单失败：gate6」
 
-=== 通过 ===
-review 无 Blocker + gate exit 0 → 回复：状态5通过
+━━ 3 写第3章 ━━
+Read：.trae/skills/chapter-writing/SKILL.md
+Read：novels/novel-f5026010/task_plan.md（抄第3章标题到 --title 与正文 # 第3章）
+Read：novels/novel-f5026010/chapters/02_暗格.md
+Read：novels/novel-f5026010/canon/concept-brief.md、voice-brief.md、progress.json
+Read：novels/novel-f5026010/plot/foreshadowing.md
+Write 草稿：novels/novel-f5026010/chapters/.drafts/ch03.md
+  格式：# 第3章：<标题>、---、## 一/二/三、---、（第3章完）
+py -3 -m novel_suite.cli writer chapter draft --project novels/novel-f5026010 --chapter 3 --title "<task_plan第3章标题>" --input novels/novel-f5026010/chapters/.drafts/ch03.md --json
+须 code=CHAPTER_DRAFT_OK；有 chapters/03_*.md、snapshots/ch03-after.md
+
+━━ 完成口令 ━━
+1+2+3 全成功 → 只回复一行：任务单完成
 ```
 
-### 块 B — 状态5通过后再发：写第3章（状态3-next）
-
-```text
-【合并任务 B — 写第3章并落盘】
-根目录/项目/环境：同块 A（cd + NOVEL_SUITE_ROOT + PYTHONPATH）
-
-=== Read ===
-.trae/skills/chapter-writing/SKILL.md
-.trae/skills/chapter-writing/references/chapter-format.md
-novels/novel-f5026010/task_plan.md
-novels/novel-f5026010/chapters/02_暗格.md
-novels/novel-f5026010/canon/concept-brief.md
-novels/novel-f5026010/canon/voice-brief.md
-novels/novel-f5026010/canon/progress.json
-novels/novel-f5026010/plot/foreshadowing.md
-
-=== 写稿（禁止 C:\Users\Public）===
-路径：novels/novel-f5026010/chapters/.drafts/ch03.md
-格式：# 第3章：<从task_plan抄标题>、---、## 一/二/三、---、（第3章完）
-
-=== 终端（--title 与 task_plan 第3章标题一致）===
-py -3 -m novel_suite.cli writer chapter draft --project novels/novel-f5026010 --chapter 3 --title "<第3章标题>" --input novels/novel-f5026010/chapters/.drafts/ch03.md --json
-
-=== 通过 ===
-code=CHAPTER_DRAFT_OK；有 chapters/03_*.md 与 canon/snapshots/ch03-after.md；01/02 未动 → 回复：状态3通过，章号=3
-```
+**下一轮（ch3 写完后）：** 把任务单里「2→3」改成「审 ch3 / gate / 写 ch4」，再整单复制一次。
 
 ---
 
