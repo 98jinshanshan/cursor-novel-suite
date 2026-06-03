@@ -7,9 +7,9 @@
 | 0 | 同步 + 验收 | ✅ 已完成 |
 | 1 | 引擎验收 | ✅ 状态1通过 |
 | 2 | 新书冒烟 | ⏭ 跳过（书已存在） |
-| 2-pre | 修第1章 Markdown | ✅ 建议已完成 |
-| 3 | 写第2章《暗格》 | ✅ **状态3通过** |
-| **任务单** | 审 ch2 + gate6 + 写 ch3 | 👉 **现在只发文档最上方一整块** |
+| 2-pre | 第1章格式+审稿 | ⚠️ **未验收**（你发过《入府》全文，曾判格式 blocker） |
+| 3 | 写第2章《暗格》 | ✅ 已落盘 |
+| **任务单** | **先收尾 ch1 → 审 ch2 → gate6 → 写 ch3** | 👉 **现在只发最上方一整块** |
 | 4 | demo 视频 | 可选 |
 
 **路径：** `G:\SOLO小说项目\cursor-novel-writer`（不是 `cursor-novel-suite`）。
@@ -20,50 +20,51 @@
 
 **你干什么：** 全选复制 → 粘贴 SOLO → 等一句 **`任务单完成`**。中间不要你再发第二条。
 
-**起点：** 第 2 章《暗格》已落盘（`02_暗格.md`）。本单连续做：审 ch2 → gate 6 → 写 ch3。
+**起点：** 第 1 章《入府》是你专门发来审计的（一二三格式、NEC 未做完）；第 2 章已写。  
+**本单顺序：** **先收尾第 1 章** → 审第 2 章 → gate 6 → 写第 3 章。（不能跳过第 1 章。）
 
 ```text
 【侯府春深·任务单】novel-f5026010
 根：G:\SOLO小说项目\cursor-novel-writer
-禁止：重写 01_入府.md、02_暗格.md（review 列 must-fix 除外）
-禁止：C:\Users\Public\ 写稿；草稿只用 novels/.../chapters/.drafts/
+禁止：删改 01/02 剧情正文（仅允许格式套壳、review 列 must-fix）
+禁止：C:\Users\Public\；草稿用 novels/.../chapters/.drafts/
 
-━━ 0 环境（先做）━━
+━━ 0 环境 ━━
 cd G:\SOLO小说项目\cursor-novel-writer
 $env:NOVEL_SUITE_ROOT = (Get-Location).Path
 $env:PYTHONPATH = (Join-Path $env:NOVEL_SUITE_ROOT "src")
 
-━━ 1 审第2章 ━━
-Read：.trae/skills/novel-review/SKILL.md
-Read：.trae/skills/novel-review/references/forge-workflow.md
-Read：.trae/skills/novel-review/references/deai-checklist.md
+━━ 1 第1章《入府》验收（你曾发全文审计的问题，必做）━━
 Read：.trae/skills/chapter-writing/references/chapter-format.md
+Read：novels/novel-f5026010/chapters/01_入府.md
+检查：是否有 # 第1章：入府、---、## 一/二/三（非单独一行「一」）、（第1章完）
+若缺 → 只补 Markdown 结构，句段尽量不动
+Read：.trae/skills/novel-review/SKILL.md + forge-workflow + deai-checklist
 Read：novels/novel-f5026010/canon/voice-brief.md
-Read：novels/novel-f5026010/chapters/02_暗格.md
-Write：novels/novel-f5026010/reviews/ch02-review.md
-  必含 ## Format、## Blockers、## De-AI、## Ghostlight（✅/❌）
-若有 Blocker → 停，回复「任务单失败：blocker」并列出，不要执行 2、3
+Write：novels/novel-f5026010/reviews/ch01-review.md
+  必含 ## Format、## Blockers、## De-AI、## Ghostlight；Format 须说明「一二三=章内节拍非事故」
+若无 canon/snapshots/ch01-after.md → 按模板补写
+ch01 有 Blocker → 停，回复「任务单失败：ch1-blocker」
 
-━━ 2 gate（无 blocker 才做）━━
+━━ 2 审第2章《暗格》━━
+Read：novels/novel-f5026010/chapters/02_暗格.md
+Write：novels/novel-f5026010/reviews/ch02-review.md（同上四小节）
+ch02 有 Blocker → 停，回复「任务单失败：ch2-blocker」
+
+━━ 3 gate ━━
 py -3 cursor-novel-writer/engine/novel_cli.py pipeline gate --phase 6 --project novels/novel-f5026010
-失败 → 回复「任务单失败：gate6」
+失败 → 「任务单失败：gate6」
 
-━━ 3 写第3章 ━━
-Read：.trae/skills/chapter-writing/SKILL.md
-Read：novels/novel-f5026010/task_plan.md（抄第3章标题到 --title 与正文 # 第3章）
-Read：novels/novel-f5026010/chapters/02_暗格.md
-Read：novels/novel-f5026010/canon/concept-brief.md、voice-brief.md、progress.json
-Read：novels/novel-f5026010/plot/foreshadowing.md
-Write 草稿：novels/novel-f5026010/chapters/.drafts/ch03.md
-  格式：# 第3章：<标题>、---、## 一/二/三、---、（第3章完）
+━━ 4 写第3章 ━━
+Read：chapter-writing/SKILL.md、task_plan.md、02_暗格.md、canon、foreshadowing.md
+Write：novels/novel-f5026010/chapters/.drafts/ch03.md（# 第3章、## 一/二/三、（第3章完））
 py -3 -m novel_suite.cli writer chapter draft --project novels/novel-f5026010 --chapter 3 --title "<task_plan第3章标题>" --input novels/novel-f5026010/chapters/.drafts/ch03.md --json
-须 code=CHAPTER_DRAFT_OK；有 chapters/03_*.md、snapshots/ch03-after.md
 
 ━━ 完成口令 ━━
-1+2+3 全成功 → 只回复一行：任务单完成
+1+2+3+4 全成功 → 只回复：任务单完成（ch1已验收、ch2已审、gate6过、ch3落盘）
 ```
 
-**下一轮（ch3 写完后）：** 把任务单里「2→3」改成「审 ch3 / gate / 写 ch4」，再整单复制一次。
+**下一轮：** 任务单改为「验收 ch3 → 审 ch3 → gate → 写 ch4」。
 
 ---
 
