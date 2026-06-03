@@ -17,6 +17,69 @@
 
 ---
 
+## 👉 合并命令（只复制下面一块发给 SOLO）
+
+### 块 A — 现在发：审稿第2章 + gate（状态5）
+
+```text
+【合并任务 A — 审稿第2章并完成 Phase6 gate】
+根目录：G:\SOLO小说项目\cursor-novel-writer
+项目：novels/novel-f5026010
+勿改：chapters/01_入府.md、chapters/02_暗格.md 正文（除非 review 列出必须改项）
+
+=== 环境（终端先执行）===
+cd G:\SOLO小说项目\cursor-novel-writer
+$env:NOVEL_SUITE_ROOT = (Get-Location).Path
+$env:PYTHONPATH = (Join-Path $env:NOVEL_SUITE_ROOT "src")
+
+=== Read（按序读完再写报告）===
+.trae/skills/novel-review/SKILL.md
+.trae/skills/novel-review/references/forge-workflow.md
+.trae/skills/novel-review/references/deai-checklist.md
+.trae/skills/chapter-writing/references/chapter-format.md
+novels/novel-f5026010/canon/voice-brief.md
+novels/novel-f5026010/chapters/02_暗格.md
+
+=== 写入 ===
+novels/novel-f5026010/reviews/ch02-review.md
+必含小节：## Format、## Blockers、## De-AI、## Ghostlight（逐项 ✅/❌）
+
+=== 终端（无 Blocker 才执行）===
+py -3 cursor-novel-writer/engine/novel_cli.py pipeline gate --phase 6 --project novels/novel-f5026010
+
+=== 通过 ===
+review 无 Blocker + gate exit 0 → 回复：状态5通过
+```
+
+### 块 B — 状态5通过后再发：写第3章（状态3-next）
+
+```text
+【合并任务 B — 写第3章并落盘】
+根目录/项目/环境：同块 A（cd + NOVEL_SUITE_ROOT + PYTHONPATH）
+
+=== Read ===
+.trae/skills/chapter-writing/SKILL.md
+.trae/skills/chapter-writing/references/chapter-format.md
+novels/novel-f5026010/task_plan.md
+novels/novel-f5026010/chapters/02_暗格.md
+novels/novel-f5026010/canon/concept-brief.md
+novels/novel-f5026010/canon/voice-brief.md
+novels/novel-f5026010/canon/progress.json
+novels/novel-f5026010/plot/foreshadowing.md
+
+=== 写稿（禁止 C:\Users\Public）===
+路径：novels/novel-f5026010/chapters/.drafts/ch03.md
+格式：# 第3章：<从task_plan抄标题>、---、## 一/二/三、---、（第3章完）
+
+=== 终端（--title 与 task_plan 第3章标题一致）===
+py -3 -m novel_suite.cli writer chapter draft --project novels/novel-f5026010 --chapter 3 --title "<第3章标题>" --input novels/novel-f5026010/chapters/.drafts/ch03.md --json
+
+=== 通过 ===
+code=CHAPTER_DRAFT_OK；有 chapters/03_*.md 与 canon/snapshots/ch03-after.md；01/02 未动 → 回复：状态3通过，章号=3
+```
+
+---
+
 ## 状态 0｜你在 SOLO 电脑 PowerShell（已完成可跳过）
 
 ```powershell
