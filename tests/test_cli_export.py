@@ -49,10 +49,9 @@ def test_export_json_stdout_is_pure_json():
             out.unlink()
 
 
-def test_export_gate_blocked_json(tmp_path: Path):
-    project = tmp_path / "blocked"
-    project.mkdir()
-    (project / "chapters").mkdir()
+def test_export_gate_blocked_json(novels_scratch: Path):
+    project = novels_scratch
+    (project / "chapters").mkdir(exist_ok=True)
     (project / "chapters" / "01_x.md").write_text("# x\n\ny\n", encoding="utf-8")
     env = {**os.environ, "NOVEL_SUITE_ROOT": str(REPO)}
     r = subprocess.run(

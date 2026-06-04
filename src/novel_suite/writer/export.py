@@ -11,7 +11,7 @@ from typing import Literal
 
 from novel_suite.core import errors as E
 from novel_suite.core.json_stdout import capture_legacy_output
-from novel_suite.core.paths import suite_root, writer_root
+from novel_suite.core.paths import assert_project_in_allowed_roots, suite_root, writer_root
 from novel_suite.core.result import Result, artifact, error_result, ok_result
 from novel_suite.writer import gate
 from novel_suite.writer.chapter import skip_gate_allowed
@@ -115,6 +115,15 @@ def run_export(
 ) -> Result:
     project = project.resolve()
     root = suite_root()
+
+    try:
+        project = assert_project_in_allowed_roots(project)
+    except ValueError as exc:
+        return error_result(
+            E.PROJECT_PATH_OUT_OF_BOUNDS,
+            str(exc),
+            next_actions=["Use --project under novels/ or writer examples/"],
+        )
 
     if not project.is_dir():
         return error_result(

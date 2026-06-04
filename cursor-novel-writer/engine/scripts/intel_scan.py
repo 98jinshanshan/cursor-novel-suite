@@ -76,8 +76,12 @@ def ddg_search(query: str, *, limit: int, timeout_sec: float) -> list[dict[str, 
             )
         },
     )
+    max_html = 2 * 1024 * 1024
     with urlopen(req, timeout=timeout_sec) as resp:  # noqa: S310
-        html = resp.read().decode("utf-8", errors="ignore")
+        raw = resp.read(max_html + 1)
+        if len(raw) > max_html:
+            raw = raw[:max_html]
+        html = raw.decode("utf-8", errors="ignore")
 
     chunks = re.findall(
         r'(?s)<div class="result__body".*?</div>\s*</div>',

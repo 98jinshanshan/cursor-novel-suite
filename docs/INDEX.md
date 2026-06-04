@@ -11,6 +11,7 @@
 | [audit/2026-06-01-workflow-validation-synthesis.md](./audit/2026-06-01-workflow-validation-synthesis.md) | 第三层 | Workflow 编排与验证/去 AI 合成 |
 | [audit/2026-06-02-full-reference-gap-matrix.md](./audit/2026-06-02-full-reference-gap-matrix.md) | 第四层 | 十二项目全维度差距矩阵（含 D11/P-1） |
 | [audit/2026-06-03-solo-ch01-入府-audit.md](./audit/2026-06-03-solo-ch01-入府-audit.md) | 试写审稿 | SOLO 第1章《入府》+ 一二三节拍格式说明 |
+| [audit/2026-06-04-python-security-audit.md](./audit/2026-06-04-python-security-audit.md) | 安全 | Python 静态安全审查（security-best-practices） |
 | [../intel/README.md](../intel/README.md) | P-1 | 市场情报目录（radar / concepts） |
 
 ## Agent 入口

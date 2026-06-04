@@ -76,7 +76,9 @@ python engine/video_cli.py summary \
 
 ## MCP（可选）
 
-`pip install mcp` 后运行 `python mcp/server.py`。工具：
+`pip install mcp` 后运行 `python mcp/server.py`（**仅本地 stdio**，勿将 MCP 绑定到公网且无鉴权）。
+
+工具路径必须落在 Novel Suite 根目录、`novels/` 或 `cursor-novel-video/` 子树内（见 `mcp/path_guard.py`）。
 
 - `render_summary` / `render_drama`
 - `generate_subtitles` / `burn_subtitles`

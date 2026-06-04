@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import os
+import shutil
+import uuid
 from pathlib import Path
 
 import pytest
@@ -23,3 +25,14 @@ def repo_root() -> Path:
 @pytest.fixture
 def demo_project(repo_root: Path) -> Path:
     return repo_root / "cursor-novel-writer" / "examples" / "demo-novel"
+
+
+@pytest.fixture
+def novels_scratch(repo_root: Path) -> Path:
+    """Writable novel project under novels/ (satisfies path-bound checks)."""
+    slug = f"_pytest-{uuid.uuid4().hex[:8]}"
+    root = repo_root / "novels" / slug
+    root.mkdir(parents=True)
+    yield root
+    if root.is_dir():
+        shutil.rmtree(root, ignore_errors=True)

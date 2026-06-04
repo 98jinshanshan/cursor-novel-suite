@@ -9,8 +9,18 @@ param(
 $ErrorActionPreference = "Stop"
 . "$PSScriptRoot\_suite-common.ps1"
 
+if ($Repo -notmatch '^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$') {
+    throw "Invalid -Repo (expected owner/name): $Repo"
+}
+if ($Branch -match '[\s\\/:"|<>]') {
+    throw "Invalid -Branch: $Branch"
+}
+
 $DestRoot = if ($Dest) { (Resolve-Path $Dest).Path } else { Get-SuiteRoot -StartDir $PSScriptRoot }
 $zipUrl = "https://github.com/$Repo/archive/refs/heads/$Branch.zip"
+if (-not $zipUrl.StartsWith("https://github.com/")) {
+    throw "Refusing non-GitHub zip URL: $zipUrl"
+}
 $tempZip = Join-Path $env:TEMP "cursor-novel-suite-$Branch.zip"
 $tempExtract = Join-Path $env:TEMP ("cursor-novel-suite-extract-" + [guid]::NewGuid().ToString("n"))
 

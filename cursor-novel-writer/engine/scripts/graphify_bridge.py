@@ -6,10 +6,28 @@ from __future__ import annotations
 import argparse
 import glob
 import json
+import re
 import shutil
 import subprocess
 import sys
 from pathlib import Path
+
+_GRAPHIFY_TOKEN_MAX = 80
+_GRAPHIFY_TOKEN_RE = re.compile(
+    r"^[\w\u4e00-\u9fff\u3400-\u4dbf·\-]{1,80}$",
+    re.UNICODE,
+)
+
+
+def sanitize_graphify_token(name: str, *, label: str = "identifier") -> str:
+    s = (name or "").strip()
+    if not s or len(s) > _GRAPHIFY_TOKEN_MAX:
+        raise ValueError(f"Invalid graphify {label}: length 1..{_GRAPHIFY_TOKEN_MAX}")
+    if any(c in s for c in "\n\r\x00\t") or s.startswith("-") or "--" in s:
+        raise ValueError(f"Invalid graphify {label}: forbidden characters or CLI-like prefix")
+    if not _GRAPHIFY_TOKEN_RE.match(s):
+        raise ValueError(f"Invalid graphify {label}: unsupported character set")
+    return s
 
 
 def graphify_base() -> list[str] | None:
@@ -140,11 +158,18 @@ def cmd_query(project: Path, **kwargs) -> int:
     if not graph.exists():
         print("ERROR: no graphify-out/graph.json — run update --from-chapters first", file=sys.stderr)
         return 1
-    if kwargs.get("from_char") and kwargs.get("to_char"):
-        return run_graphify(["path", kwargs["from_char"], kwargs["to_char"]], project) or 1
-    if kwargs.get("character"):
-        q = f"{kwargs['character']} relationships and story connections"
-        return run_graphify(["query", q, "--budget", "1200"], project) or 1
+    try:
+        if kwargs.get("from_char") and kwargs.get("to_char"):
+            a = sanitize_graphify_token(kwargs["from_char"], label="from")
+            b = sanitize_graphify_token(kwargs["to_char"], label="to")
+            return run_graphify(["path", a, b], project) or 1
+        if kwargs.get("character"):
+            char = sanitize_graphify_token(kwargs["character"], label="character")
+            q = f"{char} relationships and story connections"
+            return run_graphify(["query", q, "--budget", "1200"], project) or 1
+    except ValueError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
     print("ERROR: query requires --character or --from/--to", file=sys.stderr)
     return 1
 

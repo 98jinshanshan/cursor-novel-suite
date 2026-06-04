@@ -13,6 +13,7 @@ CHAPTER_MIN = 1
 CHAPTER_MAX = 999
 
 from novel_suite.core import errors as E
+from novel_suite.core.path_safety import assert_chapter_input_path
 from novel_suite.core.paths import writer_root
 from novel_suite.core.result import Result, artifact, error_result, ok_result
 from novel_suite.writer import gate
@@ -230,9 +231,16 @@ def run_chapter_draft(
         )
 
     try:
-        input_path = assert_under_project(project, input_path)
-    except ValueError:
-        pass  # input may be outside project (agent temp file) — allowed
+        input_path = assert_chapter_input_path(project, input_path)
+    except ValueError as exc:
+        return error_result(
+            E.CHAPTER_INPUT_OUT_OF_BOUNDS,
+            str(exc),
+            next_actions=[
+                "Put draft under project outlines/ or chapters/.drafts/",
+                "Or use a file under system TEMP/TMP",
+            ],
+        )
 
     body = input_path.read_text(encoding="utf-8")
     word_count = count_cjk_chars(body)

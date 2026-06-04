@@ -63,6 +63,16 @@ jobs:
         run: python -m novel_suite.cli doctor --core-only --json
       - name: pytest (no ffmpeg)
         run: pytest -m "not ffmpeg" -q
+      - name: pip-audit (dependencies)
+        run: |
+          pip install pip-audit
+          pip-audit -r requirements-dev.txt --desc on
+          pip-audit -r cursor-novel-writer/requirements.txt --desc on
+          pip-audit -r cursor-novel-video/requirements.txt --desc on
+      - name: bandit (src)
+        run: |
+          pip install bandit
+          bandit -r src/novel_suite -ll -q
       - name: intel radar markdown (generator contract)
         run: pytest tests/test_intel_radar_markdown.py -q
       - name: suite doctor (core-only, matches CI checkout)
