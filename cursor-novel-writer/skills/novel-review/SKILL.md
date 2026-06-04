@@ -24,8 +24,9 @@ Integrates graphify-novel, zencoder editor roles, postwriter validation layers, 
 **章节格式（Blocker）：** 对照 [../chapter-writing/references/chapter-format.md](../chapter-writing/references/chapter-format.md)
 
 - [ ] `# 第N章：标题` 与文件名一致
-- [ ] 默认 `scene-beats`：必须有 `## 一` / `## 二` / `## 三` 与 `（第N章完）`（非纯文本「一」行）
-- [ ] `voice-brief.md` 若声明 `chapter_structure: continuous`，则不得残留错误的三节拍标题
+- [ ] 默认 `continuous`：**不得**有章内 `## 一/二/三` 或单独一行「一」「二」「三」
+- [ ] 须有 `# 第N章`、`---`、`（第N章完）`（见 chapter-format.md）
+- [ ] 仅当 `voice-brief` 显式 `scene-beats` 时才允许三节拍小节
 
 From postwriter-inspired checklist:
 

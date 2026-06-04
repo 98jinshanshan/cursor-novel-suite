@@ -41,9 +41,8 @@ All paths below are relative to **`novels/<slug>/`** (or explicit `--project`).
 
 **格式规范（必读）：** [references/chapter-format.md](./references/chapter-format.md)
 
-- 章内 **`## 一` / `## 二` / `## 三`** = 三个场景节拍（起—承—转），**不是**写作事故，也**不是**全书分卷编号。
-- **禁止**只写单独一行纯文字 `一` / `二` / `三`（无 `#`）；导出 EPUB/视频分镜依赖 `##` 标题。
-- 若 `canon/voice-brief.md` 设 `chapter_structure: continuous`，则不用一二三，见 chapter-format §3。
+- **默认 `continuous`：** 单章**连贯正文**，**禁止**章内「一、二、三」小节（含 `## 一` 与单独一行 `一`）。
+- 写前必读 `canon/voice-brief.md` 的 `chapter_structure`；侯府春深等为 `continuous`，不得套用旧版三节拍模板。
 
 File: `chapters/NN_章节标题.md` (e.g. `03_雨夜访客.md`)
 
@@ -52,14 +51,7 @@ File: `chapters/NN_章节标题.md` (e.g. `03_雨夜访客.md`)
 
 ---
 
-## 一
-[场景：时间地点 + 动作]
-
-## 二
-[对话与冲突]
-
-## 三
-[转折 + 章末钩子]
+[连贯叙事：段落空行分隔，无章内小标题]
 
 ---
 
@@ -68,7 +60,7 @@ File: `chapters/NN_章节标题.md` (e.g. `03_雨夜访客.md`)
 
 Target: 3500–5500 字 unless user specifies.
 
-**落盘自检（写完后）：** 首行 `# 第N章`、三处 `## 一|二|三`、章尾 `（第N章完）` 齐全再保存。
+**落盘自检：** `# 第N章`、`---`、`（第N章完）` 齐全；全文无 `一/二/三` 小节。
 
 ## Writing Checklist
 

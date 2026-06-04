@@ -10,8 +10,8 @@ Persona 详细 prompt：[personas/](./personas/)
 
 **Format** 小节（先于 Blockers 填写）：对照 [chapter-format.md](../../chapter-writing/references/chapter-format.md)
 
-- `# 第N章`、章首章尾 `---`、`## 一/二/三` 或 voice-brief 声明的替代结构、`（第N章完）`
-- 纯文本 `一` `二` `三` 行 → **blocker**
+- `# 第N章`、章首章尾 `---`、`（第N章完）`
+- `voice-brief` 为 `continuous`（默认）时：任何 `## 一/二/三` 或单独一行「一」「二」「三」→ **blocker**
 
 对照 postwriter 清单，任一失败即 **blocker**：
 

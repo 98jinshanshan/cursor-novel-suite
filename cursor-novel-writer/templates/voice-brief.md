@@ -13,8 +13,8 @@
 
 | 项 | 约定 |
 | --- | --- |
-| chapter_structure | `scene-beats`（默认：`## 一/二/三` 三节拍）/ `continuous` / `platform-sections` |
-| 说明 | 见 [chapter-format.md](../skills/chapter-writing/references/chapter-format.md)；非 `scene-beats` 时禁止 Agent 擅自用纯文本「一」「二」 |
+| chapter_structure | **`continuous`（默认，单章禁止一二三小节）** / `scene-beats`（须用户明示）/ `platform-sections` |
+| 说明 | 见 [chapter-format.md](../skills/chapter-writing/references/chapter-format.md)；`continuous` 时不得出现 `## 一` 或单独一行「一」「二」「三」 |
 
 ## 叙述
 

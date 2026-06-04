@@ -9,62 +9,73 @@
 | 2 | 新书冒烟 | ⏭ 跳过（书已存在） |
 | 2-pre | 第1章格式+审稿 | ⚠️ **未验收**（你发过《入府》全文，曾判格式 blocker） |
 | 3 | 写第2章《暗格》 | ✅ 已落盘 |
-| **任务单** | **先收尾 ch1 → 审 ch2 → gate6 → 写 ch3** | 👉 **现在只发最上方一整块** |
+| **任务单** | **同步规范 → 去 ch1–3 一二三 → 写 ch4** | 👉 **先 PowerShell，再发任务单** |
 | 4 | demo 视频 | 可选 |
 
-**路径：** `G:\SOLO小说项目\cursor-novel-writer`（不是 `cursor-novel-suite`）。
+**路径：** 书在 SOLO 盘用 `G:\SOLO小说项目\cursor-novel-writer`；与 Cursor 统一请改开 **`G:\CURSOR`**（见下文双路径说明）。
+
+**格式变更（2026-06）：** 单章 **禁止** 章内「一、二、三」/`## 一`；默认 **continuous** 连贯正文。
 
 ---
 
-## 👉 只复制下面【一整块】发给 SOLO（一条任务单，不要分 A/B）
+## ① 你在 PowerShell 执行（拉最新规范 + Skills）
 
-**你干什么：** 全选复制 → 粘贴 SOLO → 等一句 **`任务单完成`**。中间不要你再发第二条。
+```powershell
+cd G:\SOLO小说项目\cursor-novel-writer
+$env:NOVEL_SUITE_ROOT = (Get-Location).Path
+powershell -File platforms/solo-sync.ps1 -UseZip -Agents trae-cn
+```
 
-**起点：** 第 1 章《入府》是你专门发来审计的（一二三格式、NEC 未做完）；第 2 章已写。  
-**本单顺序：** **先收尾第 1 章** → 审第 2 章 → gate 6 → 写第 3 章。（不能跳过第 1 章。）
+（若 SOLO 与 Cursor 要同一本书：把 `cd` 改成 `G:\CURSOR`，并在 Cursor 用 `robocopy` 同步 `novel-f5026010` 后再写。）
+
+---
+
+## ② 复制下面【一整块】发给 SOLO
+
+**规则：** `chapter_structure: continuous` — **禁止** 章内 `一/二/三` 或 `## 一/二/三`；只保留 `# 第N章`、`---`、连贯段落、`（第N章完）`。
 
 ```text
-【侯府春深·任务单】novel-f5026010
+【侯府春深·任务单·连贯章体】novel-f5026010
 根：G:\SOLO小说项目\cursor-novel-writer
-禁止：删改 01/02 剧情正文（仅允许格式套壳、review 列 must-fix）
-禁止：C:\Users\Public\；草稿用 novels/.../chapters/.drafts/
+禁止：章内出现 一/二/三 或 ## 一/二/三（删标题保留剧情，用空行衔接）
+禁止：C:\Users\Public\；草稿 novels/novel-f5026010/chapters/.drafts/
 
 ━━ 0 环境 ━━
 cd G:\SOLO小说项目\cursor-novel-writer
 $env:NOVEL_SUITE_ROOT = (Get-Location).Path
 $env:PYTHONPATH = (Join-Path $env:NOVEL_SUITE_ROOT "src")
+Read：.trae/skills/chapter-writing/references/chapter-format.md（最新：默认 continuous）
 
-━━ 1 第1章《入府》验收（你曾发全文审计的问题，必做）━━
-Read：.trae/skills/chapter-writing/references/chapter-format.md
-Read：novels/novel-f5026010/chapters/01_入府.md
-检查：是否有 # 第1章：入府、---、## 一/二/三（非单独一行「一」）、（第1章完）
-若缺 → 只补 Markdown 结构，句段尽量不动
-Read：.trae/skills/novel-review/SKILL.md + forge-workflow + deai-checklist
-Read：novels/novel-f5026010/canon/voice-brief.md
-Write：novels/novel-f5026010/reviews/ch01-review.md
-  必含 ## Format、## Blockers、## De-AI、## Ghostlight；Format 须说明「一二三=章内节拍非事故」
-若无 canon/snapshots/ch01-after.md → 按模板补写
-ch01 有 Blocker → 停，回复「任务单失败：ch1-blocker」
+━━ 1 锁定文风契约 ━━
+Read/更新：novels/novel-f5026010/canon/voice-brief.md
+确保有：chapter_structure | continuous
+若无则补上，并写明：单章禁止一二三小节
 
-━━ 2 审第2章《暗格》━━
-Read：novels/novel-f5026010/chapters/02_暗格.md
-Write：novels/novel-f5026010/reviews/ch02-review.md（同上四小节）
-ch02 有 Blocker → 停，回复「任务单失败：ch2-blocker」
+━━ 2 改前三章（去章内小节，剧情不动）━━
+依次处理：chapters/01_入府.md、02_暗格.md、03_*.md（若尚无第3章则跳过 03）
+每章须：# 第N章：<标题>、首尾 ---、（第N章完）；删除所有 ## 一/二/三 及单独一行「一」「二」「三」
+改完后自检：全文搜索无「^## [一二三]$」、无「^一二三$」
 
-━━ 3 gate ━━
-py -3 cursor-novel-writer/engine/novel_cli.py pipeline gate --phase 6 --project novels/novel-f5026010
-失败 → 「任务单失败：gate6」
+━━ 3 写第4章（连贯，不得用一二三）━━
+Read：chapter-writing/SKILL.md、task_plan.md 第4章、chapters/03_*.md 或 02_暗格.md（以已有最新章为准）
+Read：canon、plot/foreshadowing.md
+Write 草稿：novels/novel-f5026010/chapters/.drafts/ch04.md
+  仅 # 第4章：<task_plan标题> + 连贯正文 + （第4章完），禁止章内小节标题
+py -3 -m novel_suite.cli writer chapter draft --project novels/novel-f5026010 --chapter 4 --title "<task_plan第4章标题>" --input novels/novel-f5026010/chapters/.drafts/ch04.md --json
 
-━━ 4 写第3章 ━━
-Read：chapter-writing/SKILL.md、task_plan.md、02_暗格.md、canon、foreshadowing.md
-Write：novels/novel-f5026010/chapters/.drafts/ch03.md（# 第3章、## 一/二/三、（第3章完））
-py -3 -m novel_suite.cli writer chapter draft --project novels/novel-f5026010 --chapter 3 --title "<task_plan第3章标题>" --input novels/novel-f5026010/chapters/.drafts/ch03.md --json
+━━ 4 简要验收 ━━
+Write：reviews/ch01-review.md、ch02-review.md（若缺）及 ch04 对应 review 的 ## Format 段
+Format 须写：continuous，无章内一二三 ✅
 
 ━━ 完成口令 ━━
-1+2+3+4 全成功 → 只回复：任务单完成（ch1已验收、ch2已审、gate6过、ch3落盘）
+2+3 成功 → 回复：任务单完成（ch1-3已去小节、ch4落盘）
 ```
 
-**下一轮：** 任务单改为「验收 ch3 → 审 ch3 → gate → 写 ch4」。
+**双路径：** Cursor 在 `G:\CURSOR` 看不到书时，任务单执行完后在 Cursor 终端：
+
+```powershell
+robocopy "G:\SOLO小说项目\cursor-novel-writer\novels\novel-f5026010" "G:\CURSOR\novels\novel-f5026010" /E
+```
 
 ---
 
@@ -100,97 +111,9 @@ SOLO 机：`pip install -e .` / `final-verify` 失败不阻塞；用状态 1 SOL
 
 ---
 
-## 状态 2-pre｜修第1章格式（写第2章前，已完成可跳过）
+## 状态 3｜写第 N 章（通用，continuous）
 
-```text
-【修第1章格式】
-Read .trae/skills/chapter-writing/references/chapter-format.md
-只改 novels/novel-f5026010/chapters/01_入府.md：补 # 第1章、---、## 一/二/三、（第1章完），正文尽量不动。
-完成后回复：第1章格式已修
-```
-
----
-
-## 状态 3｜写第 N 章（通用模板）
-
-**第 2 章已完成。** 写第 3 章时用下面模板，改 4 处：`3`、`第3章标题`、`ch03.md`、`02_暗格.md`。
-
-**SOLO 实测注意：**
-
-- **不要**写 `C:\Users\Public\`（常无权限）→ 草稿放 `novels/novel-f5026010/chapters/.drafts/ch03.md`
-- `--title` 必须与 `task_plan.md` 里该章标题一致（第2章为 `暗格`）
-- 落盘前必读 `chapter-format.md`（`## 一/二/三`，禁止纯文本「一」）
-- `--input` 用 SOLO 实际保存路径（与草稿路径相同即可）
-
-```text
-【Novel Suite 2.0 — 状态3 写第<N>章】
-项目：novels/novel-f5026010（侯府春深）。
-
-步骤：
-1) Read .trae/skills/chapter-writing/SKILL.md
-2) Read .trae/skills/chapter-writing/references/chapter-format.md
-3) Read novels/novel-f5026010/task_plan.md（确认本章标题与情节点）
-4) Read 上一章：novels/novel-f5026010/chapters/02_暗格.md
-5) Read canon：concept-brief.md、voice-brief.md、progress.json、plot/foreshadowing.md
-6) 写第<N>章草稿 → novels/novel-f5026010/chapters/.drafts/ch0<N>.md
-   须含 # 第<N>章：<标题>、## 一/二/三、（第<N>章完）；对照 voice-brief 禁用词
-
-命令（monorepo 根）：
-$env:NOVEL_SUITE_ROOT = "G:\SOLO小说项目\cursor-novel-writer"
-$env:PYTHONPATH = (Join-Path $env:NOVEL_SUITE_ROOT "src")
-py -3 -m novel_suite.cli writer chapter draft `
-  --project novels/novel-f5026010 `
-  --chapter <N> `
-  --title "<与task_plan一致的章名>" `
-  --input novels/novel-f5026010/chapters/.drafts/ch0<N>.md `
-  --json
-
-通过：code 为 CHAPTER_DRAFT_OK；生成 chapters/0<N>_*.md；上一章文件未改动；
-      有 canon/snapshots/ch0<N>-after.md；progress 已更新。
-回复：状态3通过，章号=<N>
-```
-
-**写第 3 章时复制版（已填好占位）：**
-
-```text
-【Novel Suite 2.0 — 状态3 写第3章】
-项目：novels/novel-f5026010。第1–2章已存在，禁止改动 01_入府.md、02_暗格.md。
-
-步骤：Read chapter-writing SKILL + chapter-format.md + task_plan.md +
-  chapters/02_暗格.md + canon（concept/voice/progress）+ plot/foreshadowing.md
-草稿：novels/novel-f5026010/chapters/.drafts/ch03.md（格式同 chapter-format.md）
-章名：从 task_plan.md 第3章标题填写，填到下面 --title 与正文 # 第3章：
-
-$env:NOVEL_SUITE_ROOT = "G:\SOLO小说项目\cursor-novel-writer"
-$env:PYTHONPATH = (Join-Path $env:NOVEL_SUITE_ROOT "src")
-py -3 -m novel_suite.cli writer chapter draft `
-  --project novels/novel-f5026010 --chapter 3 --title "<第3章标题>" `
-  --input novels/novel-f5026010/chapters/.drafts/ch03.md --json
-
-回复：状态3通过，章号=3
-```
-
----
-
-## 状态 5｜审稿第2章（👉 现在发给 SOLO）
-
-```text
-【Novel Suite 2.0 — 状态5 审稿第2章】
-项目：novels/novel-f5026010。第2章文件：chapters/02_暗格.md（状态3已通过，勿重写正文除非 review 要求）。
-
-步骤：
-1) Read .trae/skills/novel-review/SKILL.md
-2) Read .trae/skills/novel-review/references/forge-workflow.md
-3) Read .trae/skills/novel-review/references/deai-checklist.md
-4) Read novels/novel-f5026010/canon/voice-brief.md
-5) 对照 chapter-format.md 检查 02_暗格.md，写入 reviews/ch02-review.md
-   须含小节：## Format、## Blockers、## De-AI、## Ghostlight（各条 ✅/❌）
-6) 无 Blocker 后执行：
-$env:NOVEL_SUITE_ROOT = "G:\SOLO小说项目\cursor-novel-writer"
-py -3 cursor-novel-writer/engine/novel_cli.py pipeline gate --phase 6 --project novels/novel-f5026010
-
-全部无 blocker 且 gate phase 6 通过 → 回复：状态5通过
-```
+草稿 `novels/<slug>/chapters/.drafts/ch0<N>.md`：**禁止**章内 `一/二/三`；须 `# 第N章`、连贯段落、`（第N章完）`。见文档顶部 **② 任务单**。
 
 ---
 
@@ -210,7 +133,7 @@ novel-suite video create-summary --chapter 01_试章.md `
 ## 流程（真书续写）
 
 ```text
-0 → 1 → [2-pre] → 3(第2章✅) → 5(审稿第2章) → 3(第3章) → 5(审稿第3章) → …
+① solo-sync → ② 任务单（去 ch1–3 小节 + 写 ch4 连贯）→ robocopy 到 G:\CURSOR（可选）
 ```
 
 详见 [solo-2.0-test-commands.md](./solo-2.0-test-commands.md)、[chapter-format.md](../../cursor-novel-writer/skills/chapter-writing/references/chapter-format.md)。
