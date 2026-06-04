@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -157,6 +158,48 @@ def _chapter_files(project: Path) -> list[Path]:
     return sorted(p for p in chapters.glob("*.md") if not p.name.startswith("_"))
 
 
+def _skip_audit_gate() -> bool:
+    return os.environ.get("NOVEL_SUITE_SKIP_AUDIT_GATE", "").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+    )
+
+
+def _audit_scan_status(path: Path) -> str | None:
+    if not path.is_file():
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return "error"
+    return str(data.get("status", ""))
+
+
+def optional_audit_scan_checks(project: Path, phase: int) -> list[str]:
+    """Fail gate only when scan JSON exists and status is error (NEC-11)."""
+    if _skip_audit_gate():
+        return []
+    chapters = _chapter_files(project)
+    if not chapters:
+        return []
+    from scripts.audit_common import default_scan_path  # noqa: PLC0415
+
+    latest = chapters[-1]
+    errors: list[str] = []
+    if phase >= 6:
+        fmt = default_scan_path(project, latest, "format")
+        st = _audit_scan_status(fmt)
+        if st == "error":
+            errors.append(f"{fmt.name}: format audit has blockers")
+    if phase >= 8:
+        deai = default_scan_path(project, latest, "deai")
+        st = _audit_scan_status(deai)
+        if st == "error":
+            errors.append(f"{deai.name}: deai audit error")
+    return errors
+
+
 def validate_project_schemas(project: Path) -> list[str]:
     errors: list[str] = []
     errors.extend(validate_json_file(project / "canon" / "project.json", "project.schema.json"))
@@ -275,6 +318,7 @@ def gate_entry_ok(project: Path, phase: int) -> tuple[bool, list[str]]:
             errors.append("no review report in reviews/chNN-review.md")
         elif has_open_blockers(review):
             errors.append(f"open blockers in {review.name}")
+    errors.extend(optional_audit_scan_checks(project, phase))
     return len(errors) == 0, errors
 
 
@@ -294,6 +338,7 @@ def validate_gate(project: Path, phase: int) -> tuple[bool, list[str]]:
         elif has_open_blockers(review):
             errors.append(f"open blockers in {review.name}")
 
+    errors.extend(optional_audit_scan_checks(project, phase))
     ok = len(errors) == 0
     return ok, errors
 

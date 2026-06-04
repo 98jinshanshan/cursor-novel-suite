@@ -4,6 +4,7 @@
 | --- | --- | --- | --- |
 | P9-S0 | `cli` | `pipeline gate --phase 9` | 预检通过 |
 | P9-S1 | `agent` | [quill-export-audit.md](./quill-export-audit.md) | 审计勾选 |
+| P9-S4 | `cli` | `novel audit export --json` | 章节/epub 存在性 |
 | P9-S2 | `cli` | `skills/novel-export/scripts/create_epub.py` | `dist/*.epub` |
 | P9-S3 | `cli` | `node validate --phase 9` | `phase-9.completion.json` |
 

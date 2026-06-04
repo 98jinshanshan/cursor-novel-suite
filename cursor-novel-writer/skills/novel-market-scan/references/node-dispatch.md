@@ -29,6 +29,7 @@
 | P0-S2 | `hybrid` | CLI 写入「平台快照」骨架 + Agent 读 [platform-scan-guide.md](./platform-scan-guide.md) 补表 | radar `## 平台快照` 各平台表 |
 | P0-S3 | `hybrid` | Agent 按 [radar-report-template.md](./radar-report-template.md) 对齐 | `## 题材簇 Top 10` 或热度榜 |
 | P0-S4 | `cli` | 同上 scan（默认生成 concepts）；Agent 用 [short-video-fit-rubric.md](./short-video-fit-rubric.md) 复核 | `intel/concepts/*.md` |
+| P0-S7 | `cli` | `novel audit intel --radar intel/radar/….md`（可选） | rubric 粗评 |
 | P0-S5 | `agent` | 用户确认后改 concept 状态 `approved` | `intel/concepts/<slug>.md` |
 | P0-S6 | `cli` | `novel init --concept ...` + `pipeline gate --phase 1` | `novels/<slug>/canon/concept-brief.md` + `canon/nodes/phase-0.completion.json` |
 

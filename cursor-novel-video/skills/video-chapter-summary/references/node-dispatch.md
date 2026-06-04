@@ -4,6 +4,8 @@
 | --- | --- | --- | --- |
 | V0-S0 | `cli` | `novel active` + 读章节 md | 绑定 slug |
 | V0-S1 | `agent` | [PIPELINE.md](./PIPELINE.md) | `script.md` |
+| V0-S1a | `cli` | 小说章 `novel audit format`（先过格式） | format scan |
+| V0-S1b | `cli` | `novel audit video-script --script …` | script lint |
 | V0-S2 | `cli` | `video_cli summary --project ... --subtitles` | `tmp/video_jobs/<id>/` |
 | V0-S3 | `cli` | `qc_video.py` | RESULT JSON |
 | V0-S4 | `cli` | | `node.completion.json` |

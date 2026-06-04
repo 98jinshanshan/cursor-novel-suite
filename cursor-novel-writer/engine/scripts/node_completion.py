@@ -81,6 +81,14 @@ def phase0_subtask_templates() -> list[dict[str, Any]]:
             "output_paths": [],
         },
         {
+            "id": "P0-S7",
+            "title": "intel rubric 审计（可选）",
+            "executor": "cli",
+            "command": "novel audit intel --radar intel/radar/….md",
+            "status": "pending",
+            "output_paths": [],
+        },
+        {
             "id": "P0-S5",
             "title": "用户确认 Top1–3 → approved concept-brief",
             "executor": "agent",
@@ -578,6 +586,26 @@ def _chapter_files(project: Path) -> list[Path]:
     return sorted(p for p in chapters.glob("*.md") if not p.name.startswith("_"))
 
 
+def _latest_chapter_scan_json(project: Path, suffix: str) -> Path | None:
+    chapters = _chapter_files(project)
+    if not chapters:
+        return None
+    from scripts.audit_common import default_scan_path  # noqa: PLC0415
+
+    path = default_scan_path(project, chapters[-1], suffix)
+    return path if path.is_file() else None
+
+
+def _audit_scan_status(path: Path | None) -> str | None:
+    if path is None or not path.is_file():
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return "error"
+    return str(data.get("status", ""))
+
+
 def _latest_review(project: Path) -> Path | None:
     reviews_dir = project / "reviews"
     if not reviews_dir.is_dir():
@@ -641,7 +669,9 @@ def build_project_phase4_manifest(*, project: Path) -> dict[str, Any]:
 def build_project_phase5_manifest(*, project: Path) -> dict[str, Any]:
     chapters = _chapter_files(project)
     snaps = list((project / "canon" / "snapshots").glob("*.md")) if (project / "canon" / "snapshots").is_dir() else []
-    ok = len(chapters) >= 1
+    format_scan = _latest_chapter_scan_json(project, "format")
+    fmt_ok = _audit_scan_status(format_scan) in (None, "ok", "warn")
+    ok = len(chapters) >= 1 and fmt_ok
     manifest: dict[str, Any] = {
         "schema_version": "1.0",
         "phase": 5,
@@ -652,6 +682,7 @@ def build_project_phase5_manifest(*, project: Path) -> dict[str, Any]:
         "artifacts": {
             "chapters": [str(p) for p in chapters[:10]],
             "snapshots": [str(p) for p in snaps[:5]],
+            "format_scan_json": str(format_scan) if format_scan else "",
         },
         "subtasks": [
             {
@@ -661,6 +692,14 @@ def build_project_phase5_manifest(*, project: Path) -> dict[str, Any]:
                 "reference": "chapter-writing/node-dispatch.md",
                 "status": "done" if ok else "pending",
                 "output_paths": [str(chapters[-1])] if chapters else [],
+            },
+            {
+                "id": "P5-S8",
+                "title": "chapter format lint",
+                "executor": "cli",
+                "command": "novel audit format --json",
+                "status": "done" if (format_scan and fmt_ok) or (len(chapters) >= 1 and fmt_ok) else "pending",
+                "output_paths": [str(format_scan)] if format_scan else [],
             },
             {
                 "id": "P5-S4",
@@ -687,8 +726,11 @@ def build_project_phase5_manifest(*, project: Path) -> dict[str, Any]:
 
 def build_project_phase6_manifest(*, project: Path) -> dict[str, Any]:
     review = _latest_review(project)
-    has_blockers = review is not None and _review_has_section(review, "## blockers")
-    ok = has_blockers
+    blockers_section = review is not None and _review_has_section(review, "## blockers")
+    blockers_closed = review is not None and not _review_has_open_blockers(review)
+    format_scan = _latest_chapter_scan_json(project, "format")
+    blocker_scan = _latest_chapter_scan_json(project, "blocker")
+    ok = review is not None and blockers_section and blockers_closed
     manifest: dict[str, Any] = {
         "schema_version": "1.0",
         "phase": 6,
@@ -696,7 +738,11 @@ def build_project_phase6_manifest(*, project: Path) -> dict[str, Any]:
         "project_slug": project.name,
         "status": "complete" if ok else "partial",
         "started_at": utc_now(),
-        "artifacts": {"review": str(review) if review else ""},
+        "artifacts": {
+            "review": str(review) if review else "",
+            "format_scan_json": str(format_scan) if format_scan else "",
+            "blocker_scan_json": str(blocker_scan) if blocker_scan else "",
+        },
         "subtasks": [
             {
                 "id": "P6-S1",
@@ -705,6 +751,16 @@ def build_project_phase6_manifest(*, project: Path) -> dict[str, Any]:
                 "reference": "novel-review/node-dispatch.md",
                 "status": "done" if ok else "pending",
                 "output_paths": [str(review)] if review else [],
+            },
+            {
+                "id": "P6-S4",
+                "title": "format + blocker audit",
+                "executor": "cli",
+                "command": "novel audit format && novel audit blocker",
+                "status": "done"
+                if ok and (format_scan is not None or blocker_scan is not None)
+                else "pending",
+                "output_paths": [str(p) for p in (format_scan, blocker_scan) if p],
             },
             {
                 "id": "P6-S3",
@@ -724,7 +780,9 @@ def build_project_phase6_manifest(*, project: Path) -> dict[str, Any]:
 def build_project_phase7_manifest(*, project: Path) -> dict[str, Any]:
     review = _latest_review(project)
     has_deai = review is not None and _review_has_section(review, "## de-ai")
-    ok = has_deai
+    deai_scan = _latest_chapter_scan_json(project, "deai")
+    scan_ok = _audit_scan_status(deai_scan) != "error"
+    ok = has_deai and scan_ok
     manifest: dict[str, Any] = {
         "schema_version": "1.0",
         "phase": 7,
@@ -732,14 +790,33 @@ def build_project_phase7_manifest(*, project: Path) -> dict[str, Any]:
         "project_slug": project.name,
         "status": "complete" if ok else "partial",
         "started_at": utc_now(),
-        "artifacts": {"review": str(review) if review else ""},
+        "artifacts": {
+            "review": str(review) if review else "",
+            "deai_scan_json": str(deai_scan) if deai_scan else "",
+        },
         "subtasks": [
             {
+                "id": "P7-S0",
+                "title": "deai audit dispatch",
+                "executor": "cli",
+                "reference": "deai-audit-dispatch.md",
+                "status": "done" if deai_scan else "pending",
+                "output_paths": [],
+            },
+            {
                 "id": "P7-S1",
-                "title": "deai-checklist",
+                "title": "novel audit deai",
+                "executor": "cli",
+                "command": "novel audit deai --json",
+                "status": "done" if deai_scan and scan_ok else "pending",
+                "output_paths": [str(deai_scan)] if deai_scan else [],
+            },
+            {
+                "id": "P7-S2",
+                "title": "deai-checklist + Sable",
                 "executor": "agent",
                 "reference": "deai-checklist.md",
-                "status": "done" if ok else "pending",
+                "status": "done" if has_deai else "pending",
                 "output_paths": [],
             },
             {

@@ -2,7 +2,8 @@
 
 **Agent 主入口：** [AGENTS.md](../../AGENTS.md)  
 **节点执行契约：** [NODE-EXECUTION-CONTRACT.md](../standards/NODE-EXECUTION-CONTRACT.md)  
-**加厚矩阵：** [NEC-10-enrichment-matrix.md](../plans/NEC-10-enrichment-matrix.md)
+**加厚矩阵：** [NEC-10-enrichment-matrix.md](../plans/NEC-10-enrichment-matrix.md)  
+**节点全景（思维导图 + 可点击目录）：** [NEC-NODE-MAP.md](./NEC-NODE-MAP.md)
 
 ## 执行链（每次请求）
 

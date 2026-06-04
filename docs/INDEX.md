@@ -27,6 +27,7 @@
 | 文档 | 说明 |
 | --- | --- |
 | [standards/STRUCTURE-STANDARDS.md](./standards/STRUCTURE-STANDARDS.md) | 目录架构与文档存放规范 |
+| [standards/PLATFORM-LENGTH-AND-NORMS.md](./standards/PLATFORM-LENGTH-AND-NORMS.md) | 各平台篇幅/章节与写作规范索引 |
 | [standards/DECISION-PRINCIPLE.md](./standards/DECISION-PRINCIPLE.md) | 决策呈现原则（Agent 推荐、用户确认） |
 | [standards/SKILLS-INSTALL.md](./standards/SKILLS-INSTALL.md) | Skill 清单与 Phase 0 对照 |
 | [standards/POST-CODE-VERIFICATION.md](./standards/POST-CODE-VERIFICATION.md) | 代码交付前 Problems/linter 检查（强制） |
@@ -36,6 +37,8 @@
 | [standards/WORKSPACE-LAYOUT.md](./standards/WORKSPACE-LAYOUT.md) | 左侧目录速查 |
 | [../novel-suite.code-workspace](../novel-suite.code-workspace) | 可选多根工作区视图 |
 | [workflow/README.md](./workflow/README.md) | Phase 0–9 + 视频工作流导航 |
+| [workflow/NEC-NODE-MAP.md](./workflow/NEC-NODE-MAP.md) | 节点传递方向、思维导图、NEC-11 §14 进度 |
+| [standards/AUDIT-REFERENCES-INDEX.md](./standards/AUDIT-REFERENCES-INDEX.md) | Phase 0–9 / V0 审计脚本与语料索引 |
 | [plans/NEC-10-enrichment-matrix.md](./plans/NEC-10-enrichment-matrix.md) | 节点加厚成熟度矩阵 |
 | [standards/GITHUB-RELEASE.md](./standards/GITHUB-RELEASE.md) | GitHub 创建仓库、上传与标准排版 |
 | [plans/ROADMAP.md](./plans/ROADMAP.md) | 合并审计后的完善路线图 |

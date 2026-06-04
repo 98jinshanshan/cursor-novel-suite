@@ -4,7 +4,7 @@
   "skill": "chapter-writing",
   "project_slug": "demo-novel",
   "status": "complete",
-  "started_at": "2026-06-03T14:55:19+00:00",
+  "started_at": "2026-06-04T15:56:52+00:00",
   "artifacts": {
     "chapters": [
       "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\chapters\\01_试章.md"
@@ -12,7 +12,8 @@
     "snapshots": [
       "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\canon\\snapshots\\ch01-after.md",
       "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\canon\\snapshots\\ch02-after.md"
-    ]
+    ],
+    "format_scan_json": "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\reviews\\ch01-format-scan.json"
   },
   "subtasks": [
     {
@@ -23,6 +24,16 @@
       "status": "done",
       "output_paths": [
         "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\chapters\\01_试章.md"
+      ]
+    },
+    {
+      "id": "P5-S8",
+      "title": "chapter format lint",
+      "executor": "cli",
+      "command": "novel audit format --json",
+      "status": "done",
+      "output_paths": [
+        "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\reviews\\ch01-format-scan.json"
       ]
     },
     {
@@ -44,5 +55,5 @@
       "output_paths": []
     }
   ],
-  "completed_at": "2026-06-03T14:55:19+00:00"
+  "completed_at": "2026-06-04T15:56:52+00:00"
 }

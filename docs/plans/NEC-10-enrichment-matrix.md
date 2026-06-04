@@ -2,7 +2,7 @@
 
 **日期：** 2026-06-02  
 **标准：** [NODE-EXECUTION-CONTRACT.md](../standards/NODE-EXECUTION-CONTRACT.md)  
-**状态：** NEC-0/1 已实施；Phase 1–9 分派表 v1 已写入各 Skill `references/node-dispatch.md`
+**状态：** NEC-0/1 已实施；**NEC-11**（L0–L4 审计链 + `novel audit`）已落地 — 见 [NEC-NODE-MAP §14](../workflow/NEC-NODE-MAP.md#14-nec-11-实施进度)
 
 ## 成熟度标尺
 
@@ -11,7 +11,7 @@
 | 0–1 | 有 Skill，无分派 |
 | 2–4 | 有 Workflow 清单，无 manifest / 门控 |
 | 5–7 | NEC + completion + gate（**当前目标**） |
-| 8–10 | 指标闭环、数据层（远期） |
+| 8–10 | 指标闭环、数据层（**NEC-11 目标分 8 已达成脚本层**） |
 
 ## 节点一览
 
@@ -35,4 +35,5 @@
 | NEC-1 Phase0 样板 | ✅ |
 | NEC-2–6 分派表 v1 | ✅ 文档 |
 | NEC-7 三 IDE 验收表 | 见 verification/*.md |
+| NEC-11 全节点加厚 | ✅ audit CLI + 语料 + §14 进度表 |
 | 目录重排 | ✅ docs/workflow + skills/README |

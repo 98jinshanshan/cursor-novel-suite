@@ -4,9 +4,11 @@
   "skill": "novel-review",
   "project_slug": "demo-novel",
   "status": "complete",
-  "started_at": "2026-06-03T14:55:19+00:00",
+  "started_at": "2026-06-04T15:56:52+00:00",
   "artifacts": {
-    "review": "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\reviews\\ch01-review.md"
+    "review": "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\reviews\\ch01-review.md",
+    "format_scan_json": "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\reviews\\ch01-format-scan.json",
+    "blocker_scan_json": ""
   },
   "subtasks": [
     {
@@ -20,6 +22,16 @@
       ]
     },
     {
+      "id": "P6-S4",
+      "title": "format + blocker audit",
+      "executor": "cli",
+      "command": "novel audit format && novel audit blocker",
+      "status": "done",
+      "output_paths": [
+        "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\reviews\\ch01-format-scan.json"
+      ]
+    },
+    {
       "id": "P6-S3",
       "title": "pipeline gate phase 7",
       "executor": "cli",
@@ -28,5 +40,5 @@
       "output_paths": []
     }
   ],
-  "completed_at": "2026-06-03T14:55:19+00:00"
+  "completed_at": "2026-06-04T15:56:52+00:00"
 }

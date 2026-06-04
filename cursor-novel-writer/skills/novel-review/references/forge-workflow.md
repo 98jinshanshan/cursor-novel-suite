@@ -8,6 +8,15 @@ Persona 详细 prompt：[personas/](./personas/)
 
 ## 阶段 1：硬校验（blocker）
 
+**CLI（先跑）：**
+
+```bash
+python engine/novel_cli.py audit format --project novels/<slug> --chapter chapters/NN_*.md --json
+python engine/novel_cli.py audit blocker --project novels/<slug> --json
+```
+
+落盘 `reviews/chNN-format-scan.json`、`reviews/chNN-blocker-scan.json`。
+
 **Format** 小节：对照 [chapter-format.md](../../chapter-writing/references/chapter-format.md)、[chinese-prose-layout.md](../../chapter-writing/references/chinese-prose-layout.md)
 
 - 文件层 + `continuous` 无一二三小节
@@ -50,10 +59,11 @@ Persona 详细 prompt：[personas/](./personas/)
 
 ## 阶段 4：去 AI 味（Pipeline Phase 7）
 
-1. 读 `canon/voice-brief.md`
-2. 按 [deai-checklist.md](./deai-checklist.md) 全表检查
-3. 以 **Sable** persona 输出 **De-AI** 小节 + 行级修改
-4. 执行 surgical edits（用户未要求不得全文重写）
+1. `novel audit deai` → `reviews/chNN-deai-scan.json`（见 [deai-audit-dispatch.md](./deai-audit-dispatch.md)）
+2. 读 `canon/voice-brief.md` + scan JSON
+3. 按 [deai-checklist.md](./deai-checklist.md) 全表检查
+4. 以 **Sable** persona 输出 **## De-AI Scan** + **De-AI** 小节 + 行级修改
+5. 执行 surgical edits（用户未要求不得全文重写）
 
 ---
 

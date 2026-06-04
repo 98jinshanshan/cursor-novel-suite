@@ -8,6 +8,7 @@
 | P2b-S1 | `agent` 人物卡 | `characters/*.md`（≥2） |
 | P2b-S2 | `agent` [bidirectional-relations.md](./bidirectional-relations.md) | 关系双向一致 |
 | P2b-S3 | `cli` `novel relations check` | 无 ERROR |
+| P2b-S5 | `cli` | `novel audit canon --json` |
 | P2b-S4 | `cli` `pipeline gate --phase 3` | gate OK |
 
 ## Gate

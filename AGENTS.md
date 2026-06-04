@@ -91,6 +91,16 @@ Agent 读技能时**必须先 Read `novel-market-scan`**，再执行 Phase 1+。
 对 active 小说写下一章（chapter-writing），写完后 novel-review 审稿。
 ```
 
+### NEC-11 审计（格式 / 去 AI / 门控）
+
+```text
+读 audit-dispatch-index，对 active 小说最新章依次执行：
+1) novel audit format --json
+2) novel audit blocker --json（Phase 6）
+3) novel audit deai --modes all --json（Phase 7）
+把 scan JSON 摘要写入 reviews/chNN-review.md 的 De-AI Scan 节。
+```
+
 ```text
 检查 pipeline 状态；若 gate 通过，导出 EPUB。
 ```
@@ -132,6 +142,8 @@ Agent 读技能时**必须先 Read `novel-market-scan`**，再执行 Phase 1+。
 ```bash
 python cursor-novel-writer/engine/novel_cli.py intel scan --period week
 python cursor-novel-writer/engine/novel_cli.py init --title "..." --premise "..." --concept ./intel/concepts/xxx.md
+python cursor-novel-writer/engine/novel_cli.py audit format --project novels/<slug> --json
+python cursor-novel-writer/engine/novel_cli.py audit deai --project novels/<slug> --modes all --json
 python cursor-novel-writer/engine/novel_cli.py pipeline gate --phase 1
 python cursor-novel-video/engine/video_cli.py summary --chapter ./novels/<slug>/chapters/01_*.md --subtitles
 ```

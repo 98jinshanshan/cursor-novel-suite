@@ -3,6 +3,8 @@
 > 阶段 7（Sable pass）必查。来源：zencoder Sable copy edit + postwriter soft critics + 中文网文编辑惯例。  
 > **章节 Markdown 格式（`# 第N章`、`## 一/二/三`）在 Phase 6 硬校验，不在本表重复。**
 
+**L2 先跑：** `novel audit deai --project … --chapter … --json` → 读 `reviews/chNN-deai-scan.json` 与 [deai-corpus](./deai-corpus/README.md)。路由：[deai-audit-dispatch.md](./deai-audit-dispatch.md)。
+
 ## A. 句式与连接词
 
 - [ ] 段首连续「然而 / 但 / 不过 / 与此同时」≤ 1 次/千字
@@ -41,4 +43,4 @@
 
 ## 输出
 
-在 `reviews/chNN-review.md` 增加 **De-AI** 小节，每项标 ✅ / ❌；任一 ❌ 不得进入 Phase 9 导出。
+在 `reviews/chNN-review.md` 增加 **## De-AI Scan**（链到 `chNN-deai-scan.json` 摘要）与 **## De-AI** 勾选；任一 ❌ 不得进入 Phase 9 导出。

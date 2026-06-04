@@ -11,6 +11,7 @@
 | P1-S0 | `cli` | `novel active` / `novel list` | 确认无冲突 slug |
 | P1-S1 | `agent` | [story-template.md](./story-template.md) | `story.md` 草稿 |
 | P1-S2 | `cli` | `novel init --title ... --premise ... --concept ...` | `novels/<slug>/` 脚手架 |
+| P1-S6 | `cli` | `novel audit story --json` | init 交叉校验 |
 | P1-S3 | `cli` | `pipeline gate --phase 2` | `canon/project.json` |
 | P1-S4 | `agent` | 填写 `task_plan.md` Phase 1 `[x]` | task_plan |
 | P1-S5 | `cli` | `node validate --phase 1 --project ...` | `canon/nodes/phase-1.completion.json` |

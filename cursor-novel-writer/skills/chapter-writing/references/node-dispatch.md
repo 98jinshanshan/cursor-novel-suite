@@ -13,6 +13,7 @@
 | ID | 执行体 | 产出 |
 | --- | --- | --- |
 | P5-S3 | `agent` | `chapters/NN_标题.md` |
+| P5-S8 | `cli` | `novel audit format --json` → `reviews/chNN-format-scan.json` |
 | P5-S4 | `agent` | `canon/snapshots/chNN-after.md` |
 | P5-S5 | `cli` | 更新 `canon/progress.json` |
 

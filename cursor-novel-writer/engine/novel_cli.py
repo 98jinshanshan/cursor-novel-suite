@@ -539,6 +539,43 @@ def cmd_bible_summary(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_audit(args: argparse.Namespace) -> int:
+    from scripts import audit_registry as ar  # noqa: PLC0415
+
+    mode = args.audit_mode.strip().lower()
+    script = ar.AUDIT_MODES.get(mode) or ar.VIDEO_AUDIT_MODES.get(mode)
+    if not script or not script.is_file():
+        print(
+            f"Unknown audit mode: {mode}. Choose from: {', '.join(ar.ALL_MODES)}",
+            file=sys.stderr,
+        )
+        return 2
+
+    if mode == "video-script":
+        if not getattr(args, "script", None):
+            print("video-script mode requires --script path", file=sys.stderr)
+            return 2
+        cmd = [sys.executable, str(script), "--script", str(args.script)]
+        return subprocess.call(cmd)
+
+    cmd = [sys.executable, str(script)]
+    if mode == "intel":
+        if getattr(args, "radar", None):
+            cmd.extend(["--radar", str(args.radar)])
+    else:
+        project = resolve_project(args)
+        cmd.extend(["--project", str(project)])
+        if getattr(args, "chapter", None):
+            cmd.extend(["--chapter", str(args.chapter)])
+        if getattr(args, "modes", None) and mode == "deai":
+            cmd.extend(["--modes", args.modes])
+    if getattr(args, "out", None):
+        cmd.extend(["--out", str(args.out)])
+    if getattr(args, "json_out", False):
+        cmd.append("--json")
+    return subprocess.call(cmd)
+
+
 def cmd_relations_check(args: argparse.Namespace) -> int:
     project = resolve_project(args)
     return subprocess.call(
@@ -697,6 +734,33 @@ def main() -> int:
         return 0
 
     w.set_defaults(func=cmd_write)
+
+    aud = sub.add_parser("audit", help="NEC-11 phase audit/lint scripts")
+    aud.add_argument(
+        "audit_mode",
+        choices=[
+            "format",
+            "deai",
+            "voice",
+            "plot",
+            "story",
+            "canon",
+            "blocker",
+            "revalidate",
+            "export",
+            "intel",
+            "video-script",
+        ],
+        help="Audit mode (see skills/novel-review/references/audit-dispatch-index.md)",
+    )
+    add_project_arg(aud)
+    aud.add_argument("--chapter", default=None, help="Chapter path (modes: format, deai, blocker)")
+    aud.add_argument("--modes", default="all", help="deai: lexicon,rhetoric,narrative,all")
+    aud.add_argument("--out", type=Path, default=None, help="Write JSON scan path")
+    aud.add_argument("--json", action="store_true", dest="json_out")
+    aud.add_argument("--radar", type=Path, default=None, help="intel mode: radar md path")
+    aud.add_argument("--script", type=Path, default=None, help="video-script mode: script.md path")
+    aud.set_defaults(func=cmd_audit)
 
     args = p.parse_args()
     return args.func(args)

@@ -1,0 +1,27 @@
+{
+  "mode": "deai",
+  "status": "warn",
+  "project": "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+  "chapter": "chapters/01_试章.md",
+  "output_path": "",
+  "hits": [
+    {
+      "rule_id": "deai.lexicon.第1章",
+      "severity": "warn",
+      "message": "命中高频词「第1章」×2"
+    }
+  ],
+  "summary": {
+    "modes": [
+      "lexicon",
+      "narrative",
+      "rhetoric"
+    ],
+    "lexicon_terms_loaded": 1106,
+    "eye_word_count": 0,
+    "total_hits": 1,
+    "blockers": 0,
+    "warns": 1,
+    "nits": 0
+  }
+}

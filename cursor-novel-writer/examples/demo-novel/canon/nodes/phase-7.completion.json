@@ -4,14 +4,33 @@
   "skill": "novel-review",
   "project_slug": "demo-novel",
   "status": "complete",
-  "started_at": "2026-06-03T14:55:20+00:00",
+  "started_at": "2026-06-04T15:56:52+00:00",
   "artifacts": {
-    "review": "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\reviews\\ch01-review.md"
+    "review": "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\reviews\\ch01-review.md",
+    "deai_scan_json": "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\reviews\\ch01-deai-scan.json"
   },
   "subtasks": [
     {
+      "id": "P7-S0",
+      "title": "deai audit dispatch",
+      "executor": "cli",
+      "reference": "deai-audit-dispatch.md",
+      "status": "done",
+      "output_paths": []
+    },
+    {
       "id": "P7-S1",
-      "title": "deai-checklist",
+      "title": "novel audit deai",
+      "executor": "cli",
+      "command": "novel audit deai --json",
+      "status": "done",
+      "output_paths": [
+        "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel\\reviews\\ch01-deai-scan.json"
+      ]
+    },
+    {
+      "id": "P7-S2",
+      "title": "deai-checklist + Sable",
       "executor": "agent",
       "reference": "deai-checklist.md",
       "status": "done",
@@ -27,5 +46,5 @@
       ]
     }
   ],
-  "completed_at": "2026-06-03T14:55:20+00:00"
+  "completed_at": "2026-06-04T15:56:52+00:00"
 }

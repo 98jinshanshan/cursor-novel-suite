@@ -1,0 +1,21 @@
+{
+  "mode": "format",
+  "status": "warn",
+  "project": "G:\\CURSOR\\cursor-novel-writer\\examples\\demo-novel",
+  "chapter": "chapters/01_试章.md",
+  "output_path": "",
+  "hits": [
+    {
+      "rule_id": "format.word_count_low",
+      "severity": "warn",
+      "message": "CJK 字数 52 低于建议下限 2800"
+    }
+  ],
+  "summary": {
+    "cjk_chars": 52,
+    "total_hits": 1,
+    "blockers": 0,
+    "warns": 1,
+    "nits": 0
+  }
+}
