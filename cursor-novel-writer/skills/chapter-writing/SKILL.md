@@ -39,19 +39,24 @@ All paths below are relative to **`novels/<slug>/`** (or explicit `--project`).
 
 ## Chapter Structure
 
-**格式规范（必读）：** [references/chapter-format.md](./references/chapter-format.md)
+**格式规范（必读）：**
 
-- **默认 `continuous`：** 单章**连贯正文**，**禁止**章内「一、二、三」小节（含 `## 一` 与单独一行 `一`）。
-- 写前必读 `canon/voice-brief.md` 的 `chapter_structure`；侯府春深等为 `continuous`，不得套用旧版三节拍模板。
+- [references/chapter-format.md](./references/chapter-format.md) — 文件层结构
+- [references/chinese-prose-layout.md](./references/chinese-prose-layout.md) — **中文叙事排版（段首 `　　`、对话 `“”`）**
 
-File: `chapters/NN_章节标题.md` (e.g. `03_雨夜访客.md`)
+- **禁止**正文顶格像 Markdown/README；**禁止**章内「一、二、三」小节。
+- 写前必读 `voice-brief`：`chapter_structure: continuous`、`prose_layout: cn-fiction-indent`。
+
+File: `chapters/NN_章节标题.md`
 
 ```markdown
 # 第3章：雨夜访客
 
 ---
 
-[连贯叙事：段落空行分隔，无章内小标题]
+　　连贯叙事：每段段首两个全角空格。
+
+　　“对话独立成段，”他说，“同样缩进。”
 
 ---
 
@@ -60,7 +65,7 @@ File: `chapters/NN_章节标题.md` (e.g. `03_雨夜访客.md`)
 
 Target: 3500–5500 字 unless user specifies.
 
-**落盘自检：** `# 第N章`、`---`、`（第N章完）` 齐全；全文无 `一/二/三` 小节。
+**落盘自检：** 文件层齐全；叙事段以 `　　` 开头；无顶格正文块、无一二三小节。
 
 ## Writing Checklist
 

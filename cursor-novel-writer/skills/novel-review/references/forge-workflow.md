@@ -8,10 +8,11 @@ Persona 详细 prompt：[personas/](./personas/)
 
 ## 阶段 1：硬校验（blocker）
 
-**Format** 小节（先于 Blockers 填写）：对照 [chapter-format.md](../../chapter-writing/references/chapter-format.md)
+**Format** 小节：对照 [chapter-format.md](../../chapter-writing/references/chapter-format.md)、[chinese-prose-layout.md](../../chapter-writing/references/chinese-prose-layout.md)
 
-- `# 第N章`、章首章尾 `---`、`（第N章完）`
-- `voice-brief` 为 `continuous`（默认）时：任何 `## 一/二/三` 或单独一行「一」「二」「三」→ **blocker**
+- 文件层 + `continuous` 无一二三小节
+- `prose_layout: cn-fiction-indent`：叙事段首 `　　`；顶格正文 → **blocker**
+- 对话 `“”` 全角引号
 
 对照 postwriter 清单，任一失败即 **blocker**：
 

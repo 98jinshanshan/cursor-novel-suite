@@ -13,8 +13,9 @@
 
 | 项 | 约定 |
 | --- | --- |
-| chapter_structure | **`continuous`（默认，单章禁止一二三小节）** / `scene-beats`（须用户明示）/ `platform-sections` |
-| 说明 | 见 [chapter-format.md](../skills/chapter-writing/references/chapter-format.md)；`continuous` 时不得出现 `## 一` 或单独一行「一」「二」「三」 |
+| chapter_structure | **`continuous`（默认，单章禁止一二三小节）** / `scene-beats`（须用户明示） |
+| prose_layout | **`cn-fiction-indent`（默认：叙事段首 `　　` 两字）** / `cn-fiction-no-indent`（例外须注明） |
+| 说明 | [chapter-format.md](../skills/chapter-writing/references/chapter-format.md)、[chinese-prose-layout.md](../skills/chapter-writing/references/chinese-prose-layout.md) |
 
 ## 叙述
 

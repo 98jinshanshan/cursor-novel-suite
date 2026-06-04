@@ -21,12 +21,12 @@ Integrates graphify-novel, zencoder editor roles, postwriter validation layers, 
 
 ## Hard Validators (must pass)
 
-**章节格式（Blocker）：** 对照 [../chapter-writing/references/chapter-format.md](../chapter-writing/references/chapter-format.md)
+**章节格式（Blocker）：** [chapter-format.md](../chapter-writing/references/chapter-format.md)、[chinese-prose-layout.md](../chapter-writing/references/chinese-prose-layout.md)
 
-- [ ] `# 第N章：标题` 与文件名一致
-- [ ] 默认 `continuous`：**不得**有章内 `## 一/二/三` 或单独一行「一」「二」「三」
-- [ ] 须有 `# 第N章`、`---`、`（第N章完）`（见 chapter-format.md）
-- [ ] 仅当 `voice-brief` 显式 `scene-beats` 时才允许三节拍小节
+- [ ] 文件层：`# 第N章`、`---`、`（第N章完）`
+- [ ] `continuous`：无章内 `一/二/三` 或 `## 一/二/三`
+- [ ] `cn-fiction-indent`：叙事段段首 `　　`（≥95% 段落）；**禁止**顶格正文块
+- [ ] 对话用全角 `“”`，非英文引号或括号代对话
 
 From postwriter-inspired checklist:
 
