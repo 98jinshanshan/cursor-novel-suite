@@ -92,6 +92,22 @@
 
 **状态：** P-1a–d 已完成（V1 Agent 搜索版）。
 
+## P6 — SOLO 专家团架构升级（2026-06-07）
+
+> 计划全文：[SOLO-ARCHITECTURE-UPGRADE.md](./SOLO-ARCHITECTURE-UPGRADE.md)  
+> 协作规则：`.cursor/rules/ficus-incremental-delivery.mdc`
+
+- [x] SOLO 文档审计 + 架构升级计划
+- [x] FICUS 增量交付 Cursor 规则
+- [x] Sprint 1.1：`novel-suite memory` 四层文件存储 + 双轨 recall + CLI
+- [x] Sprint 1.2：Qdrant 后端 + `memory probe/sync` + install-memory-stack.ps1
+- [x] Sprint 0：文档 D P0（pre-commit、docker-compose 127.0.0.1、sanitizer、subprocess_safe）
+- [ ] Sprint 2：Wan T2V 全量 ref + Brain QC 自动 REPAIR E2E
+- [ ] Sprint 3：Playwright 多平台发布
+- [ ] Sprint 4–5：一致性自动化 + 数据飞轮
+
+**状态：** P6 已启动（Sprint 1.1 落地）。
+
 ## R0–R5 — 可移植根契约与安装（2026-06-01 迭代）
 
 - [x] **R0** `.novel-suite-root` + `suite_paths.py`（`NOVEL_SUITE_ROOT` / 向上遍历）
@@ -134,6 +150,34 @@
 **状态：** P6 NEC-0/1 + 分派表 v1 已完成。
 
 **批量执行：** [NEC-10-batch-execution.md](./NEC-10-batch-execution.md)（**NEC-10 全部批次 A–E ✅** 2026-06-03）。
+
+## P8 — 十二参考主动跟踪（2026-06-01，P1 还债）
+
+**矩阵源：** [full-reference-gap-matrix.md](../audit/2026-06-02-full-reference-gap-matrix.md)  
+**每月 diff：** `novel suite gap-diff` → `docs/audit/gap-matrix-snapshots/YYYY-MM.json` + `gap-matrix-diff-YYYY-MM.md`
+
+### 开放 backlog（勾选 = 矩阵 §4.3 + 仍 ⚠️/❌ 项）
+
+| ID | 主题 | 优先级 | 状态 |
+| --- | --- | --- | --- |
+| X-06 | graphify thread 管理（GN-08） | 建议 | [ ] |
+| GN-02 | graphify init --from-chapters | 可选 P5 | [ ] |
+| GN-05 | graphify update --manual/--lore | 可选 P5 | [ ] |
+| GN-11 | 独立 graphify companion skill | 可选 | [ ] |
+| NS-03 | task_plan Characters 摘要表 | 可选 | [ ] |
+| NS-04 | 伏笔矩阵列名 upstream 兼容 | 可选 | [ ] |
+| SS-04 | kebab-case ID schema 校验 | 可选 | [ ] |
+| SS-12 | worldbuilding references 模板 | 建议 | [ ] |
+| SS-14 | Copilot 安装路径文档 | 可选 | [ ] |
+| SS-11 | Claude marketplace 完善 | 可选 | [ ] |
+| VS-01 | tumblr-video skill | 可选 P6 | [ ] |
+| VS-02 | knowledge-video 完整（summary 增强） | 可选 | [ ] |
+| SVM-04/11 | Whisper + loudnorm | 可选 | [ ] |
+| FW-03 | Ghostlight pacing 脚本问题 | 建议 | [ ] |
+| NM-01 | story-init requirements-table | 建议 P5 | [ ] |
+| NM-02 | voice-brief 可配置章字数 | 可选 | [ ] |
+
+**维护规则：** 关闭项在矩阵 §2 把「P3 后」改为 ✅，再跑 `suite gap-diff`；ROADMAP 行改 `[x]`。
 
 ## P7 — 目录架构 2.0（2026-06-03）
 

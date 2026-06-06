@@ -100,10 +100,19 @@ def _run_create_epub(project: Path, output: Path) -> tuple[int, list[str]]:
     script = writer_root() / "engine" / "scripts" / "create_epub.py"
     cmd = [sys.executable, str(script), "--project", str(project), "--output", str(output)]
     legacy: list[str] = []
-    with capture_legacy_output() as captured:
-        proc = subprocess.run(cmd, cwd=str(writer_root()), text=True)
-        legacy = captured
-    return proc.returncode, legacy
+    try:
+        with capture_legacy_output() as captured:
+            proc = subprocess.run(
+                cmd,
+                cwd=str(writer_root()),
+                text=True,
+                capture_output=True,
+                timeout=120,
+            )
+            legacy = captured
+        return proc.returncode, legacy
+    except subprocess.TimeoutExpired:
+        return 124, ["EPUB export timed out after 120s"]
 
 
 def run_export(

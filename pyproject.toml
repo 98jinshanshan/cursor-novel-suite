@@ -19,6 +19,10 @@ dev = [
   "jsonschema>=4.0",
   "ebooklib>=0.18",
 ]
+memory = [
+  "qdrant-client>=1.9",
+  "sentence-transformers>=3.0",
+]
 
 [project.scripts]
 novel-suite = "novel_suite.cli:main"

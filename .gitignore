@@ -9,6 +9,8 @@ intel/radar/*
 !intel/radar/.gitkeep
 intel/concepts/*
 !intel/concepts/.gitkeep
+docs/audit/session-archives/**/*
+!docs/audit/session-archives/.gitkeep
 # Local npx skills lock (machine-specific paths; regenerate with npx skills add)
 skills-lock.json
 # IDE skill installs (junction); source: cursor-novel-*/skills + platforms/install-skills.ps1
@@ -22,6 +24,7 @@ __pycache__/
 .venv/
 .env
 *.env
+platforms/data/
 **/credentials.json
 **/secrets*.json
 dist/

@@ -1,0 +1,59 @@
+---
+description: FICUS 增量交付 — SOLO 专家团提示词工程协作协议（架构升级 Sprint）
+globs:
+  - src/novel_suite/**
+  - cursor-novel-video/**
+  - cursor-novel-writer/**
+  - tests/**
+  - docs/plans/**
+alwaysApply: false
+---
+
+# FICUS 增量交付（SOLO 架构升级）
+
+与 Agent 协作实现 SOLO 缺口补全时，**默认遵循**本规则。人类可读计划：[docs/plans/SOLO-ARCHITECTURE-UPGRADE.md](../../docs/plans/SOLO-ARCHITECTURE-UPGRADE.md)
+
+## FICUS 五要素（每次对话一个单元）
+
+| 字母 | 含义 | 要求 |
+|------|------|------|
+| **F** Focus | 一次只做**一个**子能力（如 C3-A01） |
+| **I** Isolate | 列出 ✅ 可改 / ❌ 禁碰文件 |
+| **C** Context | 只读 3–5 个参考文件，不塞全局 |
+| **U** Validate | 末尾必须 pytest / `--json` 验收证据 |
+| **S** Stop | 验收全 ✅ 即结束，不顺手重构 |
+
+## 禁碰文件（除非用户明确要求架构评审）
+
+- `src/novel_suite/writer/gate.py`
+- `src/novel_suite/core/result.py`
+- `src/novel_suite/writer/registry.py`
+- `src/novel_suite/core/errors.py`（仅允许**追加**错误码常量）
+
+## PR / 增量约束
+
+- Branch：`fix/{节点}-{子能力}-{简述}`
+- **≤5 个文件**/次提交（测试+文档计入）
+- **禁止**同一轮同时改 `cursor-novel-writer` 与 `cursor-novel-video` 核心引擎
+- 新模块遵循 Result Contract（`core/result.py`）
+- 路径操作走 `core/paths.py` / `core/path_safety.py`
+
+## 验收清单（开发后必做）
+
+1. `pytest` 相关路径通过
+2. 新 CLI：`novel-suite <cmd> --json` 输出含 `status`/`code`
+3. `writer gate --phase 1` 对 demo-novel 仍 OK
+4. `ReadLints` 改动路径 Problems 清零
+
+## 提示词分层
+
+- **L1 策略**：读 `SOLO-ARCHITECTURE-UPGRADE.md`（新 Sprint 启动一次）
+- **L2 战术**：当前节点子能力 + 已有代码对照
+- **L3 执行**：单文件任务 + 验收标准
+
+## 反模式
+
+- ❌ 「帮我实现整个节点 3」
+- ❌ 未读 `result.py` 就发明新 JSON 格式
+- ❌ 无测试的 memory/video 新模块
+- ❌ 改 gate/registry 顺便「优化」

@@ -1,0 +1,23 @@
+# Sprint 0 Day 1 — credential leak prevention (document D CHK-002)
+# Install:
+#   pip install pre-commit
+#   pre-commit install
+#   pre-commit install --hook-type pre-push
+
+repos:
+  - repo: https://github.com/thoughtworks/talisman
+    rev: v1.32.0
+    hooks:
+      - id: talisman-push
+        stages: [pre-push]
+        args:
+          - "--pattern"
+          - "(?i)(?:sk-[a-zA-Z0-9]{20,}|AKIA[0-9A-Z]{16}|password\\s*[:=]\\s*['\"][^'\"]{6,}|secret\\s*[:=]\\s*['\"][^'\"]{6,}|token\\s*[:=]\\s*['\"][^'\"]{6,}|(?:ghp|gho|ghu|ghs)_[a-zA-Z0-9]{36,})"
+
+  - repo: local
+    hooks:
+      - id: block-api-key-patterns
+        name: Block sk-/AKIA/ghp_ secrets in staged text
+        language: pygrep
+        entry: "(?i)(?:sk-[a-zA-Z0-9]{20,}|AKIA[0-9A-Z]{16}|(?:ghp|gho|ghu|ghs)_[a-zA-Z0-9]{36,})"
+        types: [text]

@@ -22,6 +22,7 @@ def capture_legacy_output() -> Iterator[list[str]]:
         kwargs = dict(kwargs)
         kwargs["capture_output"] = True
         kwargs["text"] = True
+        kwargs.setdefault("timeout", 120)
         proc = real_run(*args, **kwargs)
         if proc.stdout:
             lines.extend(ln for ln in proc.stdout.splitlines() if ln.strip())

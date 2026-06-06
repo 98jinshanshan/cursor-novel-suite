@@ -17,6 +17,7 @@ from novel_suite.writer.export import run_export
 from novel_suite.video.job import create_summary_job, job_status, resume_job, run_job
 from novel_suite.writer.init import run_init
 from novel_suite.writer.intel import run_scan
+from novel_suite.memory import commands as memory_commands
 
 
 def _add_json_flag(parser: argparse.ArgumentParser) -> None:
@@ -302,6 +303,50 @@ def build_parser() -> argparse.ArgumentParser:
     _add_json_flag(v_res)
     v_res.set_defaults(func=cmd_video_resume)
 
+    mem = sub.add_parser("memory", help="Vector memory (L1–L4 layered store)")
+    mem_sub = mem.add_subparsers(dest="memory_cmd", required=True)
+
+    mem_st = mem_sub.add_parser("status", help="Count records per layer")
+    _add_project_arg(mem_st)
+    _add_json_flag(mem_st)
+    mem_st.set_defaults(func=cmd_memory_status)
+
+    mem_probe = mem_sub.add_parser("probe", help="Probe embed backend + Qdrant connectivity")
+    _add_project_arg(mem_probe)
+    _add_json_flag(mem_probe)
+    mem_probe.set_defaults(func=cmd_memory_probe)
+
+    mem_sync = mem_sub.add_parser("sync", help="Bulk sync JSONL memory to Qdrant")
+    _add_project_arg(mem_sync)
+    mem_sync.add_argument("--reembed", action="store_true", help="Re-embed all records with current backend")
+    _add_json_flag(mem_sync)
+    mem_sync.set_defaults(func=cmd_memory_sync)
+
+    mem_store = mem_sub.add_parser("store", help="Store text in a memory layer")
+    _add_project_arg(mem_store)
+    mem_store.add_argument("--text", required=True, help="Text to store")
+    mem_store.add_argument("--layer", required=True, choices=["L1", "L2", "L3", "L4"])
+    mem_store.add_argument("--tags", default="", help="Comma-separated tags")
+    mem_store.add_argument("--auto-split", action="store_true", help="Split text by layer granularity")
+    _add_json_flag(mem_store)
+    mem_store.set_defaults(func=cmd_memory_store)
+
+    mem_search = mem_sub.add_parser("search", help="Semantic search memory")
+    _add_project_arg(mem_search)
+    mem_search.add_argument("--query", required=True)
+    mem_search.add_argument("--layer", default="", choices=["", "L1", "L2", "L3", "L4"])
+    mem_search.add_argument("--tags", default="")
+    mem_search.add_argument("--track", default="", choices=["", "writing", "video"])
+    mem_search.add_argument("--limit", type=int, default=5)
+    _add_json_flag(mem_search)
+    mem_search.set_defaults(func=cmd_memory_search)
+
+    mem_check = mem_sub.add_parser("check", help="Check new text vs L4 settings")
+    _add_project_arg(mem_check)
+    mem_check.add_argument("--text", required=True)
+    _add_json_flag(mem_check)
+    mem_check.set_defaults(func=cmd_memory_check)
+
     return ap
 
 
@@ -412,6 +457,30 @@ def cmd_writer_export(args: argparse.Namespace) -> int:
         ),
         json_out=args.json,
     )
+
+
+def cmd_memory_status(args: argparse.Namespace) -> int:
+    return emit(memory_commands.run_memory_status(args), json_out=args.json)
+
+
+def cmd_memory_store(args: argparse.Namespace) -> int:
+    return emit(memory_commands.run_memory_store(args), json_out=args.json)
+
+
+def cmd_memory_search(args: argparse.Namespace) -> int:
+    return emit(memory_commands.run_memory_search(args), json_out=args.json)
+
+
+def cmd_memory_check(args: argparse.Namespace) -> int:
+    return emit(memory_commands.run_memory_check(args), json_out=args.json)
+
+
+def cmd_memory_probe(args: argparse.Namespace) -> int:
+    return emit(memory_commands.run_memory_probe(args), json_out=args.json)
+
+
+def cmd_memory_sync(args: argparse.Namespace) -> int:
+    return emit(memory_commands.run_memory_sync(args), json_out=args.json)
 
 
 def cmd_writer_chapter_promote(args: argparse.Namespace) -> int:
