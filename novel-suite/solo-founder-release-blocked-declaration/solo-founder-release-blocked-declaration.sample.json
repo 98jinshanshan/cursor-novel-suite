@@ -1,0 +1,13 @@
+{
+  "kit_version": "1.0",
+  "personal_dev_continue_allowed": true,
+  "commercial_release_allowed": false,
+  "verdict": "blocked",
+  "tag_created": false,
+  "zip_created": false,
+  "release_created": false,
+  "legal_conclusion_auto_generated": false,
+  "auto_blocker_closure": false,
+  "status": "blocked_declaration",
+  "notes": "merged scope declaration for solo founder phase; no commercial release."
+}

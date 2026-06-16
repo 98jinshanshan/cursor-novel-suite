@@ -11,6 +11,7 @@ from novel_suite.core.json_stdout import capture_legacy_output
 from novel_suite.core.paths import assert_project_in_allowed_roots, suite_root, video_root
 from novel_suite.core.result import Result, artifact, error_result, ok_result
 from novel_suite.video._legacy import load_video_cli, load_video_script
+from novel_suite.video.chapter_paths import resolve_chapter_path as _resolve_chapter_path
 
 
 def video_jobs_dir() -> Path:
@@ -81,8 +82,7 @@ def _job_artifacts(job_dir: Path, root: Path) -> list[dict[str, Any]]:
 
 
 def resolve_chapter_path(chapter: str, project: Path | None) -> Path:
-    cli = load_video_cli()
-    return cli.resolve_chapter(chapter, project)
+    return _resolve_chapter_path(chapter, project)
 
 
 def create_summary_job(

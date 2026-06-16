@@ -26,7 +26,7 @@ cursor-novel-video               REST API（Phase 2）
 ## 2. 代码边界（强制）
 
 | 可改 | 禁碰（除非架构评审） |
-|------|----------------------|
+| --- | --- |
 | `src/novel_suite/memory/*` | `writer/gate.py` |
 | `cursor-novel-video/engine/*` | `core/result.py` |
 | `cursor-novel-video/adapters/*` | `core/errors.py`（仅追加错误码） |
@@ -40,7 +40,7 @@ cursor-novel-video               REST API（Phase 2）
 ## 3. 六 Sprint 路线图
 
 | Sprint | 周期 | 目标 | 状态 |
-|--------|------|------|------|
+| --- | --- | --- | --- |
 | **S0** 基础加固 | 1 周 | 文档 D P0：凭据、端口、FFmpeg、Prompt 防护 | **✅ 已完成** |
 | **S1** 向量记忆 | 2 周 | Qdrant/M3E + 四层存储 + 双轨 recall | **S1.2 Qdrant 混合检索 + sync/probe 已落地** |
 | **S2** 视频 MVP | 3 周 | Wan T2V ref 全量、Brain QC 闭环、53 镜 E2E | 部分已有 |
@@ -55,7 +55,7 @@ cursor-novel-video               REST API（Phase 2）
 ### 4.1 四层模型
 
 | 层 | 用途 | 示例 |
-|----|------|------|
+| --- | --- | --- |
 | **L1** | 宏观摘要 | 全书梗概、主线弧 |
 | **L2** | 中观章节 | 章摘要、关键事件 |
 | **L3** | 微观场景 | 单场戏、对白片段 |
@@ -69,7 +69,7 @@ cursor-novel-video               REST API（Phase 2）
 ### 4.3 双轨接口
 
 | 函数 | 用途 |
-|------|------|
+| --- | --- |
 | `recall_for_writing` | 写作时召回 L2/L4 |
 | `recall_for_video` | 视频时召回 L3/L4 + CVDP 标签 |
 | `check_consistency` | 新文本 vs 已有 L4 设定对比 |
@@ -108,7 +108,7 @@ writer gate --phase 1 不破坏；pytest tests/memory/ 通过
 ## 6. FICUS 协作模板索引
 
 | 模板 | 场景 | 纪要章节 |
-|------|------|----------|
+| --- | --- | --- |
 | A 架构师 | 启动节点、划定边界 | §3 模板 A |
 | B 提示词工程师 | 单文件精确实现 | §3 模板 B |
 | C 审计员 | 提交前验收 | §3 模板 C |
@@ -121,11 +121,11 @@ writer gate --phase 1 不破坏；pytest tests/memory/ 通过
 ## 7. 缺口优先级（仍未解决）
 
 | P0 | P1 | P2 |
-|----|----|-----|
+| --- | --- | --- |
 | Qdrant 生产部署 | Playwright 发布 | 数据看板 |
 | Brain QC 自动 REPAIR 循环 | BGM 情绪匹配 | REST API |
 | 文档 D 安全 CHK 进 CI | MCP 扩展 | 雪花法 CLI |
 
 ---
 
-*最后更新：2026-06-07 — Sprint 1.2 Qdrant + M3E 混合检索与 sync/probe*
+最后更新：2026-06-07 — Sprint 1.2 Qdrant + M3E 混合检索与 sync/probe

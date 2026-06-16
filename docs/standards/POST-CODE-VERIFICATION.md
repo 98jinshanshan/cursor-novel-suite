@@ -24,8 +24,8 @@
 
 详见 [FINAL-VERIFICATION.md](./FINAL-VERIFICATION.md)。
 
-**CI 双保险：** `.github/workflows/ci.yml` 的 `lint` job 已包含 `intel/**/*.md`；`test` job 跑
-`tests/test_intel_radar_markdown.py`，保证 `writer scan` 雷达 Markdown 合规（radar 可 gitignore）。
+**CI 双保险：** `.github/workflows/ci.yml` 的 `final-verify` job 运行 `platforms/final-verify.sh`（与本地
+`final-verify.ps1` 同套检查）；`lint` / `typecheck` / `test` job 并行兜底。
 
 ---
 

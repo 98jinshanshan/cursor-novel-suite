@@ -1,0 +1,10 @@
+{
+  "kit_version": "1.0",
+  "demo_type": "local_readonly_dry_run",
+  "external_call_performed": false,
+  "commercial_release_allowed": false,
+  "verdict": "blocked",
+  "duration_minutes_target": 15,
+  "status": "route_template",
+  "notes": "15-minute solo developer readonly demo route; no commercial release."
+}

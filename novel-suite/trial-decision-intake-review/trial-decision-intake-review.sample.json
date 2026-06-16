@@ -1,0 +1,12 @@
+{
+  "review_version": "1.0",
+  "trial_result_reviewed": true,
+  "import_approved": false,
+  "backlog_auto_applied": false,
+  "commercial_release_allowed": false,
+  "format_check_passed": true,
+  "preflight_ref": "O1-real-trial-runbook-20260613",
+  "decision_id": "TRIAL-20260613-001",
+  "backlog_candidates_count": 0,
+  "notes": "O1 read-only intake review; no backlog CR candidates; no auto import."
+}

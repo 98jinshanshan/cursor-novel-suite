@@ -39,7 +39,12 @@ def load_video_cli() -> ModuleType:
 
 
 def load_video_script(stem: str) -> ModuleType:
-    path = _engine_dir() / "scripts" / f"{stem}.py"
+    _ensure_engine_path()
+    scripts_dir = _engine_dir() / "scripts"
+    scripts = str(scripts_dir)
+    if scripts not in sys.path:
+        sys.path.insert(0, scripts)
+    path = scripts_dir / f"{stem}.py"
     if not path.is_file():
         raise FileNotFoundError(path)
     name = f"novel_suite_video_{stem}"

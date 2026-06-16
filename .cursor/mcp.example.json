@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "novel-suite": {
+      "command": "py",
+      "args": ["-3", "-m", "novel_suite.cli", "mcp", "serve", "--transport", "stdio"],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "NOVEL_SUITE_ROOT": "${workspaceFolder}"
+      }
+    }
+  },
+  "_comment_sse": "HTTP mode: run `novel-suite mcp serve --transport sse` in a terminal, then point Cursor MCP at the SSE URL shown by FastMCP."
+}

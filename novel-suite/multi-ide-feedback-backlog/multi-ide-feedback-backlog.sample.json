@@ -1,0 +1,21 @@
+{
+  "kit_version": "1.0",
+  "feedback_imported": false,
+  "backlog_auto_applied": false,
+  "telemetry_collected": false,
+  "private_project_read": false,
+  "taxonomy_ids": [
+    "BL-ENTRY",
+    "BL-CMD",
+    "BL-PP",
+    "BL-BOUNDARY",
+    "BL-IDE",
+    "BL-DOC",
+    "BL-VALIDATE",
+    "BL-LEGAL",
+    "BL-VIDEO",
+    "BL-OTHER"
+  ],
+  "status": "blank_backlog_template",
+  "notes": "local backlog taxonomy only; no auto apply; no telemetry."
+}

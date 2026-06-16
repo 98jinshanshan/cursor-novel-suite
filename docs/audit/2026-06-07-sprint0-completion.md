@@ -6,7 +6,7 @@
 ## 完成矩阵
 
 | 检查项 | 文档D | 状态 | 实现 |
-|--------|-------|------|------|
+| --- | --- | --- | --- |
 | API Key 环境变量管理 | CHK-001 | ✅ | `.env.example`, `core/env_config.py` |
 | pre-commit 凭据拦截 | CHK-002 | ✅ | `.pre-commit-config.yaml` (talisman) |
 | Prompt 输入清洗 | CHK-003 | ✅ | `core/sanitizer.py` |

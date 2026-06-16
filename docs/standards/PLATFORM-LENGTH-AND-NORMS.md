@@ -1,132 +1,154 @@
-# 各平台篇幅与写作规范合成（2026-06-04）
+# 各平台篇幅与字数规范（2026-06-04 修订）
 
-> **用途：** Phase 0 选平台 + Phase 3 大纲扩写 + `voice-brief` / `story.md` 字数规划。  
-> **来源：** 仓库内规范文档 + 公开规则检索（非法律意见；发书前以平台最新公告为准）。  
-> **检索标注：** 无官方链接条目标 `(community/unverified)`。
+> **用途：** Phase 0 选平台、Phase 3 大纲、`story.md` / `voice-brief.md` 字数契约、`chapter_format_lint` / `plot_scale_audit`。  
+> **非法律意见：** 签约、全勤、发文额度以各平台**作家后台最新公告**为准；本文标注来源等级。
+
+| 标注 | 含义 |
+| --- | --- |
+| `official` | 平台作家专区/规则公告原文或明确条款 |
+| `community` | 编辑口径、问答、行业文章，需发书前再核对 |
+| `engine` | 本仓库 **Novel Suite 引擎** 自定口径（与各平台后台可能不一致） |
+
+**相关文档：** [AUDIT-REFERENCES-INDEX.md](./AUDIT-REFERENCES-INDEX.md) ·
+[platform-length-corpus.md](../../cursor-novel-writer/skills/novel-market-scan/references/platform-length-corpus.md)
 
 ---
 
-## 1. 仓库内「规范文档」索引（你要找的那批）
+## 0. 先回答：「4000 字」是纯汉字吗？
 
-### Phase 0 — 全平台扫榜 / 搜索节点（你记得的入口）
+### 0.1 在本项目里（写作 / lint / `story.md`）
 
-| 文档 | 路径 | 作用 |
+| 字段 / 工具 | 统计口径 | 是否含标点/空格/标题 |
 | --- | --- | --- |
-| **平台扫榜指南（Agent 搜索版）** | [cursor-novel-writer/skills/novel-market-scan/references/platform-scan-guide.md](../../cursor-novel-writer/skills/novel-market-scan/references/platform-scan-guide.md) | 番茄/起点/晋江/盐选 **联网搜索** 补 radar |
-| 节点分派表 P0-S0–S6 | [node-dispatch.md](../../cursor-novel-writer/skills/novel-market-scan/references/node-dispatch.md) | 「搜索全平台」工作流契约 |
-| 雷达模板 | [radar-report-template.md](../../cursor-novel-writer/skills/novel-market-scan/references/radar-report-template.md) | `intel/radar/YYYY-Www.md` 结构 |
-| 短视频评分 | [short-video-fit-rubric.md](../../cursor-novel-writer/skills/novel-market-scan/references/short-video-fit-rubric.md) | 选题五维 /25 |
-| Phase 0 Skill | [novel-market-scan/SKILL.md](../../cursor-novel-writer/skills/novel-market-scan/SKILL.md) | 总入口 |
+| `words_per_chapter`（`story.md` front matter） | **目标：章均汉字数** | 约定为 **CJK 汉字** `[一-龥]` |
+| `chapter_format_lint` → `count_cjk()` | **正文文件内汉字个数** | **不含**标点、英文、数字、空格、`# 标题`、`---`、`（第N章完）` |
+| `plot_scale_audit` | 对照 `words_per_chapter` 与平台表 | 同上语义 |
 
-### 正文写作 / 排版规范
+**结论：** 技能里写的「3500–5500 字/章」在未特别声明时，指 **汉字字数（CJK）**，不是各平台后台的「计费字数」。
 
-| 文档 | 路径 |
-| --- | --- |
-| 章节文件层格式 | [chapter-format.md](../../cursor-novel-writer/skills/chapter-writing/references/chapter-format.md) |
-| 中文叙事排版（段首 `　　`） | [chinese-prose-layout.md](../../cursor-novel-writer/skills/chapter-writing/references/chinese-prose-layout.md) |
-| 情节框架（三幕/起承转合） | [plot-frameworks.md](../../cursor-novel-writer/skills/plot-structure/references/plot-frameworks.md) |
-| 文风契约模板 | [templates/voice-brief.md](../../cursor-novel-writer/templates/voice-brief.md) |
+### 0.2 在各平台后台（发表 / 全勤 / 日更打卡）
 
-### 审稿 / 平台合规（AI 与发表红线）
+各站**不一致**，且常与 Word「字符数」不同：
 
-| 文档 | 路径 |
-| --- | --- |
-| **平台 AI 写作合规** | [platform-compliance.md](../../cursor-novel-writer/skills/novel-review/references/platform-compliance.md) |
-| 去 AI 清单 | [deai-checklist.md](../../cursor-novel-writer/skills/novel-review/references/deai-checklist.md) |
-| Forge 审稿流 | [forge-workflow.md](../../cursor-novel-writer/skills/novel-review/references/forge-workflow.md) |
+| 平台 | 后台一般怎么计 | 与引擎 CJK 差 |
+| --- | --- | --- |
+| **番茄** | 章节**正文**（不含标题）；日更额度含**当日新章 + 修改增量** | 通常 **多于** CJK（含标点） |
+| **晋江** | **汉字 + 标点 + 空格**（网友实测 Word 少 5%–15%） | **多于** CJK |
+| **起点** | 作家助手/订阅按章展示；日更 4000 指**更新量**非单章上限 | 单章无统一「纯汉字」公示 |
+| **盐选** | 投稿按**全稿**；回答引流 3000–5000 为试读段 | 与连载章计不同 |
 
-### 立项与总控
+**切勿混用：**
 
-| 文档 | 路径 |
-| --- | --- |
-| 概念立项包 | [templates/concept-brief.md](../../cursor-novel-writer/templates/concept-brief.md) |
-| 故事圣经模板 | [story-init/references/story-template.md](../../cursor-novel-writer/skills/story-init/references/story-template.md) |
-| 全流程总控 | [novel-pipeline/SKILL.md](../../cursor-novel-writer/skills/novel-pipeline/SKILL.md) |
-
-### 本周雷达（刚跑 demo）
-
-| 文档 | 路径 |
-| --- | --- |
-| 2026-W23 雷达 | [intel/radar/2026-W23.md](../../intel/radar/2026-W23.md)（文字平台表仍为「待补全」，需 P0-S2 Agent 搜索） |
+- ❌ 「起点日更 4000」≠「每一章必须写 4000 汉字」
+- ❌ 「晋江全勤每日 3000」≠「CJK 3000」（后台字数往往更高）
+- ❌ Word 字符数 ≠ 番茄后台字数 ≠ 本仓库 `count_cjk`
 
 ---
 
-## 2. 各平台篇幅与章节 — 对照表
+## 1. 分平台对照表（2026-06 检索）
 
-| 平台 | 短篇/中篇/长篇（实用口径） | 典型章字数 | 签约/连载里程碑 | 与本项目默认关系 |
-| --- | --- | --- | --- | --- |
-| **晋江** | 官方**短篇入库 ≤10 万字**完结；10 万+ 日常称中长篇；**~100 万 = 读者语境「长篇」** `(community)` | 2500–5000 常见 | 金榜文常有 50 万–200 万+ | `chapter-writing` 3500–5500 字/章 **兼容** |
-| **番茄** | 2 万/5 万/8 万三次签约窗；全勤常要求日更 4000+；头部女频 100 万+、男频 300 万+ 有激励档 `(secondary)` | **2000–2300** 利于全勤/有声 | 8 万验证期、20–50 万书测 | 若选番茄须 **下调** `words_per_chapter` |
-| **起点/阅文** | 连载 100 万–500 万+ 常见；「拿得出手」偏 **200 万+ / 500 章+** `(community)` | 3000–5000 | 三江/畅销看追读 | 男频长线 KPI，**非晋江默认** |
-| **盐选** | **短篇** 为主（几万–十几万） | 钩子密、章短 | 知乎生态 | 与「百万字古言」路线 **不匹配** |
+### 1.1 起点中文网 / 阅文男频（你当前 `冷案回声`）
+
+| 维度 | 规则摘要 | 来源 |
+| --- | --- | --- |
+| **单章字数（创作建议）** | 男频常见 **2000–4000**；社区黄金 **2500–3500**；也有 **3000–8000** 区间说法 | `community` [起点问答](https://m.qidian.com/ask/qqboszfvxycnj) |
+| **日更 4000+** | 指 **每日更新字数合计**（维持推荐/全勤习惯），**不是**单章下限 | `community` 编辑方法论转载 |
+| **签约门槛** | 正文满 **6000** 可进初审；**3 万** 字前后受编辑关注 | `community` |
+| **长篇体量** | 连载 **100 万–500 万+**；冲榜常 **200 万+ / 500 章+** | `community` |
+| **本项目建议** | `words_per_chapter: 3500`（CJK）；`target_chapters: 200–500`；日更目标 **4000–6000 汉字/日**（可 1–2 章） | `engine` |
+
+### 1.2 番茄小说
+
+| 维度 | 规则摘要 | 来源 |
+| --- | --- | --- |
+| **单章** | 推书/教程常写 **2000 字/章** 利于节奏；与「日更 4000」配合可 **一天 2 章** | `community` |
+| **日更全勤** | **有效更新 ≥4000 字/自然日**（进阶 **6000**）；满 **10 万** 字次月起；听读收益门槛等见福利页 | `official` [全勤规则变更公告](https://fanqienovel.com/writer/zone/article/7295651439395733530)、`community` [2025 福利说明](https://fanqienovel.com/writer/zone/article/7444811345830101017) |
+| **日更额度口径** | **章节正文字数（不含标题）**；修改旧章只计**增量**；删章/审核失败返还额度 | `official` [长篇发文规则第二版](https://wangwen666.com/post/189.html) 转载平台 2026-05-22 条款 `community` |
+| **本书引擎** | `words_per_chapter: 2200–2500`（CJK）；勿用 4000 当「章均」 | `engine` |
+
+### 1.3 晋江文学城
+
+| 维度 | 规则摘要 | 来源 |
+| --- | --- | --- |
+| **短篇入库** | 完结 **≤10 万字** 按短篇；**10 万+** 为常规长篇语境 | `community` |
+| **章均** | 常见 **2500–5000**（含标点后台计）；Word **2900 → 后台约 3000** 经验比例 | `community` [bbs 字数统计](https://bbs.jjwxc.net/showmsg.php?board=17&id=452224) |
+| **VIP 全勤** | 自然月 **每日** VIP 章更新达 **3000 / 6000 / 9000**（**含标点、空格**）；月累计含罚额 **10 万 / 20 万 / 30 万** | `official` [全勤说明](http://www.jjwxc.net/sp/indexAd/index.html) |
+| **本书引擎** | `words_per_chapter: 3500–4500`（CJK，约等于后台 3800–5000） | `engine` |
+
+### 1.4 知乎盐选
+
+| 维度 | 规则摘要 | 来源 |
+| --- | --- | --- |
+| **短篇投稿** | 完稿 **≥8000**（官方小助手写 **故事类 ≥5k**）；常见过稿 **1–2.5 万** | `official` [盐选 FAQ](http://s.zhihu.com/CvhTM) `community` |
+| **结构** | **3–5 章**；免费段 **2000–5000** 须出核心冲突 | `community` |
+| **连载长篇** | 大纲 + 样章 **3–5 万**；全书常 **10–30 万** | `community` |
+| **本书引擎** | 不按章连载；走 `plot/chapter-plan` 短篇单元即可 | `engine` |
 
 ---
 
-## 3. 直接回答你的判断
+## 2. 引擎默认契约（`plot_scale_audit` / 模板）
 
-### 「百万字 + 335 章」在晋江算短还是中长？
+`engine/scripts/plot_scale_audit.py` → `PLATFORM_DEFAULTS`：
 
-- **335 章、约 100 万字** → 按章均 ~3000 字，属于**正常网文章节奏**。
-- **在晋江**：远低于短篇入库上限（10 万），也高于一般「中篇」口语（几十万）；在读者讨论里 **~100 万常被称作长篇** `(community/unverified)`，**绝不是短篇**。
-- **和「2 百万字 + 1000 章」比**：那是 **起点男频头部连载/完本 trophy 线**，不是晋江古言权谋的通用及格线。晋江榜单上大量完结精品在 **30 万–150 万** 区间仍可很强（见站点字数榜样本 `(unverified)`）。
+| platform_target | target_chapters 参考 | words_per_chapter（**CJK**） | 日更汉字参考（非 story 字段） |
+| --- | --- | --- | --- |
+| 起点中文网 | 300–1500 | **3500**（允许 2800–4500） | **4000–6000/日** |
+| 晋江文学城 | 200–500 | **3500**（允许 3000–4500） | 按全勤档折算 |
+| 番茄小说 | 100–800 | **2200**（勿 >3500） | **4000–6000/日**（后台计） |
+| 通用 | 12–999 | 4000 | — |
 
-### SOLO「12 章大纲 → 扩写到百万字」的问题
+`chapter_format_lint` 默认 band：`words_per_chapter × 0.7` ~ `× 1.5`（CJK）。
 
-| 现状 | 风险 |
+---
+
+## 3. 常见误区（本次修订针对）
+
+| 误区 | 正确理解 |
 | --- | --- |
-| 12 条 = 最终章节 | 每章需 ~8 万字 → 与 `chapter-format`（3500–5500/章）**严重冲突** |
-| 无分卷/分幕 | 伏笔与人物弧无法按 Phase 3 `plot/` 交付 |
-| 未写 `platform_target` | 合规与节奏无法对照 [platform-compliance.md](../../cursor-novel-writer/skills/novel-review/references/platform-compliance.md) |
+| 全书 `words_per_chapter: 4000` = 平台「日更 4000」 | 前者是**章均汉字目标**；后者是**每日更新总量**（番茄/起点运营） |
+| 技能默认 4000 = 各站统一标准 | 只有 **engine 模板默认值**；番茄章均应 **下调** |
+| lint 字数 = 后台全勤字数 | lint 用 **CJK**；晋江/番茄后台常 **大于** CJK |
+| 12 章大纲 × 4000 = 百万字长篇 | 12 应是 **节拍**；正文章数 = `target_chapters`（如 300） |
 
 ---
 
-## 4. 推荐优化方案（请确认是否按此执行）
+## 4. 立项时必须写的字段
 
-**结论：保留「百万字级」野心，但改掉「12 章 = 12 正文文件」；平台默认按晋江古言长篇规划。**
+在 `story.md` + `canon/voice-brief.md` 中显式写明：
 
-### 4.1 三层大纲（给 SOLO / plot-structure）
-
-```text
-L1  12 节拍 = 全书剧情骨架（三幕 / 起承转合 / Save the Cat）→ plot/arcs/master-12.md
-L2  4–6 卷 × 每卷 40–70 章规划 → plot/arcs/vol-01.md …
-L3  分章表：每章 1 句钩子 + 目标字数 3500–4500 → plot/chapter-plan.md（或 task_plan 分章表）
+```yaml
+# story.md（示例：起点悬疑）
+platform_target: 起点中文网   # 在 voice-brief 表内
+target_chapters: 300
+words_per_chapter: 3500      # 章均 CJK 汉字，非平台后台字数
+daily_update_cjk: 4500       # 建议新增到 voice-brief「连载节奏」段（汉字/日）
 ```
 
-**晋江向体量（推荐默认）：**
+发章前用后台预览核对：若晋江/番茄后台比 CJK 少 **300–800**，属正常，写作时按上表 **上浮目标**。
 
-| 指标 | 建议值 |
+---
+
+## 5. 仓库内文档索引
+
+| 文档 | 路径 |
 | --- | --- |
-| 总字数 | **80 万–120 万**（首签完本）；若要冲榜再扩到 150 万 |
-| 章节数 | **250–350 章**（与百万字、章均 3k–4k 一致） |
-| 日更 | 按你精力 4k–6k 字/日；存稿 ≥20 章再开 VIP |
-
-**若坚持「2 百万 + 1000 章」：** 仅当 `platform_target` 改为 **起点中文网** 且接受 3–5 年连载；应单独立项，不与晋江古言混 KPI。
-
-### 4.2 必改 canon（侯府春深 / 当前书）
-
-1. `canon/voice-brief.md`：`platform_target: 晋江文学城`；`chapter_structure: continuous`；`prose_layout: cn-fiction-indent`
-2. `story.md`：`target_chapters: 300`（可调）；`words_per_chapter: 4000`
-3. `canon/concept-brief.md`：补 **发行与视频策略 → 连载平台 / 总字数目标 / 分卷数**
-4. SOLO 停止「12 章各扩成数万字」；改为 **产出 L1+L2+分章表前 30 章**
-
-### 4.3 Phase 0 工作流（下一步）
-
-```powershell
-cd G:\CURSOR
-$env:NOVEL_SUITE_ROOT = (Get-Location).Path
-# 1) 短视频侧（已 demo）
-py -3 cursor-novel-writer/engine/novel_cli.py intel scan --period week
-# 2) Agent 按 platform-scan-guide 补全 intel/radar/YYYY-Www.md 的「平台快照」四表（P0-S2）
-# 3) 用户确认 platform_target → 更新 concept-brief → gate phase 1
-```
+| 章节格式 + 字数 band | [chapter-format.md](../../cursor-novel-writer/skills/chapter-writing/references/chapter-format.md) |
+| 排版 | [chinese-prose-layout.md](../../cursor-novel-writer/skills/chapter-writing/references/chinese-prose-layout.md) |
+| chapter-writing Skill | [SKILL.md](../../cursor-novel-writer/skills/chapter-writing/SKILL.md) |
+| 文风模板 | [voice-brief.md](../../cursor-novel-writer/templates/voice-brief.md) |
+| 扫榜语料入口 | [platform-length-corpus.md](../../cursor-novel-writer/skills/novel-market-scan/references/platform-length-corpus.md) |
+| P3 校验 | `novel audit plot` → `plot_scale_audit.py` |
+| P5 校验 | `novel audit format` → `chapter_format_lint.py`（**CJK**） |
 
 ---
 
-## 5. 与推送状态
+## 6. Phase 0 检索记录（2026-06-04）
 
-- 分支 `cursor/python-security-hardening` 你已本地 **push 成功**；可开 PR：  
-  https://github.com/98jinshanshan/cursor-novel-suite/pull/new/cursor/python-security-hardening
+- 番茄：全勤 4000/6000、发文额度、正文不含标题 — 作家专区公告 + 2026 发文规则转载  
+- 起点：章均 2000–4000、日更 4000 为更新习惯 — 问答/社区  
+- 晋江：全勤 3000/6000/9000 含标点空格 — 官网全勤页 + bbs  
+- 盐选：短篇 8k+ 完稿 — 盐选作者 FAQ + 社区  
 
 ---
 
-*确认后可在 SOLO 下发「任务单：plot-structure 三层大纲 + 更新 voice-brief/story 字数契约」。*
+*下次扫榜时 Agent 应更新 §1 表格「来源」列并刷新 `intel/radar` 平台快照中的「字数口径」行。*

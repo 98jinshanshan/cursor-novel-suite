@@ -1,0 +1,51 @@
+---
+description: 长任务前必须通过 DocRouter preflight；禁止全量读取 docs/索引/回执
+globs:
+alwaysApply: false
+---
+
+# DocRouter 文档路由门禁
+
+## 适用
+
+- 预计超过 10 分钟的任务
+- 需要读取 `docs/`、阶段报告、执行回执、多文件索引
+- RealPipeline / VideoRender / ComfyUI / 文档治理 / 跨项目审计
+
+## 强制流程
+
+1. **Read** `skills/doc-router/SKILL.md`（或 `.agents/skills/doc-router/SKILL.md`）
+2. 运行 preflight：
+
+```powershell
+Set-Location -LiteralPath "G:/CURSOR"
+$env:PYTHONPATH="G:/CURSOR/src"
+.\.venv\Scripts\python.exe -m novel_suite.cli doc-router preflight "<任务描述>" --json
+```
+
+3. 仅读取 `selected_docs` 中的文档；遵守 `read_budget`
+4. `status=blocked` 或 `risk_level=critical` → 停止长任务
+5. `risk_level=high` → 摘要/header  only，禁止全文追链
+
+## 禁止
+
+- 任务开始时全量读取 `docs/INDEX.md`、文档关系总索引、全部回执
+- 对未命中文档做目录级递归全文 Read
+- 将完整 pytest 日志、长 JSON、全文 Markdown 粘贴进聊天
+
+## 扩大范围
+
+必须先二次 query：
+
+```powershell
+.\.venv\Scripts\python.exe -m novel_suite.cli doc-router query "<新关键词>" --top-k 10 --json
+```
+
+不得直接 `Glob **/*.md` 后批量 Read。
+
+## 相关
+
+- [doc-router SKILL](../../skills/doc-router/SKILL.md)
+- [Cursor 防卡死规则（外部）](file:///G:/Users/admin/Documents/AI_Workspace_OS/02_Projects_项目区/Project_10_Workflow_OS/docs/00_总索引与规则/Cursor防卡死强制规则_20260617.md)
+- `tools/safe-runner/safe_read.py` — 分段读取
+- `tools/doc-router/` — 薄 wrapper 脚本

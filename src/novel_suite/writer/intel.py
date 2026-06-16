@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -38,6 +39,94 @@ def confidence_from_score(score: int, sample_size: int) -> str:
     return "low"
 
 
+def _suggest_platform(platform_names: set[str] | frozenset[str]) -> str:
+    """根据题材覆盖的平台来源，建议最适合的发布平台。"""
+    video_platforms = {"douyin", "kuaishou", "bilibili"}
+    video_count = len(set(platform_names) & video_platforms)
+    if video_count >= 2:
+        return "douyin"
+    return "fanqie"
+
+
+def scrape_platform_trending(platform: str, max_items: int = 50) -> list[dict[str, Any]]:
+    """爬取指定平台热门列表（stub，可替换为 MediaCrawler / Playwright）。"""
+    return [
+        {
+            "platform": platform,
+            "title": f"热门标题 #{i}",
+            "heat_score": 100 - i * 2,
+            "source": "scraper_stub",
+            "note": "Replace with MediaCrawler or Playwright scraper",
+        }
+        for i in range(min(max_items, 10))
+    ]
+
+
+def predict_trend(historical_scores: list[float], days_ahead: int = 7) -> dict[str, Any]:
+    """基于简单移动平均预测热度趋势。"""
+    if len(historical_scores) < 3:
+        return {"predictions": [], "trend": "unknown", "confidence": 0}
+
+    window = min(7, len(historical_scores))
+    sma = sum(historical_scores[-window:]) / window
+    last = historical_scores[-1]
+
+    if last > sma * 1.05:
+        trend = "up"
+    elif last < sma * 0.95:
+        trend = "down"
+    else:
+        trend = "stable"
+
+    confidence = min(0.9, len(historical_scores) * 0.1)
+
+    return {
+        "predictions": [round(sma * (1 + 0.02 * i), 1) for i in range(1, days_ahead + 1)],
+        "trend": trend,
+        "confidence": round(confidence, 2),
+        "based_on_samples": len(historical_scores),
+    }
+
+
+def analyze_competition(topic: str, hits: list[Any]) -> dict[str, Any]:
+    """分析某题材的竞争格局。"""
+    _ = topic
+    competitor_count = len(hits)
+
+    if competitor_count == 0:
+        return {
+            "competitor_count": 0,
+            "content_density": "空白",
+            "gap_opportunity": "蓝海，建议快速入场",
+        }
+    if competitor_count < 10:
+        return {
+            "competitor_count": competitor_count,
+            "content_density": "低",
+            "gap_opportunity": "轻度竞争，差异化容易",
+        }
+    if competitor_count < 30:
+        return {
+            "competitor_count": competitor_count,
+            "content_density": "中",
+            "gap_opportunity": "中等竞争，需找到独特角度",
+        }
+    return {
+        "competitor_count": competitor_count,
+        "content_density": "高",
+        "gap_opportunity": "红海市场，不建议入局",
+    }
+
+
+def _enrich_theme_metadata(theme: dict[str, Any], hits: list[Any]) -> dict[str, Any]:
+    theme["competition_analysis"] = analyze_competition(theme.get("theme", ""), hits)
+    theme["trend_prediction"] = predict_trend(
+        [float(theme.get("score", 50))] * 3,
+        days_ahead=7,
+    )
+    return theme
+
+
 def theme_record(
     *,
     theme: str,
@@ -46,7 +135,9 @@ def theme_record(
     platform_coverage: int,
     source_type: str,
     verified: bool,
+    platform_names: set[str] | frozenset[str] | None = None,
 ) -> dict[str, Any]:
+    names = platform_names if platform_names is not None else set()
     return {
         "theme": theme,
         "score": score,
@@ -56,6 +147,7 @@ def theme_record(
         "source_type": source_type,
         "verified": verified,
         "risks": [] if verified else ["source_unverified"],
+        "suggested_platform": _suggest_platform(names),
     }
 
 
@@ -163,6 +255,7 @@ def run_scan(
         no_concepts=no_concepts,
     )
 
+    root = suite_root()
     concept_paths: list[Path] = []
     themes_meta: list[dict[str, Any]] = []
     ranked = [kv for kv in sorted(topic_scores.items(), key=lambda kv: kv[1], reverse=True) if kv[1] > 0]
@@ -174,23 +267,24 @@ def run_scan(
             out = out_concepts / f"{tag}-{i:02d}-{slug}.md"
             scan.make_concept_brief(topic=topic, week_or_month=tag, score=score, output=out)
             concept_paths.append(out)
-            themes_meta.append(
-                theme_record(
-                    theme=topic,
-                    score=score,
-                    sample_size=len(hits),
-                    platform_coverage=len(topic_coverage.get(topic, set())),
-                    source_type=src_type,
-                    verified=verified,
-                )
+            coverage = topic_coverage.get(topic, set())
+            rec = theme_record(
+                theme=topic,
+                score=score,
+                sample_size=len(hits),
+                platform_coverage=len(coverage),
+                source_type=src_type,
+                verified=verified,
+                platform_names=coverage,
             )
+            rec["concept_path"] = _rel(root, out)
+            themes_meta.append(rec)
         manifest = nec.load_manifest(completion)
         if manifest:
             nec.recompute_phase0_status(manifest, out_radar)
             nec.write_manifest(completion, manifest)
         nec.promote_phase0_if_demo_project_linked(out_radar)
 
-    root = suite_root()
     arts = [
         artifact(_rel(root, out_radar), label="radar"),
         artifact(_rel(root, completion), label="completion"),
@@ -206,9 +300,32 @@ def run_scan(
             platform_coverage=len(topic_coverage.get(t, set())),
             source_type=src_type,
             verified=verified,
+            platform_names=topic_coverage.get(t, set()),
         )
         for t in [k for k, v in sorted(topic_scores.items(), key=lambda kv: kv[1], reverse=True) if v > 0][:3]
     ]
+
+    for theme in themes_meta:
+        _enrich_theme_metadata(theme, hits)
+    for theme in top3:
+        if "competition_analysis" not in theme:
+            _enrich_theme_metadata(theme, hits)
+
+    scan_json_path = out_radar.with_name(f"{out_radar.stem}.scan.json")
+    scan_payload = {
+        "version": 1,
+        "period": period,
+        "radar_path": _rel(root, out_radar),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "source_type": src_type,
+        "sample_size": len(hits),
+        "themes": top3,
+    }
+    scan_json_path.write_text(
+        json.dumps(scan_payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    arts.append(artifact(_rel(root, scan_json_path), label="scan_json"))
 
     return ok_result(
         "SCAN_OK",
@@ -216,8 +333,9 @@ def run_scan(
         artifacts=arts,
         next_actions=[
             "Review Top3 concepts and mark one as approved",
-            "novel-suite writer init --concept intel/concepts/<file>.md --json (or legacy novel init)",
+            f"novel-suite writer init --from-scan {scan_json_path.as_posix()} --json",
         ],
+        scan_json_path=_rel(root, scan_json_path),
         period=period,
         source_type=src_type,
         verified=verified,

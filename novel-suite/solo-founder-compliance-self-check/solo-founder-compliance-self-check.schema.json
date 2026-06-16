@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "novel-suite/solo-founder-compliance-self-check/solo-founder-compliance-self-check.schema.json",
+  "title": "Solo Founder Compliance Self-Check Record",
+  "type": "object",
+  "required": [
+    "kit_version",
+    "legal_conclusion_auto_generated",
+    "legal_review_completed",
+    "auto_blocker_closure",
+    "blocker_B01",
+    "blocker_B03",
+    "blocker_B04",
+    "blocker_B05",
+    "commercial_release_allowed",
+    "verdict"
+  ],
+  "properties": {
+    "kit_version": { "type": "string" },
+    "legal_conclusion_auto_generated": { "type": "boolean", "const": false },
+    "legal_review_completed": { "type": "boolean", "const": false },
+    "auto_blocker_closure": { "type": "boolean", "const": false },
+    "blocker_B01": { "type": "string", "const": "open" },
+    "blocker_B03": { "type": "string", "const": "open" },
+    "blocker_B04": { "type": "string", "const": "open" },
+    "blocker_B05": { "type": "string", "const": "resolved-demo-only" },
+    "commercial_release_allowed": { "type": "boolean", "const": false },
+    "verdict": { "type": "string", "const": "blocked" },
+    "status": { "type": "string" },
+    "notes": { "type": "string" }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "kit_version": "1.0",
+  "sample_only": true,
+  "trial_executed": false,
+  "fake_feedback_generated": false,
+  "external_call_performed": false,
+  "commercial_release_allowed": false,
+  "verdict": "blocked",
+  "status": "blank_intake_template",
+  "notes": "fictional sample only; real trial records go to .tmp/novel-suite-q/solo-demo-trial-intake/"
+}

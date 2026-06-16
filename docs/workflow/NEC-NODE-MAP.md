@@ -2,7 +2,8 @@
 
 > **用途：** 看清每个 Phase 的**传递方向**、**现有文件（可点击）**、**NEC-11 审计链（L0–L4）**。  
 > **状态：** NEC-11 已落地 — `novel audit <mode>` + 各 Phase 语料/脚本；进度见 [§14](#14-nec-11-实施进度)。  
-> **相关：** [NODE-EXECUTION-CONTRACT.md](../standards/NODE-EXECUTION-CONTRACT.md) · [AUDIT-REFERENCES-INDEX.md](../standards/AUDIT-REFERENCES-INDEX.md) · [workflow/README.md](./README.md)
+> **相关：** [NODE-EXECUTION-CONTRACT.md](../standards/NODE-EXECUTION-CONTRACT.md) ·
+> [AUDIT-REFERENCES-INDEX.md](../standards/AUDIT-REFERENCES-INDEX.md) · [workflow/README.md](./README.md)
 
 ---
 
@@ -36,7 +37,10 @@ flowchart TB
   P9 -->|"dist/epub"| OUT["发行产物"]
 ```
 
-**宏观规则：** 用户话术 → [novel-pipeline](../../cursor-novel-writer/skills/novel-pipeline/SKILL.md) 选 Phase → 读该 Phase 的 `node-dispatch.md` → 执行 → 落盘 → [pipeline gate](../../cursor-novel-writer/engine/scripts/pipeline_gate.py) / [node validate](../../cursor-novel-writer/engine/scripts/node_completion.py)。
+**宏观规则：** 用户话术 → [novel-pipeline](../../cursor-novel-writer/skills/novel-pipeline/SKILL.md) 选 Phase →
+读该 Phase 的 `node-dispatch.md` → 执行 → 落盘 →
+[pipeline gate](../../cursor-novel-writer/engine/scripts/pipeline_gate.py) /
+[node validate](../../cursor-novel-writer/engine/scripts/node_completion.py)。
 
 ---
 
@@ -58,7 +62,7 @@ flowchart LR
 | L0 | [audit-dispatch-index.md](../../cursor-novel-writer/skills/novel-review/references/audit-dispatch-index.md) · [deai-audit-dispatch.md](../../cursor-novel-writer/skills/novel-review/references/deai-audit-dispatch.md) |
 | L1 | [deai-corpus](../../cursor-novel-writer/skills/novel-review/references/deai-corpus/README.md) · [platform-length-corpus.md](../../cursor-novel-writer/skills/novel-market-scan/references/platform-length-corpus.md) |
 | L2 | `novel audit <mode>` → [engine/scripts](../../cursor-novel-writer/engine/scripts/) `*_audit.py` / `*_lint.py` |
-| L3 | 各 Skill Agent（读 scan JSON + persona） | |
+| L3 | 各 Skill Agent（读 scan JSON + persona） |
 | L4 | `reviews/*-scan.json` + [node_completion.py](../../cursor-novel-writer/engine/scripts/node_completion.py) |
 
 ---
@@ -293,7 +297,10 @@ flowchart TB
   CH --> P6["→ Phase 6"]
 ```
 
-**理解校验：** 套件默认 **3500–5500 字/章**（见 [chapter-writing SKILL](../../cursor-novel-writer/skills/chapter-writing/SKILL.md)）；2.0 另有 [chapter draft CLI](../../src/novel_suite/writer/chapter.py)，NEC 文档仍写 agent 写章，**存在文档与引擎轻微脱节**。
+**理解校验：** 套件默认 **3500–5500 字/章**（见
+[chapter-writing SKILL](../../cursor-novel-writer/skills/chapter-writing/SKILL.md)）；
+2.0 另有 [chapter draft CLI](../../src/novel_suite/writer/chapter.py)，NEC 文档仍写 agent 写章，
+**存在文档与引擎轻微脱节**。
 
 ### 7.2 目录架构
 
@@ -401,7 +408,8 @@ engine/scripts/deai_audit.py        → `novel audit deai`
 novels/<slug>/reviews/chNN-deai-scan.json
 ```
 
-**流程：** L0 路由 → L1 语料 → L2 CLI → Agent [deai-checklist.md](../../cursor-novel-writer/skills/novel-review/references/deai-checklist.md) + `## De-AI Scan`。
+**流程：** L0 路由 → L1 语料 → L2 CLI → Agent
+[deai-checklist.md](../../cursor-novel-writer/skills/novel-review/references/deai-checklist.md) + `## De-AI Scan`。
 
 ### 8.4 Phase 8
 
@@ -457,7 +465,8 @@ flowchart LR
 | V1 | [video-scene-drama/node-dispatch.md](../../cursor-novel-video/skills/video-scene-drama/references/node-dispatch.md) | drama 管线 |
 | V2 | [video-export/node-dispatch.md](../../cursor-novel-video/skills/video-export/references/node-dispatch.md) | 导出/QC |
 
-[cursor-novel-video/engine/scripts/video_script_lint.py](../../cursor-novel-video/engine/scripts/video_script_lint.py) → `novel audit video-script` · 写视频前先 `novel audit format`
+[cursor-novel-video/engine/scripts/video_script_lint.py](../../cursor-novel-video/engine/scripts/video_script_lint.py)
+→ `novel audit video-script` · 写视频前先 `novel audit format`
 
 ---
 
@@ -508,9 +517,11 @@ flowchart TB
 ## 13. 建议阅读顺序（点击练习）
 
 1. [workflow/README.md](./README.md) — Phase 索引  
-2. [novel-pipeline node-dispatch](../../cursor-novel-writer/skills/novel-pipeline/references/node-dispatch.md) — 选 Phase  
+2. [novel-pipeline node-dispatch](../../cursor-novel-writer/skills/novel-pipeline/references/node-dispatch.md)
+   — 选 Phase  
 3. 打开对应 Phase 的 `node-dispatch.md`（上表各节）  
-4. 审稿链：[forge-workflow.md](../../cursor-novel-writer/skills/novel-review/references/forge-workflow.md) → [§8.3 deai-corpus](#83-phase-7-目录你要求的审计链--核心放大)  
+4. 审稿链：[forge-workflow.md](../../cursor-novel-writer/skills/novel-review/references/forge-workflow.md)
+   → [§8.3 deai-corpus](#83-phase-7-目录你要求的审计链--核心放大)  
 5. 篇幅规划：[PLATFORM-LENGTH-AND-NORMS.md](../standards/PLATFORM-LENGTH-AND-NORMS.md)  
 6. 审计索引：[AUDIT-REFERENCES-INDEX.md](../standards/AUDIT-REFERENCES-INDEX.md)
 
@@ -532,4 +543,5 @@ flowchart TB
 | P9 | node-dispatch | quill-export-audit | [export_audit.py](../../cursor-novel-writer/engine/scripts/export_audit.py) | dist/epub | done |
 | V0 | video node-dispatch | PIPELINE | [video_script_lint.py](../../cursor-novel-video/engine/scripts/video_script_lint.py) | job output | done |
 
-**入口：** `python cursor-novel-writer/engine/novel_cli.py audit <mode> --project …` · 详见 [audit-dispatch-index.md](../../cursor-novel-writer/skills/novel-review/references/audit-dispatch-index.md)。
+**入口：** `python cursor-novel-writer/engine/novel_cli.py audit <mode> --project …` · 详见
+[audit-dispatch-index.md](../../cursor-novel-writer/skills/novel-review/references/audit-dispatch-index.md)。

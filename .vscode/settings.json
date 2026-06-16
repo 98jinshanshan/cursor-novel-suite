@@ -1,22 +1,72 @@
 {
-  "markdownlint.configFile": ".markdownlint.json",
-  "files.associations": {
-    "LICENSE": "plaintext"
-  },
-  "python.analysis.diagnosticSeverityOverrides": {
-    "reportMissingImports": "none"
-  },
-  "files.exclude": {
-    "**/.agents": true,
-    "**/.qoder": true,
-    "**/.trae": true,
-    "**/.cursor/skills": true,
-    "**/.pytest_cache": true,
-    "**/__pycache__": true
-  },
-  "explorer.sortOrder": "foldersNestsFiles",
-  "explorer.fileNesting.enabled": true,
-  "explorer.fileNesting.patterns": {
-    "*.md": "${capture}.completion.json"
-  }
+    "markdownlint.configFile":  ".markdownlint.json",
+    "files.associations":  {
+                               "LICENSE":  "plaintext"
+                           },
+    "python.analysis.diagnosticSeverityOverrides":  {
+                                                        "reportMissingImports":  "none"
+                                                    },
+    "files.exclude":  {
+                          "**/.agents":  true,
+                          "**/.qoder":  true,
+                          "**/.trae":  true,
+                          "**/.cursor/skills":  true,
+                          "**/.pytest_cache":  true,
+                          "**/__pycache__":  true
+                      },
+    "files.watcherExclude":  {
+                                 "**/.mypy_cache/**":  true,
+                                 "**/.ruff_cache/**":  true,
+                                 "**/platforms/**":  true,
+                                 "**/dist/**":  true,
+                                 "**/build/**":  true,
+                                 "**/*.mp4":  true,
+                                 "**/*.png":  true,
+                                 "**/*.jpg":  true,
+                                 "**/.git/**":  true,
+                                 "**/.venv/**":  true,
+                                 "**/__pycache__/**":  true,
+                                 "**/.pytest_cache/**":  true,
+                                 "**/.tmp/**":  true,
+                                 "**/node_modules/**":  true,
+                                 "**/*.pyc":  true,
+                                 "**/*.log":  true
+                             },
+    "search.exclude":  {
+                           "**/platforms/**":  true,
+                           "**/*.mp4":  true,
+                           "**/*.png":  true,
+                           "**/*.jpg":  true,
+                           "**/.git/**":  true,
+                           "**/.venv/**":  true,
+                           "**/__pycache__/**":  true,
+                           "**/.pytest_cache/**":  true,
+                           "**/.tmp/**":  true,
+                           "**/node_modules/**":  true,
+                           "**/*.pyc":  true,
+                           "**/*.log":  true
+                       },
+    "python.analysis.exclude":  [
+                                    ".venv",
+                                    ".tmp",
+                                    "platforms",
+                                    "node_modules",
+                                    "**/__pycache__"
+                                ],
+    "python.analysis.indexing":  false,
+    "explorer.sortOrder":  "foldersNestsFiles",
+    "explorer.fileNesting.enabled":  true,
+    "explorer.fileNesting.patterns":  {
+                                          "*.md":  "${capture}.completion.json"
+                                    },
+                                    "cursorpyright.analysis.diagnosticSeverityOverrides": {
+                                        "reportMissingImports": "none"
+                                    },
+                                    "cursorpyright.analysis.exclude": [
+                                        ".venv",
+                                        ".tmp",
+                                        "platforms",
+                                        "node_modules",
+                                        "**/__pycache__"
+                                    ]
 }

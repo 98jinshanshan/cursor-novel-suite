@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "novel-suite/multi-ide-feedback-backlog/multi-ide-feedback-backlog.schema.json",
+  "title": "Multi-IDE Feedback Backlog Record",
+  "type": "object",
+  "required": [
+    "kit_version",
+    "feedback_imported",
+    "backlog_auto_applied",
+    "telemetry_collected",
+    "private_project_read"
+  ],
+  "properties": {
+    "kit_version": { "type": "string" },
+    "feedback_imported": { "type": "boolean", "const": false },
+    "backlog_auto_applied": { "type": "boolean", "const": false },
+    "telemetry_collected": { "type": "boolean", "const": false },
+    "private_project_read": { "type": "boolean", "const": false },
+    "taxonomy_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 10
+    },
+    "status": { "type": "string" },
+    "notes": { "type": "string" }
+  }
+}

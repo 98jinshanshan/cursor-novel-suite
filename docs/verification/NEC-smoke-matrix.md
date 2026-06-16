@@ -26,7 +26,8 @@ py -3 cursor-novel-writer/engine/novel_cli.py node sync --phase 9 --project curs
 ```powershell
 py -3 cursor-novel-writer/engine/novel_cli.py suite doctor --core-only
 py -3 cursor-novel-writer/engine/novel_cli.py audit format --project cursor-novel-writer/examples/demo-novel --json
-py -3 cursor-novel-writer/engine/novel_cli.py audit deai --project cursor-novel-writer/examples/demo-novel --modes lexicon --json
+py -3 cursor-novel-writer/engine/novel_cli.py audit deai --project cursor-novel-writer/examples/demo-novel --modes
+lexicon --json
 py -3 cursor-novel-writer/engine/scripts/nec_cursor_smoke.py
 py -3 cursor-novel-video/engine/scripts/nec_video_smoke.py
 pytest cursor-novel-writer/tests/audit -q

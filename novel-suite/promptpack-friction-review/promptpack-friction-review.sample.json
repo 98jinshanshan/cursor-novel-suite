@@ -1,0 +1,9 @@
+{
+  "kit_version": "1.0",
+  "real_friction_available": false,
+  "auto_promptpack_changed": false,
+  "revision_candidate_only": true,
+  "external_call_performed": false,
+  "status": "blank_friction_template",
+  "notes": "revision candidates only; no auto promptpack edits."
+}

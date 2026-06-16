@@ -32,7 +32,8 @@ powershell -File platforms/solo-sync.ps1 -UseZip -Agents trae-cn
 - `.trae/skills/` 共 **13** 项（含 `novel-market-scan`、`novel-pipeline`）
 - `.novel-suite-root` 中 `suite-version=2026.06.03-nec`
 
-SOLO 自定义 Agent：粘贴 [solo-agent-prompt.md](../../cursor-novel-writer/platforms/trae/solo-agent-prompt.md) 全文为 System Prompt。
+SOLO 自定义 Agent：粘贴 [solo-agent-prompt.md](../../cursor-novel-writer/platforms/trae/solo-agent-prompt.md) 全文为 System
+Prompt。
 
 ---
 

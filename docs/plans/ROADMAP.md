@@ -102,8 +102,8 @@
 - [x] Sprint 1.1：`novel-suite memory` 四层文件存储 + 双轨 recall + CLI
 - [x] Sprint 1.2：Qdrant 后端 + `memory probe/sync` + install-memory-stack.ps1
 - [x] Sprint 0：文档 D P0（pre-commit、docker-compose 127.0.0.1、sanitizer、subprocess_safe）
-- [ ] Sprint 2：Wan T2V 全量 ref + Brain QC 自动 REPAIR E2E
-- [ ] Sprint 3：Playwright 多平台发布
+- [x] Sprint 2：视频管线 MVP（storyboard → character → stills → compose → pipeline + QC）
+- [ ] Sprint 3：质量门禁 + 发布 MVP（安全收尾 → LLM 门禁 → 抖音发布 → 复盘）
 - [ ] Sprint 4–5：一致性自动化 + 数据飞轮
 
 **状态：** P6 已启动（Sprint 1.1 落地）。
@@ -181,7 +181,8 @@
 
 ## P7 — 目录架构 2.0（2026-06-03）
 
-- [x] [DIRECTORY-ARCHITECTURE.md](../standards/DIRECTORY-ARCHITECTURE.md) + [layout-phase-map.json](../standards/layout-phase-map.json)
+- [x] [DIRECTORY-ARCHITECTURE.md](../standards/DIRECTORY-ARCHITECTURE.md) +
+[layout-phase-map.json](../standards/layout-phase-map.json)
 - [x] `.novel-suite-root` 增加 `layout-version` / `nec-version`
 - [x] `suite doctor` → `layout_version` 检查
 - [x] `novel-suite.code-workspace` 多根视图；隐藏 `.agents/.qoder/.trae`

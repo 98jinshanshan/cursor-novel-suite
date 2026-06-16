@@ -5,6 +5,7 @@ from __future__ import annotations
 import contextlib
 import importlib.util
 import io
+import json
 import sys
 from pathlib import Path
 from typing import Any
@@ -15,6 +16,8 @@ from novel_suite.core.json_stdout import capture_legacy_output
 from novel_suite.core.result import Result, artifact, error_result, ok_result
 from novel_suite.writer import gate, registry
 from novel_suite.writer._legacy import load_script_module
+from novel_suite.writer.project_clean import reclaim_empty_slug, remove_empty_at_path
+from novel_suite.writer.scan_bridge import init_params_from_scan
 
 
 def _load_novel_cli_module():
@@ -122,15 +125,42 @@ def collect_init_artifacts(project: Path, root: Path) -> list[dict[str, Any]]:
 
 def run_init(
     *,
-    title: str,
-    premise: str,
+    title: str = "",
+    premise: str = "",
     genre: str = "通用",
     slug: str = "",
     output: Path | None = None,
     concept: Path | None = None,
     platform_target: str = "通用",
+    from_scan: Path | None = None,
+    scan_theme_index: int = 0,
     json_mode: bool = False,
 ) -> Result:
+    scan_meta: dict[str, Any] = {}
+    if from_scan is not None:
+        try:
+            scan_fields = init_params_from_scan(
+                from_scan,
+                theme_index=scan_theme_index,
+                title_override=title,
+                premise_override=premise,
+                platform_override=platform_target if platform_target != "通用" else "",
+            )
+        except FileNotFoundError as exc:
+            return error_result(E.SCAN_JSON_NOT_FOUND, str(exc))
+        except (ValueError, IndexError, json.JSONDecodeError) as exc:
+            return error_result(E.SCAN_JSON_INVALID, str(exc))
+        title = scan_fields["title"]
+        premise = scan_fields["premise"]
+        platform_target = scan_fields["platform_target"]
+        if concept is None and scan_fields.get("concept"):
+            concept = scan_fields["concept"]
+        scan_meta = {
+            "from_scan": scan_fields.get("scan_source"),
+            "scan_theme": scan_fields.get("scan_theme"),
+            "suggested_platform": platform_target,
+        }
+
     if not title.strip():
         return error_result("INIT_TITLE_REQUIRED", "Title is required")
     if not premise.strip():
@@ -144,10 +174,15 @@ def run_init(
             next_actions=["Run writer scan --demo and pick intel/concepts/*.md"],
         )
 
+    reclaimed = reclaim_empty_slug(title, slug=slug)
     try:
         path, final_slug, register = resolve_init_paths(title=title, slug=slug, output=output)
     except Exception as exc:  # noqa: BLE001
         return error_result("INIT_PATH_ERROR", str(exc))
+
+    replaced_empty = bool(reclaimed)
+    if path.exists() and remove_empty_at_path(path):
+        replaced_empty = True
 
     cli = _load_novel_cli_module()
     legacy_output: list[str] = []
@@ -182,6 +217,17 @@ def run_init(
 
     root = suite_root()
     project = path.resolve()
+    project_json_path = project / "canon" / "project.json"
+    if project_json_path.is_file():
+        try:
+            project_data = json.loads(project_json_path.read_text(encoding="utf-8"))
+            project_data["platform_target"] = platform_target
+            project_json_path.write_text(
+                json.dumps(project_data, ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+        except (json.JSONDecodeError, OSError):
+            pass
     if concept_path is not None:
         finalize_project_phase0_manifest(project)
     arts = collect_init_artifacts(project, root)
@@ -198,9 +244,13 @@ def run_init(
         "slug": final_slug,
         "project_path": str(project),
         "active_slug": active,
+        "platform_target": platform_target,
         "gate_phase_1": gate_ok,
         "gate_errors": gate_result.required if not gate_ok else [],
+        "replaced_empty_project": replaced_empty,
     }
+    if scan_meta:
+        details.update(scan_meta)
     if legacy_output:
         details["legacy_output"] = legacy_output
 

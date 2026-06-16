@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "novel-suite": {
+      "command": "py",
+      "args": ["-3", "-m", "novel_suite.cli", "mcp", "serve"],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "NOVEL_SUITE_ROOT": "${workspaceFolder}"
+      }
+    }
+  }
+}

@@ -127,7 +127,8 @@ SOLO System Prompt：[solo-agent-prompt.md](../../cursor-novel-writer/platforms/
 ### 使用前确认（说一次即可）
 
 ```text
-请确认当前 IDE 工作区是 Novel Suite 根目录（含 .novel-suite-root、cursor-novel-writer/、cursor-novel-video/），不是只打开 cursor-novel-writer 子文件夹。若不是，请先提示我改工作区再继续。
+请确认当前 IDE 工作区是 Novel Suite 根目录（含 .novel-suite-root、cursor-novel-writer/、cursor-novel-video/），不是只打开 cursor-novel-writer
+子文件夹。若不是，请先提示我改工作区再继续。
 ```
 
 ### 方案 A：分步对话（推荐）
@@ -164,7 +165,8 @@ Phase 0 没有 phase-0/ 目录，对应 Skill 是 novel-market-scan。请：
 ```text
 请 Read novel-pipeline 的 SKILL.md，然后：
 1) py -3 cursor-novel-writer/engine/novel_cli.py pipeline status --project cursor-novel-writer/examples/demo-novel
-2) py -3 cursor-novel-writer/engine/novel_cli.py pipeline gate --phase 1 --project cursor-novel-writer/examples/demo-novel
+2) py -3 cursor-novel-writer/engine/novel_cli.py pipeline gate --phase 1 --project
+cursor-novel-writer/examples/demo-novel
 3) 用表格说明 Phase 0–9 哪些已完成、下一 Phase 是什么
 ```
 

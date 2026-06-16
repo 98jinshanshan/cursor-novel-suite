@@ -9,6 +9,49 @@
 
 ---
 
+## 默认入口（一句话 — 复制即用）
+
+**除非用户点名单个 Skill，否则一律先 Read `novel-pipeline`，按总控编排 delegate。**
+
+```text
+按 novel-pipeline 总控执行。先 Read cursor-novel-writer/skills/novel-pipeline/SKILL.md。
+1) novel active（或 --project novels/<slug>）
+2) 读 task_plan 当前 Phase；未立项则从 Phase 0 扫榜（novel-market-scan）
+3) 每 Phase 结束跑 pipeline gate --phase N；有 blocker 禁止下一阶段
+4) 代码/配置改动收尾：final-verify + Final Verification 块
+
+我的目标：[扫榜 / 新开书 / 写下一章 / 审稿 / 导出 / 做视频 — 填一项]
+```
+
+| 用户说法 | 路由 |
+| --- | --- |
+| 全流程 / 写小说 / 开书 / _pipeline_ | 上段话术 → `novel-pipeline` |
+| 只扫榜 / 选题 | `novel-market-scan`（仍属 Phase 0） |
+| 只写一章 | `chapter-writing` + 完成后 `novel-review` |
+| 只导出 / 只视频 | `novel-export` / `video-chapter-summary` |
+
+SOLO 三条复制块：[solo-2.0-命令状态.md](docs/verification/solo-2.0-命令状态.md)
+
+### Session 复盘（压缩后）
+
+```text
+整理压缩对话：Read session-retrospect → ingest-pending → 更新问题总表。
+逻辑重排：Read session-lifecycle-reorder → 更新 lifecycle-reordered.md。
+```
+
+安装压缩前 Hook（用户级，归档到**当前工作区** `docs/audit/session-archives/`）：
+
+```powershell
+powershell -File platforms/install-session-hooks.ps1
+powershell -File platforms/install-session-skills.ps1 -Agents cursor -AlsoAgents
+```
+
+**Reload（必做一次）：** `Ctrl+Shift+P` → 输入 `Reload Window` → 选 **Developer: Reload Window**。
+
+详见 [SESSION-ARCHIVE.md](docs/standards/SESSION-ARCHIVE.md)。
+
+---
+
 ## 一次性准备
 
 ```bash
@@ -33,7 +76,8 @@ powershell -File platforms/solo-sync.ps1 -UseZip -Agents trae-cn   # SOLO / 无 
 
 **重要：** Skills 必须装到当前工作区；Option A 脚本依赖完整仓库里的 `engine/scripts/`。  
 **Skill 清单与 Phase 0 对照：** [docs/standards/SKILLS-INSTALL.md](docs/standards/SKILLS-INSTALL.md)  
-**SOLO 测试端同步：** `platforms/solo-sync.ps1`（`-UseZip` / `-Source G:\CURSOR` / `-UseGit`）→ [solo-clone-checklist.md](docs/verification/solo-clone-checklist.md)
+**SOLO 测试端同步：** `platforms/solo-sync.ps1`（`-UseZip` / `-Source G:\CURSOR` / `-UseGit`）→
+[solo-clone-checklist.md](docs/verification/solo-clone-checklist.md)
 
 ---
 
@@ -42,10 +86,27 @@ powershell -File platforms/solo-sync.ps1 -UseZip -Agents trae-cn   # SOLO / 无 
 | 说法 | 实际 |
 | --- | --- |
 | Phase 0 / 扫榜 / 选题 | Skill **`novel-market-scan`** |
-| 引擎命令 | `novel intel scan --period week` |
+| 引擎命令 | `novel intel scan --period week --fallback-demo` |
 | 必装 wrapper | `.trae/skills/novel-market-scan/scripts/intel_scan.py` |
 
 Agent 读技能时**必须先 Read `novel-market-scan`**，再执行 Phase 1+。
+
+### Phase 0 离线 / 联网失败 fallback（P0 契约）
+
+联网不稳定（SSL、超时、零命中）时**不得**跳过 Phase 0。按序降级：
+
+| 步骤 | 命令 / 动作 | 产物 |
+| --- | --- | --- |
+| 1 | `novel intel scan --period week --fallback-demo` | `intel/radar/YYYY-Www.md` + `*.completion.json` |
+| 2 | 仍失败 → `novel intel scan --demo --period week` | 同上（fixture，标 WARN） |
+| 3 | 有用户粘贴/自采样本 → `novel intel scan --input ./hits.json` | 同上 |
+| 4 | **P0-S2** Agent 补全 `## 平台快照`（见 platform-scan-guide） | 番茄/起点/晋江/盐选表 |
+| 5 | 对齐 radar-report-template | 周报复用骨架，只换日期与表格 |
+
+**周报复用：** 复制上周 `intel/radar/YYYY-Www.md` 结构 → 更新 Executive Summary、平台快照表、检索日期；勿从零发明章节。
+
+**`--input` JSON 格式：** `[{"platform":"douyin","title":"…","url":"…","snippet":"…"}, …]`（见
+`intel/fixtures/smoke-hits.json`）。
 
 ---
 
@@ -66,15 +127,16 @@ Agent 读技能时**必须先 Read `novel-market-scan`**，再执行 Phase 1+。
 
 ---
 
-## 推荐对话话术（复制即用）
+## 展开话术（按需 — 默认用上文「一句话入口」）
 
 ### Phase 0 — 全平台扫榜 → 选题
 
 ```text
 请读取 novel-market-scan Skill，执行本周全平台短视频热榜扫描：
-1) 运行 novel intel scan --period week
-2) 展示 intel/radar 当周报告 Top 题材
-3) 从 intel/concepts 推荐 Top1，等我确认后再 init
+1) 运行 novel intel scan --period week --fallback-demo
+2) 若 stderr 有 WARN/ERROR，按 AGENTS.md「Phase 0 离线 fallback」降级并补 P0-S2 平台快照
+3) 展示 intel/radar 当周报告 Top 题材
+4) 从 intel/concepts 推荐 Top1，等我确认后再 init
 ```
 
 ### Phase 0→1 — 全流程开书
@@ -132,6 +194,8 @@ Agent 读技能时**必须先 Read `novel-market-scan`**，再执行 Phase 1+。
 2. Phase 0 未完成 → 禁止实质写作（`pipeline gate --phase 1`）
 3. 有 blocker → 禁止导出（`pipeline gate --phase 9`）
 4. 脚本失败时必须展示 stderr，不得假装成功
+5. **代码任务收尾：** 运行 `platforms/final-verify.ps1` 或 `final-verify.sh`；
+   回复须含 [Final Verification](docs/standards/FINAL-VERIFICATION.md) 块（与 CI `final-verify` job 对齐）
 
 ---
 

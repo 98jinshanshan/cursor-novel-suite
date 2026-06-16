@@ -1,24 +1,28 @@
 # Python 安全审查报告（Novel Suite）
 
 **日期**：2026-06-04  
-**依据**：[security-best-practices](https://github.com/anthropics/skills/tree/main/skills/security-best-practices)（通用 CLI / 本地工具模式；无 Web 框架专项参考）  
-**范围**：`src/novel_suite/`、`cursor-novel-writer/engine/`、`cursor-novel-video/engine/`、`platforms/*.ps1`、根目录 `SECURITY.md`、CI 与依赖声明  
+**依据**：[security-best-practices](https://github.com/anthropics/skills/tree/main/skills/security-best-practices)（通用 CLI /
+本地工具模式；无 Web 框架专项参考）
+**范围**：`src/novel_suite/`、`cursor-novel-writer/engine/`、`cursor-novel-video/engine/`、`platforms/*.ps1`、根目录
+`SECURITY.md`、CI 与依赖声明
 **方法**：静态代码检索（`subprocess`、`eval`、`pickle`、`shell=True`、`urlopen`/`httpx`、路径边界）、架构对照 `SECURITY.md`、环境探测（`pip audit` 未安装）
 
 ---
 
 ## 执行摘要
 
-本项目为**本地优先**的 Agent/CLI 小说与短视频工具链，**不对外提供 HTTP 服务**。在「可信操作者 + 本地工作区」威胁模型下，**未发现可直接远程利用的 RCE 路径**；主要风险集中在 **（1）MCP/Agent 信任边界下的任意路径读写**、**（2）可选联网模块的 SSRF/资源耗尽**、**（3）从 GitHub 拉取并覆盖代码树的供应链信任**。
+本项目为**本地优先**的 Agent/CLI 小说与短视频工具链，**不对外提供 HTTP 服务**。在「可信操作者 + 本地工作区」威胁模型下，**未发现可直接远程利用的 RCE 路径**；主要风险集中在 **（1）MCP/Agent
+信任边界下的任意路径读写**、**（2）可选联网模块的 SSRF/资源耗尽**、**（3）从 GitHub 拉取并覆盖代码树的供应链信任**。
 
 | 级别 | 数量 | 说明 |
-| --- | ---: | --- |
+| --- | --- | --- |
 | Critical | 0 | — |
 | High | 2 | 条件性（MCP 暴露、Agent 误用 `--input`） |
 | Medium | 3 | 联网下载、zip 刷新、graphify 查询注入面 |
 | Low / 信息 | 8+ | 依赖审计、文档化绕过、输出注入等 |
 
-**推荐结论**：维持当前「本地 CLI + 明确信任边界」模型；**P1** 为 MCP 路径校验与 `openai_image` 下载加固；**P2** 为 CI 增加 `pip-audit`/`bandit` 与 graphify 参数过滤。无需为典型单机写作场景做大规模重构。
+**推荐结论**：维持当前「本地 CLI + 明确信任边界」模型；**P1** 为 MCP 路径校验与 `openai_image` 下载加固；**P2** 为 CI 增加 `pip-audit`/`bandit` 与 graphify
+参数过滤。无需为典型单机写作场景做大规模重构。
 
 ---
 
@@ -30,7 +34,8 @@
 | 攻击者 | 恶意 Skill 提示、被篡改的 `intel/` 或章节 Markdown、**不可信 MCP 客户端**、恶意 PyPI/zip 包 |
 | 非目标 | 多租户 SaaS、公网暴露的 API、数据库注入（无 DB） |
 
-与根目录 [SECURITY.md](../../SECURITY.md) 一致：`SKIP_GATE`、`--skip-gate`、任意 `--project`（在允许根下）、`--input` 读盘均属**设计内的能力**，不是漏洞，除非操作者非预期。
+与根目录 [SECURITY.md](../../SECURITY.md) 一致：`SKIP_GATE`、`--skip-gate`、任意 `--project`（在允许根下）、`--input`
+读盘均属**设计内的能力**，不是漏洞，除非操作者非预期。
 
 ---
 
@@ -66,7 +71,8 @@ def assert_project_in_allowed_roots(project: Path) -> Path:
 
 ### H-1：MCP 视频工具接受任意文件系统路径（条件性 High）
 
-**位置**：`cursor-novel-video/mcp/server.py`（`render_summary`、`burn_subtitles` 等将 `chapter_path`/`video_path`/`srt_path` 直接传给 `video_cli.py`）。
+**位置**：`cursor-novel-video/mcp/server.py`（`render_summary`、`burn_subtitles` 等将 `chapter_path`/`video_path`/`srt_path`
+直接传给 `video_cli.py`）。
 
 **风险**：若 FastMCP 服务以 **stdio 以外方式绑定到网络**且**无身份鉴别**，远程调用者可读写/处理本机任意可读路径上的章节与视频（依赖 FFmpeg 与脚本侧行为）。
 
@@ -82,7 +88,8 @@ def assert_project_in_allowed_roots(project: Path) -> Path:
 
 ### H-2：章节草稿 `--input` 可读取项目外文件（条件性 High）
 
-**位置**：`src/novel_suite/writer/chapter.py`（及 legacy `run_chapter_draft`）：当提供 `--input` 时从任意绝对/相对路径 `read_text`，再写入项目内 `chapters/`。
+**位置**：`src/novel_suite/writer/chapter.py`（及 legacy `run_chapter_draft`）：当提供 `--input` 时从任意绝对/相对路径 `read_text`，再写入项目内
+`chapters/`。
 
 **风险**：被诱导的 Agent 可读取用户主目录、SSH 密钥路径（若可读）、其他仓库内容，并将摘要泄露到对话或 `chapters/` 落盘。
 
@@ -124,7 +131,8 @@ def assert_project_in_allowed_roots(project: Path) -> Path:
 
 ### M-3：Graphify `query` 将用户/Agent 提供的角色名拼入查询字符串
 
-**位置**：`cursor-novel-writer/engine/scripts/graphify_bridge.py` — `cmd_query` 中 `q = f"{kwargs['character']} relationships..."` 传入 `run_graphify(["query", q, ...])`。
+**位置**：`cursor-novel-writer/engine/scripts/graphify_bridge.py` — `cmd_query` 中 `q = f"{kwargs['character']}
+relationships..."` 传入 `run_graphify(["query", q, ...])`。
 
 **风险**：对 **graphify CLI** 的注入或异常参数（取决于上游 graphifyy 实现）；项目路径已通过 `--project` 约束在允许根内。
 
@@ -202,7 +210,8 @@ def assert_project_in_allowed_roots(project: Path) -> Path:
 
 ## 与 Web 专项参考的差异
 
-security-best-practices 技能对 **Django/Flask/FastAPI** 有专项 reference；本项目**无 Web 路由、无 Cookie/CSRF/SSRF 服务端入口**，故未套用 OWASP Web Top 10 逐条矩阵。若未来增加「上传章节 HTTP API」，应重新打开 Web 审查并单独立项。
+security-best-practices 技能对 **Django/Flask/FastAPI** 有专项 reference；本项目**无 Web 路由、无 Cookie/CSRF/SSRF 服务端入口**，故未套用 OWASP
+Web Top 10 逐条矩阵。若未来增加「上传章节 HTTP API」，应重新打开 Web 审查并单独立项。
 
 ---
 

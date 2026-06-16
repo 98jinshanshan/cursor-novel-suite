@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "novel-suite/promptpack-friction-review/promptpack-friction-review.schema.json",
+  "title": "PromptPack Friction Review Record",
+  "type": "object",
+  "required": [
+    "kit_version",
+    "real_friction_available",
+    "auto_promptpack_changed",
+    "revision_candidate_only",
+    "external_call_performed"
+  ],
+  "properties": {
+    "kit_version": { "type": "string" },
+    "real_friction_available": { "type": "boolean", "const": false },
+    "auto_promptpack_changed": { "type": "boolean", "const": false },
+    "revision_candidate_only": { "type": "boolean", "const": true },
+    "external_call_performed": { "type": "boolean", "const": false },
+    "status": { "type": "string" },
+    "notes": { "type": "string" }
+  }
+}

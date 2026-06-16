@@ -17,11 +17,17 @@ dependencies = [
 dev = [
   "pytest>=8.0",
   "jsonschema>=4.0",
+]
+epub = [
   "ebooklib>=0.18",
 ]
 memory = [
   "qdrant-client>=1.9",
   "sentence-transformers>=3.0",
+]
+server = [
+  "fastapi>=0.110",
+  "uvicorn>=0.27",
 ]
 
 [project.scripts]

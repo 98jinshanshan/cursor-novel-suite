@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "hooks": {
+    "preCompact": [
+      {
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ./hooks/pre-compact-archive.ps1",
+        "timeout": 30
+      }
+    ],
+    "sessionEnd": [
+      {
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ./hooks/pre-compact-archive.ps1",
+        "timeout": 30
+      }
+    ]
+  }
+}

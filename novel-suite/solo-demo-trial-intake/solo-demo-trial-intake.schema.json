@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "novel-suite/solo-demo-trial-intake/solo-demo-trial-intake.schema.json",
+  "title": "Solo Demo Trial Intake Record",
+  "type": "object",
+  "required": [
+    "kit_version",
+    "sample_only",
+    "trial_executed",
+    "fake_feedback_generated",
+    "external_call_performed",
+    "commercial_release_allowed",
+    "verdict"
+  ],
+  "properties": {
+    "kit_version": { "type": "string" },
+    "sample_only": { "type": "boolean", "const": true },
+    "trial_executed": { "type": "boolean", "const": false },
+    "fake_feedback_generated": { "type": "boolean", "const": false },
+    "external_call_performed": { "type": "boolean", "const": false },
+    "commercial_release_allowed": { "type": "boolean", "const": false },
+    "verdict": { "type": "string", "const": "blocked" },
+    "status": { "type": "string" },
+    "notes": { "type": "string" }
+  }
+}

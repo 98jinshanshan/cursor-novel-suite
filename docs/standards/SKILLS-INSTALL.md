@@ -18,7 +18,22 @@ Agent **必须先 Read** `novel-market-scan/SKILL.md`，再跑 `novel intel scan
 
 ---
 
-## 完整 Skill 清单（13）
+## Session 复盘（2）— 仓库根 `skills/`
+
+| Skill | 用途 |
+| --- | --- |
+| `session-retrospect` | 压缩后整理对话 → 问题总表 |
+| `session-lifecycle-reorder` | 按项目生命周期逻辑重排 |
+
+```powershell
+powershell -File platforms/install-session-skills.ps1 -Agents cursor -AlsoAgents
+```
+
+安装后 **Reload Window**（`Ctrl+Shift+P` → `Developer: Reload Window`）。
+
+---
+
+## 完整 Skill 清单（13 + 2 session）
 
 ### 小说（10）— `cursor-novel-writer/skills/`
 

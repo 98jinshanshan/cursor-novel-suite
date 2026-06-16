@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "novel-suite/solo-founder-freeze-self-check/solo-founder-freeze-self-check.schema.json",
+  "title": "Solo Founder Freeze Self-Check Record",
+  "type": "object",
+  "required": [
+    "kit_version",
+    "freeze_candidate_only",
+    "tag_created",
+    "zip_created",
+    "release_created",
+    "agent_may_create_tag",
+    "commercial_release_allowed",
+    "verdict"
+  ],
+  "properties": {
+    "kit_version": { "type": "string" },
+    "freeze_candidate_only": { "type": "boolean", "const": true },
+    "tag_created": { "type": "boolean", "const": false },
+    "zip_created": { "type": "boolean", "const": false },
+    "release_created": { "type": "boolean", "const": false },
+    "agent_may_create_tag": { "type": "boolean", "const": false },
+    "commercial_release_allowed": { "type": "boolean", "const": false },
+    "verdict": { "type": "string", "const": "blocked" },
+    "status": { "type": "string" },
+    "notes": { "type": "string" }
+  }
+}

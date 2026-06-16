@@ -1,0 +1,16 @@
+{
+  "kit_version": "1.0",
+  "telemetry_collected": false,
+  "external_call_performed": false,
+  "private_project_read": false,
+  "supported_ides": [
+    "cursor",
+    "codex",
+    "trae_cn",
+    "qoder",
+    "openclaw",
+    "generic_agent"
+  ],
+  "status": "feedback_template_unified",
+  "notes": "local collection only; no telemetry; no private project reads."
+}

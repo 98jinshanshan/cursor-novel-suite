@@ -2,7 +2,8 @@
 
 **状态：** 功能冻结（2026-06-03）  
 **包版本：** `novel-suite==2.0.0`（`pyproject.toml`）  
-**签收：** [RELEASE-READINESS.md](./RELEASE-READINESS.md) · [smoke-checklist.md](../skills/openclaw-novel-suite/references/smoke-checklist.md)
+**签收：** [RELEASE-READINESS.md](./RELEASE-READINESS.md) ·
+[smoke-checklist.md](../skills/openclaw-novel-suite/references/smoke-checklist.md)
 
 ---
 

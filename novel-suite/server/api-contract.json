@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "commercial_release_allowed": false,
+  "verdict": "blocked",
+  "base_path": "/api",
+  "routes": [
+    { "method": "GET", "path": "/api/doctor", "handler": "doctor", "description": "Workspace doctor" },
+    { "method": "GET", "path": "/api/projects", "handler": "projects_list", "description": "List novels" },
+    { "method": "GET", "path": "/api/projects/active", "handler": "projects_active", "description": "Active novel" },
+    { "method": "POST", "path": "/api/projects/use", "handler": "projects_use", "description": "Set active novel" },
+    { "method": "GET", "path": "/api/projects/{slug}/status", "handler": "project_status", "description": "Project status" },
+    {
+      "method": "POST",
+      "path": "/api/agents/market-scan/run",
+      "handler": "market_scan_run",
+      "description": "Market scan demo only",
+      "constraints": { "demo_only": true, "live_scan_allowed": false }
+    },
+    {
+      "method": "POST",
+      "path": "/api/agents/ip-to-short-drama/run",
+      "handler": "ip_to_short_drama_run",
+      "description": "IP to short drama offline demo",
+      "constraints": { "demo_only": true, "adapter_enabled": false, "external_call_performed": false }
+    },
+    {
+      "method": "POST",
+      "path": "/api/agents/novel-review/run",
+      "handler": "novel_review_run",
+      "description": "Novel review offline demo",
+      "constraints": { "demo_only": true, "auto_rewrite_allowed": false, "write_project": false }
+    },
+    {
+      "method": "POST",
+      "path": "/api/agents/realgen/run",
+      "handler": "realgen_run",
+      "description": "RealGen local pipeline (real chapter/review/package/video)",
+      "constraints": { "real_generation": true, "platform_publish_allowed": false }
+    },
+    { "method": "GET", "path": "/api/artifacts", "handler": "artifacts", "description": "Project artifacts" },
+    { "method": "GET", "path": "/api/events", "handler": "events", "description": "SSE heartbeat / recent events" }
+  ],
+  "result_contract": {
+    "fields": ["status", "code", "message", "artifacts", "next_actions", "required", "details"]
+  },
+  "static_ui": "novel-suite/ui-agent-workbench/static/index.html"
+}

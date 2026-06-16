@@ -20,7 +20,8 @@ Writer: doctor → scan → init → gate → chapter draft → export
 Video:  create-summary → run / status / resume  (或 create-summary --run)
 ```
 
-OpenClaw 冒烟清单：[skills/openclaw-novel-suite/references/smoke-checklist.md](../skills/openclaw-novel-suite/references/smoke-checklist.md)
+OpenClaw
+冒烟清单：[skills/openclaw-novel-suite/references/smoke-checklist.md](../skills/openclaw-novel-suite/references/smoke-checklist.md)
 
 ---
 

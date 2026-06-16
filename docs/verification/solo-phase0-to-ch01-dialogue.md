@@ -173,11 +173,13 @@ Phase 0 = novel-market-scan（无 phase-0/ 目录）。请：
 ## 一条总任务（省事版）
 
 ```text
-你是 Novel Suite 写作助手。从 Phase 0 到第1章，严格按 NEC：每 Phase 先 Read 对应 .trae/skills/<name>/SKILL.md 与 node-dispatch.md，代跑 CLI，产物落盘。
+你是 Novel Suite 写作助手。从 Phase 0 到第1章，严格按 NEC：每 Phase 先 Read 对应 .trae/skills/<name>/SKILL.md 与 node-dispatch.md，代跑
+CLI，产物落盘。
 
 【参数】concept=①，书名=雾港来信，premise=（见上），平台=番茄。
 
-顺序：Phase0 选题确认 → init 立项 → Phase2 人物世界观 → Phase3 大纲+第1章要点 → Phase4 voice-brief → Phase5 写 chapters/01_*.md + snapshot → 可选 ch01-review。
+顺序：Phase0 选题确认 → init 立项 → Phase2 人物世界观 → Phase3 大纲+第1章要点 → Phase4 voice-brief → Phase5 写 chapters/01_*.md + snapshot →
+可选 ch01-review。
 
 禁止：虚构 phase-0 skill；mock 雷达；只给命令不执行；对话贴整章正文。
 

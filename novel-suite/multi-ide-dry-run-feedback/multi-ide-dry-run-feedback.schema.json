@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "novel-suite/multi-ide-dry-run-feedback/multi-ide-dry-run-feedback.schema.json",
+  "title": "Multi-IDE Dry-Run Feedback Record",
+  "type": "object",
+  "required": [
+    "kit_version",
+    "telemetry_collected",
+    "external_call_performed",
+    "private_project_read"
+  ],
+  "properties": {
+    "kit_version": { "type": "string" },
+    "telemetry_collected": { "type": "boolean", "const": false },
+    "external_call_performed": { "type": "boolean", "const": false },
+    "private_project_read": { "type": "boolean", "const": false },
+    "supported_ides": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 6
+    },
+    "status": { "type": "string" },
+    "notes": { "type": "string" }
+  }
+}

@@ -82,6 +82,25 @@ jobs:
           python cursor-novel-writer/engine/scripts/nec_cursor_smoke.py
           python cursor-novel-video/engine/scripts/nec_video_smoke.py
 
+  final-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install deps
+        run: |
+          pip install -r requirements-dev.txt
+          pip install -r cursor-novel-writer/requirements.txt
+          pip install -r cursor-novel-video/requirements.txt
+          pip install -e .
+      - name: final-verify.sh (local/CI parity gate)
+        run: bash platforms/final-verify.sh
+
   test-ffmpeg:
     runs-on: ubuntu-latest
     steps:

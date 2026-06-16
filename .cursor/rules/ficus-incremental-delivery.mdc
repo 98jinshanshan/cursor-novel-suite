@@ -11,17 +11,18 @@ alwaysApply: false
 
 # FICUS 增量交付（SOLO 架构升级）
 
-与 Agent 协作实现 SOLO 缺口补全时，**默认遵循**本规则。人类可读计划：[docs/plans/SOLO-ARCHITECTURE-UPGRADE.md](../../docs/plans/SOLO-ARCHITECTURE-UPGRADE.md)
+与 Agent 协作实现 SOLO
+缺口补全时，**默认遵循**本规则。人类可读计划：[docs/plans/SOLO-ARCHITECTURE-UPGRADE.md](../../docs/plans/SOLO-ARCHITECTURE-UPGRADE.md)
 
 ## FICUS 五要素（每次对话一个单元）
 
 | 字母 | 含义 | 要求 |
-|------|------|------|
-| **F** Focus | 一次只做**一个**子能力（如 C3-A01） |
-| **I** Isolate | 列出 ✅ 可改 / ❌ 禁碰文件 |
-| **C** Context | 只读 3–5 个参考文件，不塞全局 |
-| **U** Validate | 末尾必须 pytest / `--json` 验收证据 |
-| **S** Stop | 验收全 ✅ 即结束，不顺手重构 |
+| --- | --- | --- |
+| **F** | Focus | 一次只做**一个**子能力（如 C3-A01） |
+| **I** | Isolate | 列出 ✅ 可改 / ❌ 禁碰文件 |
+| **C** | Context | 只读 3–5 个参考文件，不塞全局 |
+| **U** | Validate | 末尾必须 pytest / `--json` 验收证据 |
+| **S** | Stop | 验收全 ✅ 即结束，不顺手重构 |
 
 ## 禁碰文件（除非用户明确要求架构评审）
 

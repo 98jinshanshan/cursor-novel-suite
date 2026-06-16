@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "novel-suite/trial-decision-intake-review/trial-decision-intake-review.schema.json",
+  "title": "Trial Decision Intake Review Record",
+  "type": "object",
+  "required": [
+    "review_version",
+    "trial_result_reviewed",
+    "import_approved",
+    "backlog_auto_applied",
+    "commercial_release_allowed",
+    "format_check_passed"
+  ],
+  "properties": {
+    "review_version": { "type": "string" },
+    "trial_result_reviewed": { "type": "boolean" },
+    "import_approved": { "type": "boolean", "const": false },
+    "backlog_auto_applied": { "type": "boolean", "const": false },
+    "commercial_release_allowed": { "type": "boolean", "const": false },
+    "format_check_passed": { "type": "boolean" },
+    "preflight_ref": { "type": "string" },
+    "decision_id": { "type": "string" },
+    "backlog_candidates_count": { "type": "integer" },
+    "notes": { "type": "string" }
+  }
+}

@@ -3,7 +3,8 @@
 > **只想复制命令、不想读长文 → 用 [solo-2.0-命令状态.md](./solo-2.0-命令状态.md)（状态 0→4，整段粘贴即可）。**
 
 **版本：** 2026-06-03（对齐 `main` ≥ `ba5883e`、`novel-suite==2.0.0`）  
-**前置：** [solo-clone-checklist.md](./solo-clone-checklist.md) · [smoke-checklist.md](../../skills/openclaw-novel-suite/references/smoke-checklist.md)
+**前置：** [solo-clone-checklist.md](./solo-clone-checklist.md) ·
+[smoke-checklist.md](../../skills/openclaw-novel-suite/references/smoke-checklist.md)
 
 **原则：** 人工在 PowerShell 跑确定性验收；SOLO Agent 对话跑 **JSON 主链路** + 必要时 legacy `novel_cli.py`（NEC `node sync` 等）。
 

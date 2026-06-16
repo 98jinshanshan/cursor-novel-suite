@@ -2,7 +2,8 @@
 
 **版本：** 1.0（2026-06-02）  
 **适用范围：** Novel Suite 全部 Phase 0–9 与视频 V0–V2  
-**依据：** [AGENTS.md](../../AGENTS.md) Agent-first、[STRUCTURE-STANDARDS.md](./STRUCTURE-STANDARDS.md) Option A、[workflow-validation-synthesis](../audit/2026-06-01-workflow-validation-synthesis.md)
+**依据：** [AGENTS.md](../../AGENTS.md) Agent-first、[STRUCTURE-STANDARDS.md](./STRUCTURE-STANDARDS.md) Option
+A、[workflow-validation-synthesis](../audit/2026-06-01-workflow-validation-synthesis.md)
 
 ---
 

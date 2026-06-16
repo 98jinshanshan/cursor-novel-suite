@@ -125,6 +125,8 @@ foreach ($agent in $Agents) {
 
 Write-Host "Done. Run: py -3 cursor-novel-writer/engine/novel_cli.py suite doctor"
 Write-Host ""
+Write-Host "Rules Packs: powershell -File platforms/install-rules-packs.ps1 -Agents cursor,codex,trae-cn,qoder,openclaw,generic-agent -DryRun"
+Write-Host ""
 Write-Host "Phase 0 = novel-market-scan (NOT a phase-0/ folder). Verify:"
 Write-Host "  .trae/skills/novel-market-scan/scripts/intel_scan.py  (trae-cn)"
 Write-Host "  See docs/standards/SKILLS-INSTALL.md"

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "novel-suite/solo-demo-15min/solo-demo-15min.schema.json",
+  "title": "Solo Demo 15min Record",
+  "type": "object",
+  "required": [
+    "kit_version",
+    "demo_type",
+    "external_call_performed",
+    "commercial_release_allowed",
+    "verdict"
+  ],
+  "properties": {
+    "kit_version": { "type": "string" },
+    "demo_type": { "type": "string", "const": "local_readonly_dry_run" },
+    "external_call_performed": { "type": "boolean", "const": false },
+    "commercial_release_allowed": { "type": "boolean", "const": false },
+    "verdict": { "type": "string", "const": "blocked" },
+    "duration_minutes_target": { "type": "integer", "const": 15 },
+    "status": { "type": "string" },
+    "notes": { "type": "string" }
+  }
+}

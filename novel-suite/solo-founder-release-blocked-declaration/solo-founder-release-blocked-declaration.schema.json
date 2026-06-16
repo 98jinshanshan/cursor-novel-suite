@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "novel-suite/solo-founder-release-blocked-declaration/solo-founder-release-blocked-declaration.schema.json",
+  "title": "Solo Founder Release Blocked Declaration",
+  "type": "object",
+  "required": [
+    "kit_version",
+    "personal_dev_continue_allowed",
+    "commercial_release_allowed",
+    "verdict",
+    "tag_created",
+    "zip_created",
+    "release_created",
+    "legal_conclusion_auto_generated",
+    "auto_blocker_closure"
+  ],
+  "properties": {
+    "kit_version": { "type": "string" },
+    "personal_dev_continue_allowed": { "type": "boolean", "const": true },
+    "commercial_release_allowed": { "type": "boolean", "const": false },
+    "verdict": { "type": "string", "const": "blocked" },
+    "tag_created": { "type": "boolean", "const": false },
+    "zip_created": { "type": "boolean", "const": false },
+    "release_created": { "type": "boolean", "const": false },
+    "legal_conclusion_auto_generated": { "type": "boolean", "const": false },
+    "auto_blocker_closure": { "type": "boolean", "const": false },
+    "status": { "type": "string" },
+    "notes": { "type": "string" }
+  }
+}

@@ -15,6 +15,7 @@ docs/audit/session-archives/**/*
 skills-lock.json
 # IDE skill installs (junction); source: cursor-novel-*/skills + platforms/install-skills.ps1
 .agents/
+.agent-rules/
 .cursor/skills/
 .qoder/
 .trae/
@@ -29,3 +30,10 @@ platforms/data/
 **/secrets*.json
 dist/
 *.epub
+# Cursor performance/generated artifacts
+.cursorignore
+.tmp/
+**/__pycache__/
+*.log
+.mypy_cache/
+.ruff_cache/

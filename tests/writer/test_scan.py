@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from novel_suite.writer.intel import (
+    _suggest_platform,
     confidence_from_score,
     run_scan,
     source_type_for_run,
@@ -27,10 +28,18 @@ def test_theme_record_unverified():
         platform_coverage=3,
         source_type="demo_fixture",
         verified=False,
+        platform_names={"douyin", "kuaishou", "bilibili"},
     )
     assert rec["verified"] is False
     assert "source_unverified" in rec["risks"]
     assert rec["confidence"] in ("low", "medium", "high")
+    assert rec["suggested_platform"] == "douyin"
+
+
+def test_suggest_platform_video_vs_novel():
+    assert _suggest_platform({"douyin", "kuaishou"}) == "douyin"
+    assert _suggest_platform({"douyin"}) == "fanqie"
+    assert _suggest_platform(set()) == "fanqie"
 
 
 def test_run_scan_demo(repo_root: Path, tmp_path: Path):
@@ -65,6 +74,9 @@ def test_run_scan_demo_json_fields(repo_root: Path, tmp_path: Path):
     assert themes[0]["theme"]
     assert "score" in themes[0]
     assert "confidence" in themes[0]
+    assert themes[0]["suggested_platform"] in ("fanqie", "douyin")
+    assert "competition_analysis" in themes[0]
+    assert "trend_prediction" in themes[0]
 
 
 def test_scan_input_missing(tmp_path: Path):

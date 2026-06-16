@@ -2,7 +2,8 @@
 
 **日期：** 2026-06-02  
 **标准：** [NODE-EXECUTION-CONTRACT.md](../standards/NODE-EXECUTION-CONTRACT.md)  
-**状态：** NEC-0/1 已实施；**NEC-11**（L0–L4 审计链 + `novel audit`）已落地 — 见 [NEC-NODE-MAP §14](../workflow/NEC-NODE-MAP.md#14-nec-11-实施进度)
+**状态：** NEC-0/1 已实施；**NEC-11**（L0–L4 审计链 + `novel audit`）已落地 — 见 [NEC-NODE-MAP
+§14](../workflow/NEC-NODE-MAP.md#14-nec-11-实施进度)
 
 ## 成熟度标尺
 

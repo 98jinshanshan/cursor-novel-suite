@@ -1,0 +1,14 @@
+{
+  "kit_version": "1.0",
+  "legal_conclusion_auto_generated": false,
+  "legal_review_completed": false,
+  "auto_blocker_closure": false,
+  "blocker_B01": "open",
+  "blocker_B03": "open",
+  "blocker_B04": "open",
+  "blocker_B05": "resolved-demo-only",
+  "commercial_release_allowed": false,
+  "verdict": "blocked",
+  "status": "self_check_template",
+  "notes": "solo founder compliance self-check; not legal advice."
+}

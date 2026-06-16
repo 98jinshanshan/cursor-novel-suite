@@ -74,22 +74,95 @@ def error_result(
     )
 
 
+EMOJI_MAP: dict[str, str] = {
+    "MEMORY_STORE_OK": "💾",
+    "MEMORY_SEARCH_OK": "🔍",
+    "MEMORY_PROBE_OK": "📡",
+    "MEMORY_SYNC_OK": "🔄",
+    "MEMORY_STATUS_OK": "💾",
+    "SCAN_OK": "📊",
+    "INIT_OK": "📖",
+    "CHAPTER_DRAFT_OK": "✍️",
+    "EXPORT_OK": "📦",
+    "STORYBOARD_OK": "🎬",
+    "STILLS_GENERATE_OK": "🖼️",
+    "COMPOSE_OK": "🎥",
+    "PIPELINE_OK": "🎞️",
+    "GATE_OK": "✅",
+    "PUBLISH_OK": "🚀",
+    "PUBLISH_LIST_OK": "📋",
+    "COOKIE_OK": "🔑",
+    "AUTH_LOGIN_OK": "🔓",
+    "AUTH_LOGOUT_OK": "🔒",
+    "AUTH_STATUS_OK": "🔑",
+    "ANALYTICS_RECORD_OK": "📝",
+    "ANALYTICS_STATUS_OK": "📈",
+    "ANALYTICS_REPORT_OK": "📈",
+    "ANALYTICS_CROSS_OK": "📊",
+    "MCP_SERVE_OK": "🌐",
+    "DOCTOR_OK": "🩺",
+    "DOCTOR_CORE_OK": "🩺",
+    "PRODUCT_LIST_OK": "📚",
+    "PRODUCT_READ_OK": "📄",
+    "PRODUCT_VALIDATE_OK": "✅",
+    "CLEAN_OK": "🧹",
+    "CLEAN_DRY_RUN_OK": "🧹",
+    "VERSION_OK": "ℹ️",
+    "LIST_OK": "📋",
+    "ACTIVE_OK": "ℹ️",
+    "USE_OK": "ℹ️",
+}
+
+
+def _emoji_for_code(code: str, *, status: Status) -> str:
+    if status == "error":
+        return "❌"
+    return EMOJI_MAP.get(code, "ℹ️")
+
+
+def _supports_color() -> bool:
+    if not hasattr(sys.stdout, "isatty"):
+        return False
+    try:
+        return sys.stdout.isatty()
+    except (ValueError, OSError):
+        return False
+
+
 def emit_human(result: Result) -> None:
+    emoji = _emoji_for_code(result.code, status=result.status)
+    use_color = _supports_color()
+    if result.status == "ok":
+        color = "\033[32m" if use_color else ""
+    else:
+        color = "\033[31m" if use_color else ""
+    reset = "\033[0m" if use_color else ""
+
     stream = sys.stderr if result.status == "error" else sys.stdout
-    print(result.message, file=stream)
+    print(f"{emoji} {color}{result.code}{reset} — {result.message}", file=stream)
+
     for item in result.required:
-        print(f"  required: {item}", file=sys.stderr)
-    for action in result.next_actions:
-        print(f"  next: {action}", file=sys.stderr)
-    for art in result.artifacts:
-        print(f"  artifact: {art.get('path', art)}", file=stream)
+        print(f"  ⚠️ required: {item}", file=sys.stderr)
+    if result.next_actions:
+        print("  💡 下一步：", file=stream if result.status == "ok" else sys.stderr)
+        for action in result.next_actions[:3]:
+            target = stream if result.status == "ok" else sys.stderr
+            print(f"     {action}", file=target)
+    for art in result.artifacts[:5]:
+        print(f"  📎 {art.get('path', art)}", file=stream)
 
 
-def emit(result: Result, *, json_out: bool) -> int:
+def emit(result: Result, *, json_out: bool, blocked_summary: bool = False) -> int:
     if json_out:
         from novel_suite.core.json_stdout import write_json_stdout
 
-        write_json_stdout(result.to_dict())
+        payload = result.to_dict()
+        payload["emoji"] = _emoji_for_code(result.code, status=result.status)
+        if blocked_summary:
+            details = payload.get("details") or {}
+            payload["commercial_release_allowed"] = details.get("commercial_release_allowed", False)
+            payload["verdict"] = details.get("verdict", "blocked")
+        write_json_stdout(payload)
     else:
         emit_human(result)
     return result.exit_code()

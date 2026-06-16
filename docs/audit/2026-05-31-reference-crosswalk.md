@@ -127,7 +127,9 @@
 
 ---
 
-## 5. zencoder-novel-engine — [denoflore/zencoder-based-novel-engine](https://github.com/denoflore/zencoder-based-novel-engine)
+## 5. zencoder-novel-engine —
+
+[denoflore/zencoder-based-novel-engine](https://github.com/denoflore/zencoder-based-novel-engine)
 
 **参考特色：** 7 角色 Agent 文件（Spark/Verity/Ghostlight/Lumen/Sable/Forge/Quill）、流水线、Forge 合成修订计划。
 

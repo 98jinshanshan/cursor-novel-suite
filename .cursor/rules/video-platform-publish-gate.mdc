@@ -1,0 +1,29 @@
+---
+description: Mandatory platform publish gate before any cursor-novel-video render/export
+globs:
+  - cursor-novel-video/**
+  - novels/**/canon/publish-targets.json
+alwaysApply: false
+---
+
+# 视频平台上架门禁（强制）
+
+凡修改或运行 `cursor-novel-video` 产出**可发布 MP4**：
+
+## 必须
+
+1. **Step 0** 运行或等效执行 `platform_publish_gate.py --phase intake`（`motion-comic` 在 `video_cli` 已内置）。
+2. **漫剧/上架母版** 使用 `motion-comic`，不得用 `summary --visual-backend comfyui` 作为最终上架片。
+3. 项目须有 `canon/publish-targets.json`（或接受默认五平台列表）。
+4. 导出后须有 `publish_manifest.json`（`ai_generated: true` + 发稿 checklist）。
+5. 刑侦悬疑：`visual_positive` 须写实风；禁止「动漫/国漫」模型与提示词。
+
+## 禁止
+
+- 跳过门禁直接 ComfyUI 全章单图渲染
+- 3 秒 Ken Burns + `tpad` 拉长作为漫剧成片
+- 未声明 AI 即当「非 AI」发稿
+
+## 文档
+
+[docs/standards/VIDEO-PLATFORM-PUBLISH.md](../../docs/standards/VIDEO-PLATFORM-PUBLISH.md)

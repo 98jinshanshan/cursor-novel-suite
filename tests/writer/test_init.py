@@ -94,3 +94,35 @@ def test_init_concept_not_found(novels_tmp: Path, tmp_path: Path):
 def test_init_empty_title(novels_tmp: Path):
     result = init.run_init(title="  ", premise="x")
     assert result.code == E.INIT_TITLE_REQUIRED
+
+
+def test_run_init_platform_target_fanqie(novels_tmp: Path):
+    result = init.run_init(
+        title="番茄书",
+        premise="平台感知立项测试梗概。",
+        platform_target="fanqie",
+    )
+    assert result.status == "ok"
+    project = Path(result.details["project_path"])
+    data = json.loads((project / "canon" / "project.json").read_text(encoding="utf-8"))
+    assert data["platform_target"] == "fanqie"
+
+
+def test_run_init_platform_target_douyin(novels_tmp: Path):
+    result = init.run_init(
+        title="抖音书",
+        premise="视频推文立项测试梗概。",
+        platform_target="douyin",
+    )
+    assert result.status == "ok"
+    project = Path(result.details["project_path"])
+    data = json.loads((project / "canon" / "project.json").read_text(encoding="utf-8"))
+    assert data["platform_target"] == "douyin"
+
+
+def test_run_init_platform_target_default(novels_tmp: Path):
+    result = init.run_init(title="默认书", premise="默认平台立项测试梗概。")
+    assert result.status == "ok"
+    project = Path(result.details["project_path"])
+    data = json.loads((project / "canon" / "project.json").read_text(encoding="utf-8"))
+    assert data["platform_target"] == "通用"

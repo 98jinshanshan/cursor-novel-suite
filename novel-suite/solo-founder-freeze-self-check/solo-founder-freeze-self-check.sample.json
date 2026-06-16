@@ -1,0 +1,12 @@
+{
+  "kit_version": "1.0",
+  "freeze_candidate_only": true,
+  "tag_created": false,
+  "zip_created": false,
+  "release_created": false,
+  "agent_may_create_tag": false,
+  "commercial_release_allowed": false,
+  "verdict": "blocked",
+  "status": "self_check_template",
+  "notes": "solo founder freeze self-check; not a team meeting resolution."
+}

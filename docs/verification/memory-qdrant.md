@@ -12,7 +12,8 @@ cd G:\CURSOR
 或手动：
 
 ```powershell
-docker run -d --name novel-suite-qdrant -p 127.0.0.1:6333:6333 -v novel-suite-qdrant-storage:/qdrant/storage qdrant/qdrant:latest
+docker run -d --name novel-suite-qdrant -p 127.0.0.1:6333:6333 -v novel-suite-qdrant-storage:/qdrant/storage
+qdrant/qdrant:latest
 pip install -e ".[memory]"
 ```
 
@@ -60,7 +61,7 @@ py -3 -m novel_suite.cli memory search `
 ## 6. 故障排除
 
 | 现象 | 处理 |
-|------|------|
+| --- | --- |
 | `MEMORY_QDRANT_UNAVAILABLE` | 设 `QDRANT_URL`；`docker start novel-suite-qdrant` |
 | `pip install qdrant-client` | `pip install -e ".[memory]"` |
 | 检索为空 / 分数异常 | `memory sync --reembed` 后重试 |

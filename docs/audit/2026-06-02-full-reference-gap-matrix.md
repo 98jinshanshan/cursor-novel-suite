@@ -4,7 +4,8 @@
 **方法：** 第二层 180+ 指标 **刷新至 P3 完成后现状** + 跨项目 **10 维度** 扫描 + 用户 P4（多书隔离）需求  
 **状态：** P4/P5/P-1 已实施（2026-06-02）— 见 [ROADMAP](../plans/ROADMAP.md)
 
-**前置：** [reference-crosswalk](./2026-05-31-reference-crosswalk.md) · [workflow-validation-synthesis](./2026-06-01-workflow-validation-synthesis.md)
+**前置：** [reference-crosswalk](./2026-05-31-reference-crosswalk.md) ·
+[workflow-validation-synthesis](./2026-06-01-workflow-validation-synthesis.md)
 
 ---
 

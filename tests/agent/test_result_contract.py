@@ -31,8 +31,24 @@ def test_error_result_required_and_next_actions():
 
 
 def test_emit_json(capsys):
-    code = emit(ok_result("TEST", "ok"), json_out=True)
+    code = emit(ok_result("DOCTOR_OK", "ok"), json_out=True)
     assert code == 0
     out = capsys.readouterr().out
     data = json.loads(out)
     assert data["status"] == "ok"
+    assert data["emoji"] == "🩺"
+
+
+def test_emit_json_error_emoji(capsys):
+    code = emit(error_result("PUBLISH_FAILED", "failed"), json_out=True)
+    assert code == 1
+    data = json.loads(capsys.readouterr().out)
+    assert data["emoji"] == "❌"
+
+
+def test_emit_human_includes_code(capsys):
+    code = emit(ok_result("SCAN_OK", "scan done"), json_out=False)
+    assert code == 0
+    out = capsys.readouterr().out
+    assert "SCAN_OK" in out
+    assert "📊" in out

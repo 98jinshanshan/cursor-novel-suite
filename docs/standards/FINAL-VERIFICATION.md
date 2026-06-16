@@ -1,8 +1,10 @@
 # Final Verification（本地收尾验收）
 
 **版本：** 1.0（2026-06-02）  
-**脚本：** [platforms/final-verify.ps1](../../platforms/final-verify.ps1)  
-**Cursor 规则：** [post-code-problems-check.mdc](../../.cursor/rules/post-code-problems-check.mdc)
+**脚本（Windows）：** [platforms/final-verify.ps1](../../platforms/final-verify.ps1)  
+**脚本（Linux/macOS/CI）：** [platforms/final-verify.sh](../../platforms/final-verify.sh)  
+**Cursor 规则：** [post-code-problems-check.mdc](../../.cursor/rules/post-code-problems-check.mdc)  
+**CI：** `.github/workflows/ci.yml` → `final-verify` job
 
 ---
 
@@ -33,6 +35,10 @@ Cursor 规则（提醒 + 固定收尾模板）
 
 ```powershell
 powershell -File platforms/final-verify.ps1
+```
+
+```bash
+bash platforms/final-verify.sh
 ```
 
 常用参数：
