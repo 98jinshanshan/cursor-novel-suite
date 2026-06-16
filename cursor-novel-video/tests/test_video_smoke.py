@@ -31,6 +31,32 @@ SAMPLE = """# 第1章
 """
 
 
+def test_resolve_chapter_bare_filename(tmp_path: Path):
+    project = tmp_path / "novel"
+    chapters = project / "chapters"
+    chapters.mkdir(parents=True)
+    ch_file = chapters / "01_试章.md"
+    ch_file.write_text(SAMPLE, encoding="utf-8")
+
+    resolved = video_cli.resolve_chapter("01_试章.md", project)
+    assert resolved == ch_file.resolve()
+
+    resolved_prefixed = video_cli.resolve_chapter("chapters/01_试章.md", project)
+    assert resolved_prefixed == ch_file.resolve()
+    assert "chapters" not in resolved_prefixed.parts[-2:][0] or resolved_prefixed.parent.name == "chapters"
+
+
+def test_resolve_chapter_no_double_chapters_prefix(tmp_path: Path):
+    project = tmp_path / "novel"
+    chapters = project / "chapters"
+    chapters.mkdir(parents=True)
+    missing = "chapters/missing.md"
+
+    resolved = video_cli.resolve_chapter(missing, project)
+    assert resolved == (project / missing).resolve()
+    assert resolved.parts[-2:] != ("chapters", "chapters")
+
+
 def test_split_scenes():
     scenes = video_cli.split_scenes(SAMPLE)
     assert len(scenes) == 2
@@ -40,6 +66,27 @@ def test_split_scenes():
 def test_summarize_chapter():
     text = video_cli.summarize_chapter(SAMPLE, max_chars=50)
     assert len(text) <= 50
+
+
+def test_resolve_chapter_bare_filename(tmp_path: Path):
+    project = tmp_path / "proj"
+    ch_dir = project / "chapters"
+    ch_dir.mkdir(parents=True)
+    chapter = ch_dir / "01_试章.md"
+    chapter.write_text(SAMPLE, encoding="utf-8")
+    assert video_cli.resolve_chapter("01_试章.md", project) == chapter.resolve()
+
+
+def test_resolve_chapter_prefixed_path_no_double_chapters(tmp_path: Path):
+    project = tmp_path / "proj"
+    ch_dir = project / "chapters"
+    ch_dir.mkdir(parents=True)
+    chapter = ch_dir / "01_试章.md"
+    chapter.write_text(SAMPLE, encoding="utf-8")
+    assert video_cli.resolve_chapter("chapters/01_试章.md", project) == chapter.resolve()
+    missing = video_cli.resolve_chapter("chapters/missing.md", project)
+    assert missing == (project / "chapters" / "missing.md").resolve()
+    assert "chapters/chapters" not in missing.as_posix()
 
 
 def test_create_job_storyboard(tmp_path: Path, monkeypatch):
@@ -184,6 +231,72 @@ def test_summary_missing_chapter_emits_error_result(tmp_path: Path):
     )
     assert r.returncode == 1
     assert "RESULT:" in r.stdout
+
+
+def test_screenplay_to_shots_ch01_node2():
+    sys.path.insert(0, str(SCRIPTS))
+    import screenplay_to_shots  # noqa: E402
+
+    project = MONOREPO / "novels" / "novel-837dd4f1"
+    if not (project / "video" / "ch01" / "screenplay.md").is_file():
+        pytest.skip("ch01 screenplay missing")
+    out_dir = project / "video" / "ch01"
+    payload = screenplay_to_shots.build_shots(project=project, chapter_dir=out_dir)
+    assert payload["shot_count"] >= 40
+    assert payload["total_duration_sec"] >= 120
+    assert payload.get("version") >= 3
+    assert "cvdp_ref" in payload
+    sh = payload["shots"][0]
+    assert sh.get("ambient_bed")
+    assert sh.get("mixer_prompt")
+    assert sh.get("camera_cuts")
+    assert sh.get("character_refs")
+    assert sh.get("character_tokens")
+    assert "LINXIAO26_CN_LEAN" in sh["character_tokens"]
+    assert sh["beat_id"] == "S01-01"
+    dlg_beat = next(s for s in payload["shots"] if s["beat_id"] == "S07-02")
+    assert len(dlg_beat.get("dialogue", [])) >= 5
+
+
+def test_script_to_shots_ch01_has_15_shots():
+    sys.path.insert(0, str(SCRIPTS))
+    import script_to_shots  # noqa: E402
+
+    ch = MONOREPO / "novels" / "novel-837dd4f1" / "chapters" / "01_卷宗亮了.md"
+    if not ch.is_file():
+        pytest.skip("冷案回声 ch01 missing")
+    shots = script_to_shots.shots_from_chapter(ch)
+    assert len(shots) == 15
+    scenes = script_to_shots.shots_to_storyboard_scenes(shots)
+    assert scenes[0]["id"] == "s01"
+    assert all(sc.get("motion_prompt") for sc in scenes)
+    assert all(sc.get("visual_positive") for sc in scenes)
+
+
+def test_drama_quality_gate_rejects_few_shots(tmp_path: Path):
+    sys.path.insert(0, str(SCRIPTS))
+    import drama_quality_gate  # noqa: E402
+
+    job = tmp_path / "job"
+    job.mkdir()
+    (job / "storyboard.json").write_text(
+        json.dumps({"scenes": [{"id": "s01", "narration": "x", "visual_positive": "cinematic photorealistic"}]}),
+        encoding="utf-8",
+    )
+    result = drama_quality_gate.gate_job(job)
+    assert not result["ok"]
+    assert any("shot count" in e for e in result["errors"])
+
+
+def test_motion_drama_cli_help():
+    r = subprocess.run(
+        [sys.executable, str(ENGINE / "video_cli.py"), "motion-drama", "--help"],
+        capture_output=True,
+        text=True,
+        cwd=str(ROOT),
+    )
+    assert r.returncode == 0
+    assert "--project" in r.stdout
 
 
 @pytest.mark.ffmpeg

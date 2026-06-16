@@ -47,3 +47,9 @@ python skills/video-export/scripts/qc_video.py out.mp4 --min-duration 30 --requi
   "artifacts": [{"type": "video", "path": "output/ch03_summary.mp4"}]
 }
 ```
+
+## Sprint 4-6 新增
+
+- 发布前运行 `novel-suite video gate`（合规 + 角色一致性）
+- `novel-suite video publish upload --platform douyin|kuaishou|bilibili`
+- 发布后 `novel-suite analytics record --metrics "播放量=X 收入=Y"` 追踪效果

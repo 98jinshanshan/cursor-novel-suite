@@ -1,0 +1,6 @@
+{
+  "video_platforms": ["douyin", "kuaishou", "channels", "bilibili_story", "xiaohongshu"],
+  "content_rating": "general",
+  "ai_disclosure": "required_explicit",
+  "master_aspect": "9:16"
+}

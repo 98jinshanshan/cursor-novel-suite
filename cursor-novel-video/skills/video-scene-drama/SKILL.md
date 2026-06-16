@@ -48,3 +48,13 @@ Skill scripts: `skills/video-scene-drama/scripts/` (tts_edge, make_title_card, k
 ## Optional B-roll
 
 See `adapters/seedance.md` for Replicate Seedance; fallback order: user image → OpenAI still → typographic card.
+
+## Sprint 2-4 视频管线完整流程
+
+1. `novel-suite video storyboard` → 从章节生成分镜 JSON
+2. `novel-suite video character list/pack/qc` → 角色素材管理
+3. `novel-suite video stills generate` → 逐场景静帧
+4. `novel-suite video compose` → Ken Burns + TTS + 字幕
+5. `novel-suite video pipeline` → 一键 E2E
+6. `novel-suite video gate` → 发布前门禁检查
+7. `novel-suite video publish upload` → 多平台发布（douyin/kuaishou/bilibili）

@@ -50,10 +50,15 @@ Agent / MCP 应解析 `RESULT:` 行，勿仅依赖 `OK:`。
 - FFmpeg、Python 3.10+、`edge-tts`（见 requirements.txt）
 - 输入：cursor-novel-writer `chapters/*.md`（Markdown，可选 `##` 场景标题）
 
-## 与 drama 模式区别
+## 平台上架（强制）
 
-| | summary | drama (`video-scene-drama`) |
-| --- | --- | --- |
-| 时长 | 60–180s | 2–5min |
-| 分镜 | 单 narration | 多 scene 逐段 TTS+Ken Burns |
-| Skill | `video-chapter-summary` | `video-scene-drama` |
+上架母版使用 **`motion-comic`** + [VIDEO-PLATFORM-PUBLISH.md](../../../../docs/standards/VIDEO-PLATFORM-PUBLISH.md)。  
+`summary` 仅作短预告，不得作为抖音/视频号等上架成片。
+
+## 模式区别
+
+| | summary | motion-comic | drama |
+| --- | --- | --- | --- |
+| 用途 | 60–180s 预告 | **平台上架漫剧** | 多场景叙事 |
+| 分镜 | 1 | 6–12 + gate | 按 `##` 切 |
+| Skill | `video-chapter-summary` | `video-motion-comic` | `video-scene-drama` |

@@ -69,7 +69,8 @@ python skills/video-chapter-summary/scripts/qc_video.py output/ch03_summary.mp4
 ## CLI Equivalent
 
 ```bash
-python engine/video_cli.py summary --chapter ../cursor-novel-writer/examples/demo-novel/chapters/01_试章.md --aspect 9:16 --subtitles
+python engine/video_cli.py summary --chapter ../cursor-novel-writer/examples/demo-novel/chapters/01_试章.md --aspect 9:16
+--subtitles
 ```
 
 ## Trigger Phrases
@@ -77,3 +78,14 @@ python engine/video_cli.py summary --chapter ../cursor-novel-writer/examples/dem
 - 把第3章做成60秒摘要视频
 - 章节短视频 竖屏
 - chapter summary video
+
+## Sprint 2-4 视频管线完整流程
+
+1. `novel-suite video storyboard` → 从章节生成分镜 JSON
+2. `novel-suite video character list/pack/qc` → 角色素材管理
+3. `novel-suite video stills generate` → 逐场景静帧
+4. `novel-suite video compose` → Ken Burns + TTS + 字幕
+5. `novel-suite video pipeline` → 一键 E2E（🎞️ `PIPELINE_OK`）
+6. `novel-suite video gate` → 发布前门禁检查（✅ `GATE_OK`）
+7. `novel-suite video publish upload --platform douyin|kuaishou|bilibili` → 多平台发布（🚀 `PUBLISH_OK`）
+8. `publish_guide(platform)` MCP → 分步引导（含 analytics 数据录入）
