@@ -11,10 +11,30 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 
 
+def test_writer_init_help_shows_target_platform():
+    env = {**os.environ, "NOVEL_SUITE_ROOT": str(REPO)}
+    r = subprocess.run(
+        [sys.executable, "-m", "novel_suite.cli", "writer", "init", "--help"],
+        cwd=str(REPO),
+        capture_output=True,
+        text=True,
+        env=env,
+    )
+    assert r.returncode == 0, r.stderr
+    assert "--target-platform" in r.stdout
+    assert "fanqie" in r.stdout
+
+
 def test_writer_init_json():
     novels = REPO / "novels"
     slug = "cli-init-smoke-test"
     project = novels / slug
+    active_path = novels / ".active"
+    reg_path = novels / "_registry.json"
+    prev_active_text = active_path.read_text(encoding="utf-8") if active_path.is_file() else None
+    prev_reg: dict | None = None
+    if reg_path.is_file():
+        prev_reg = json.loads(reg_path.read_text(encoding="utf-8"))
     if project.exists():
         import shutil
 
@@ -53,10 +73,9 @@ def test_writer_init_json():
             import shutil
 
             shutil.rmtree(project, ignore_errors=True)
-            reg = REPO / "novels" / "_registry.json"
-            if reg.is_file():
-                data = json.loads(reg.read_text(encoding="utf-8"))
-                data["novels"] = [n for n in data.get("novels", []) if n.get("slug") != slug]
-                if data.get("active_slug") == slug:
-                    data["active_slug"] = None
-                reg.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        if prev_reg is not None:
+            reg_path.write_text(json.dumps(prev_reg, ensure_ascii=False, indent=2), encoding="utf-8")
+        if prev_active_text is not None:
+            active_path.write_text(prev_active_text, encoding="utf-8")
+        elif active_path.is_file():
+            active_path.unlink(missing_ok=True)

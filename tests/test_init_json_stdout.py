@@ -13,6 +13,12 @@ REPO = Path(__file__).resolve().parents[1]
 
 def test_init_json_stdout_is_pure_json(tmp_path: Path):
     slug = "pure-json-init-test"
+    active_path = REPO / "novels" / ".active"
+    reg_path = REPO / "novels" / "_registry.json"
+    prev_active_text = active_path.read_text(encoding="utf-8") if active_path.is_file() else None
+    prev_reg: dict | None = None
+    if reg_path.is_file():
+        prev_reg = json.loads(reg_path.read_text(encoding="utf-8"))
     env = {**os.environ, "NOVEL_SUITE_ROOT": str(REPO)}
     r = subprocess.run(
         [
@@ -54,10 +60,9 @@ def test_init_json_stdout_is_pure_json(tmp_path: Path):
             import shutil
 
             shutil.rmtree(project, ignore_errors=True)
-        reg = REPO / "novels" / "_registry.json"
-        if reg.is_file():
-            payload = json.loads(reg.read_text(encoding="utf-8"))
-            payload["novels"] = [n for n in payload.get("novels", []) if n.get("slug") != slug]
-            if payload.get("active_slug") == slug:
-                payload["active_slug"] = None
-            reg.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+        if prev_reg is not None:
+            reg_path.write_text(json.dumps(prev_reg, ensure_ascii=False, indent=2), encoding="utf-8")
+        if prev_active_text is not None:
+            active_path.write_text(prev_active_text, encoding="utf-8")
+        elif active_path.is_file():
+            active_path.unlink(missing_ok=True)

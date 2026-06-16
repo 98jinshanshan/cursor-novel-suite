@@ -19,8 +19,18 @@ Write-Host "== Novel Suite Final Verification ==" -ForegroundColor Cyan
 Write-Host "Repo: $RepoRoot"
 
 Write-Host "`n-- Changed files (git) --"
-$changedTracked = @(git diff --name-only --diff-filter=ACMRTUXB "$BaseRef" -- 2>$null)
-$changedUntracked = @(git ls-files --others --exclude-standard 2>$null)
+# Git writes CRLF hints to stderr; with $ErrorActionPreference=Stop that aborts the script.
+$prevEap = $ErrorActionPreference
+$ErrorActionPreference = "Continue"
+$changedTracked = @(
+    & git -c core.safecrlf=false diff --name-only --diff-filter=ACMRTUXB "$BaseRef" -- 2>&1 |
+        Where-Object { $_ -is [string] -and $_ -notmatch '^\s*$' }
+)
+$changedUntracked = @(
+    & git ls-files --others --exclude-standard 2>&1 |
+        Where-Object { $_ -is [string] -and $_ -notmatch '^\s*$' }
+)
+$ErrorActionPreference = $prevEap
 $changedAll = @($changedTracked + $changedUntracked | Sort-Object -Unique)
 if ($changedAll.Count -eq 0) {
     Write-Host "(none vs $BaseRef)"
@@ -42,6 +52,8 @@ if (-not $SkipPytest) {
 }
 
 Write-Host "`n-- pyright --"
+$nativeEap = $ErrorActionPreference
+$ErrorActionPreference = "Continue"
 $pyrightArgs = @("--yes", "pyright", "-p", "pyrightconfig.json")
 if ($ChangedOnly) {
     $pyFiles = $changedAll | Where-Object { $_ -match '\.py$' }
@@ -57,6 +69,7 @@ if ($ChangedOnly) {
     npx @pyrightArgs
     if ($LASTEXITCODE -ne 0) { $failures += "pyright failed" } else { $summary["pyright"] = "passed" }
 }
+$ErrorActionPreference = $nativeEap
 
 if (-not $SkipMarkdown) {
     Write-Host "`n-- markdownlint-cli2 (CI-aligned globs + intel/radar) --"

@@ -90,6 +90,24 @@ def resolve_project_path(entry: dict) -> Path:
     return assert_project_in_allowed_roots(resolved)
 
 
+def unregister_novel(slug: str) -> dict | None:
+    """Remove a novel from registry; clear active slug if needed."""
+    reg = load_registry()
+    match = next((n for n in reg.get("novels", []) if n.get("slug") == slug), None)
+    if not match:
+        return None
+    reg["novels"] = [n for n in reg.get("novels", []) if n.get("slug") != slug]
+    if reg.get("active_slug") == slug:
+        reg["active_slug"] = reg["novels"][-1]["slug"] if reg["novels"] else None
+    save_registry(reg)
+    active_slug = reg.get("active_slug")
+    if active_slug:
+        _active_path().write_text(active_slug + "\n", encoding="utf-8")
+    elif _active_path().is_file():
+        _active_path().unlink(missing_ok=True)
+    return match
+
+
 def register_novel(
     project_path: Path,
     title: str,

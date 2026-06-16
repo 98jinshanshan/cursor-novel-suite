@@ -69,14 +69,15 @@ class QdrantMemoryBackend:
         self.collection = collection_name(self.project.name, vector_dim)
         self._client: Any | None = None
 
-    def _get_client(self):
+    def _get_client(self) -> Any:
         if self._client is not None:
             return self._client
         if not is_configured():
             raise RuntimeError("QDRANT_NOT_CONFIGURED")
         QdrantClient, *_ = _import_client()
-        self._client = QdrantClient(url=qdrant_url(), timeout=_TIMEOUT_SEC)
-        return self._client
+        client = QdrantClient(url=qdrant_url(), timeout=_TIMEOUT_SEC)
+        self._client = client
+        return client
 
     def ensure_collection(self) -> None:
         client = self._get_client()
