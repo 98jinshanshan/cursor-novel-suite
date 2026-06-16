@@ -51,3 +51,9 @@ From story-skills: rich profiles + bidirectional relationship links.
 - [ ] Voice notes (说话习惯、口头禅)
 - [ ] Goals / fears / secrets
 - [ ] Arc beats tied to plot arcs
+
+## Sprint 7 新增
+
+- `novel_suite.writer.character_gen.extract_character(text, name)` 从正文自动提取角色设定卡
+- `novel-suite video character qc` 可验证角色一致性（与 gate consistency 联动）
+- `generate_cvdp_from_chapters(project)` 批量准备 CVDP 角色素材任务

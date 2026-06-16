@@ -39,3 +39,8 @@ rules:
 
 Any rule in `systems/` is **hard canon**. Chapter-writing must not violate without
 explicit retcon in `plot/timeline.md`.
+
+## 关联模块
+
+- `novel-suite video character pack` 中的 `appearance_class` 和 `consistency_token` 应与世界观设定一致
+- 平台注册表（`platforms/_registry.py`）中的 `chapter_word_limit` 可对照世界观节奏规划

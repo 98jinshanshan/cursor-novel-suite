@@ -336,6 +336,11 @@ def main() -> int:
         action="store_true",
         help="Offline smoke: use intel/fixtures/smoke-hits.json (not live market data)",
     )
+    ap.add_argument(
+        "--fallback-demo",
+        action="store_true",
+        help="If live scan collects zero hits, load intel/fixtures/smoke-hits.json with WARN",
+    )
     ap.add_argument("--radar", type=Path, default=None, help="Output radar markdown path")
     ap.add_argument("--concepts-dir", type=Path, default=None, help="Directory for generated concept briefs")
     ap.add_argument("--concept-top", type=int, default=3, help="Number of concept briefs to generate")
@@ -379,8 +384,22 @@ def main() -> int:
 
     hits = normalize_hits(raw_hits)
     hits = [h for h in hits if h.platform in platforms]
+    if not hits and args.fallback_demo and not args.demo and not args.input:
+        fixture = sp.suite_root() / "intel" / "fixtures" / "smoke-hits.json"
+        if fixture.is_file():
+            print(
+                "WARN: live scan collected zero hits; --fallback-demo loading fixture "
+                f"{fixture}",
+                file=sys.stderr,
+            )
+            raw_hits = load_hits_from_input(fixture)
+            hits = normalize_hits(raw_hits)
+            hits = [h for h in hits if h.platform in platforms]
     if not hits:
-        print("ERROR: no scan hits collected; provide --input or retry later", file=sys.stderr)
+        print(
+            "ERROR: no scan hits collected; use --input, --demo, or --fallback-demo",
+            file=sys.stderr,
+        )
         return 1
 
     topic_scores, topic_coverage = score_topics(hits)

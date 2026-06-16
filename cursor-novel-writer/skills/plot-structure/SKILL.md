@@ -43,10 +43,15 @@ Framework details: [references/plot-frameworks.md](./references/plot-frameworks.
 
 ```markdown
 ## 章节计划
-- [ ] 第01章：标题 — 场景要点 (~4000字)
+- [ ] 第01章：标题 — 场景要点（~`story.md` words_per_chapter **CJK 汉字**）
 - [ ] 第02章：...
 ```
 
 ## After Outline
 
 Suggest `chapter-writing` for draft, or `novel-review` for outline-only critique.
+
+## Sprint 7 新增
+
+- `novel_suite.writer.snowflake.run_snowflake(topic)` 雪花法 4 步大纲生成（一句话→摘要→一页→章节蓝图）
+- 可与 `story-init` / `chapter-writing` 配合：先 snowflake 定结构，再分章写作

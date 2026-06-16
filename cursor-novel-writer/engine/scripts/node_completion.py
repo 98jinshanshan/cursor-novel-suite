@@ -85,8 +85,9 @@ def phase0_subtask_templates() -> list[dict[str, Any]]:
             "title": "intel rubric 审计（可选）",
             "executor": "cli",
             "command": "novel audit intel --radar intel/radar/….md",
-            "status": "pending",
+            "status": "skipped",
             "output_paths": [],
+            "notes": "optional; run novel audit intel when rubric audit needed",
         },
         {
             "id": "P0-S5",

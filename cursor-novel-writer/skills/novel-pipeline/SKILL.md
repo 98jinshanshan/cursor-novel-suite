@@ -14,6 +14,8 @@ metadata:
 
 **编排 Skill**：delegate 原子 Skill，**强制一书一目录**，禁止跨书写入。
 
+**对话入口：** 用户未点名单 Skill 时，Agent 从 [AGENTS.md](../../../AGENTS.md)「默认入口（一句话）」进入本 Skill。
+
 ## Node Execution Contract (NEC)
 
 进入任一 Phase 前：**Read** 该 Phase 原子 Skill 的 [node-dispatch.md](./references/node-dispatch.md)（或子 Skill 内同名文件）。  
@@ -102,3 +104,18 @@ python engine/novel_cli.py promote 01_标题.md --project novels/<slug>
 - [Market scan (Phase 0)](../novel-market-scan/SKILL.md)
 - [Forge workflow](../novel-review/references/forge-workflow.md)
 - [Gap matrix P4](../../../docs/audit/2026-06-02-full-reference-gap-matrix.md)
+
+## Sprint 4-7 整合
+
+全流程现在支持：
+
+1. `novel-suite writer scan` → 写入 `intel/radar/<week>.scan.json`（平台建议 + 竞品 + 趋势）
+2. `novel-suite writer init --from-scan intel/radar/<latest>.scan.json` → 自动带入 title / premise / target-platform，并跑 gate
+phase 1
+3. `novel-suite writer clean --dry-run` → 清理 0 章节空项目（开发残留）
+4. `novel-suite writer chapter draft` → 完成后可用 snowflake / character_gen 辅助
+5. `novel-suite video pipeline` → 按平台参数（aspect/voice）自动适配
+6. `novel-suite video gate` → 合规 + 一致性双门禁
+7. `novel-suite video publish upload` / `novel-suite novel publish upload` → 多平台发布
+8. `novel-suite analytics record/report/cross-report` → 效果追踪
+9. MCP Tools：`auth_login` / `publish_upload` / `novel_publish_upload` / `analytics_record`

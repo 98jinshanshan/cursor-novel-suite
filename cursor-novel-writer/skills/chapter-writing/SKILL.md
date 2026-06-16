@@ -15,7 +15,8 @@ Fuses story-skills chapter workflow + Novel Master snapshots + novel-skill Chine
 
 ## Node Execution Contract (NEC)
 
-**执行前必读：** [references/node-dispatch.md](./references/node-dispatch.md)。落盘章节 + `canon/snapshots/chNN-after.md` + `phase-5.completion.json`；对话框仅摘要。
+**执行前必读：** [references/node-dispatch.md](./references/node-dispatch.md)。落盘章节 + `canon/snapshots/chNN-after.md` +
+`phase-5.completion.json`；对话框仅摘要。
 
 ## Project Resolution（P4）
 
@@ -63,7 +64,8 @@ File: `chapters/NN_章节标题.md`
 （第3章完）
 ```
 
-Target: 3500–5500 字 unless user specifies.
+Target: `story.md` → `words_per_chapter`（**CJK 汉字**，`chapter_format_lint` 统计）；默认约 3500–4500。勿与平台「日更 4000」混淆 —
+[PLATFORM-LENGTH-AND-NORMS.md](../../docs/standards/PLATFORM-LENGTH-AND-NORMS.md)。
 
 **落盘自检：** 文件层齐全；叙事段以 `　　` 开头；无顶格正文块、无一二三小节。
 
@@ -79,7 +81,8 @@ Target: 3500–5500 字 unless user specifies.
 
 1. Update `task_plan.md` progress and `canon/progress.json`
 2. Update `chapters/_index.md`
-3. **Snapshot file** (required): copy [templates/snapshot-chapter.md](../../templates/snapshot-chapter.md) → `canon/snapshots/chNN-after.md`
+3. **Snapshot file** (required): copy [templates/snapshot-chapter.md](../../templates/snapshot-chapter.md) →
+`canon/snapshots/chNN-after.md`
 4. Run review:
 
    ```bash
@@ -100,3 +103,9 @@ From zencoder-novel-engine — ask user if they want:
 - **Sable**: 语句润色
 
 Use `novel-review` skill for full editorial pass.
+
+## Sprint 7 新增
+
+- 雪花法大纲：`novel_suite.writer.snowflake.run_snowflake(topic)` 生成 4 步递进大纲（Agent 调用 LLM 填充每步）
+- 角色卡生成：`novel_suite.writer.character_gen.extract_character(text, name)` 从正文提取角色设定
+- 格式化输出：`format_snowflake_output()` 生成可读 Markdown 大纲

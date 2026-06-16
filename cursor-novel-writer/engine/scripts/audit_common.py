@@ -146,9 +146,13 @@ def parse_story_meta(story_path: Path) -> dict[str, str]:
     out: dict[str, str] = {}
     if not story_path.is_file():
         return out
-    for line in story_path.read_text(encoding="utf-8").splitlines():
-        if line.strip() == "---":
-            break
+    text = story_path.read_text(encoding="utf-8")
+    if not text.startswith("---"):
+        return out
+    parts = text.split("---", 2)
+    if len(parts) < 3:
+        return out
+    for line in parts[1].strip().splitlines():
         if ":" in line:
             k, _, v = line.partition(":")
             out[k.strip()] = v.strip().strip('"')

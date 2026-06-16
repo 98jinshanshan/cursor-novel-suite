@@ -239,6 +239,30 @@ def test_novel_cli_intel_scan_from_input(tmp_path: Path):
     assert len(list(concepts.glob("*.md"))) == 1
 
 
+def test_intel_scan_fallback_demo_on_empty_live(monkeypatch, tmp_path: Path):
+    sys.path.insert(0, str(ENGINE / "scripts"))
+    import intel_scan as mod  # noqa: PLC0415
+
+    monkeypatch.setattr(mod, "ddg_search", lambda *a, **k: [])
+
+    radar = tmp_path / "radar-fallback.md"
+    argv = [
+        "intel_scan.py",
+        "--period",
+        "week",
+        "--platforms",
+        "douyin",
+        "--fallback-demo",
+        "--radar",
+        str(radar),
+        "--no-concepts",
+    ]
+    monkeypatch.setattr(sys, "argv", argv)
+    assert mod.main() == 0
+    assert radar.is_file()
+    assert "题材热度榜" in radar.read_text(encoding="utf-8")
+
+
 def test_novel_cli_intel_scan_demo(tmp_path: Path):
     radar = tmp_path / "radar-demo.md"
     r = subprocess.run(

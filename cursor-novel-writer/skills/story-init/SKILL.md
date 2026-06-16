@@ -76,7 +76,8 @@ novels/<slug>/
 
    If graphify is not installed, document in README and continue with markdown-only canon.
 
-10. Update `task_plan.md` with Phase 1 complete; tell user next steps: worldbuilding → plot → **voice brief** → chapters.
+10. Update `task_plan.md` with Phase 1 complete; tell user next steps: worldbuilding → plot → **voice brief** →
+chapters.
 
 For end-to-end orchestration, use skill **`novel-pipeline`**.
 
@@ -93,3 +94,9 @@ For end-to-end orchestration, use skill **`novel-pipeline`**.
 - [Project structure](references/structure.md)
 - [story.md template](references/story-template.md)
 - [Phase 0 market scan](../novel-market-scan/SKILL.md)
+
+## Sprint 5 新增
+
+- `novel-suite writer init --target-platform fanqie|douyin|qidian|jinjiang|kuaishou|bilibili|通用`
+- 目标平台写入 `canon/project.json` 的 `platform_target`，影响视频比例与发布流程
+- 与 `novel-suite platforms/_registry.py` 平台注册表对齐

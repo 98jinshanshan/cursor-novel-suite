@@ -364,6 +364,15 @@ def cmd_suite_doctor(args: argparse.Namespace) -> int:
     return subprocess.call(cmd)
 
 
+def cmd_suite_gap_diff(args: argparse.Namespace) -> int:
+    cmd = [sys.executable, str(SCRIPTS / "gap_matrix_diff.py"), "--write-report"]
+    if getattr(args, "month", ""):
+        cmd.extend(["--month", args.month])
+    if getattr(args, "json_out", False):
+        cmd.append("--json")
+    return subprocess.call(cmd)
+
+
 def cmd_intel_scan(args: argparse.Namespace) -> int:
     cmd = [
         sys.executable,
@@ -389,6 +398,8 @@ def cmd_intel_scan(args: argparse.Namespace) -> int:
         cmd.append("--no-concepts")
     if getattr(args, "demo", False):
         cmd.append("--demo")
+    if getattr(args, "fallback_demo", False):
+        cmd.append("--fallback-demo")
     return subprocess.call(cmd)
 
 
@@ -665,6 +676,12 @@ def main() -> int:
         action="store_true",
         help="Offline smoke using intel/fixtures/smoke-hits.json",
     )
+    intel_scan.add_argument(
+        "--fallback-demo",
+        action="store_true",
+        dest="fallback_demo",
+        help="On zero live hits, load intel/fixtures/smoke-hits.json (network/SSL fallback)",
+    )
     intel_scan.add_argument("--radar", type=Path, default=None, help="Custom radar markdown output path")
     intel_scan.add_argument("--concepts-dir", type=Path, default=None, dest="concepts_dir")
     intel_scan.add_argument("--concept-top", type=int, default=3, dest="concept_top")
@@ -722,6 +739,13 @@ def main() -> int:
         help="Check skills only for these agents (comma-separated, e.g. trae-cn)",
     )
     suite_doc.set_defaults(func=cmd_suite_doctor)
+    suite_gap = suite_sub.add_parser(
+        "gap-diff",
+        help="Snapshot open items in full-reference-gap-matrix and write monthly diff report",
+    )
+    suite_gap.add_argument("--month", default="", help="YYYY-MM (default: current UTC month)")
+    suite_gap.add_argument("--json", action="store_true", dest="json_out")
+    suite_gap.set_defaults(func=cmd_suite_gap_diff)
 
     w = sub.add_parser("write", help="Print guidance for chapter writing (use IDE skill for generation)")
     add_project_arg(w)

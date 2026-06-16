@@ -52,11 +52,12 @@ novel suite doctor
 2. **P0-S1** CLI 扫描（短视频平台）：
 
    ```bash
-   python engine/novel_cli.py intel scan --period week
+   python engine/novel_cli.py intel scan --period week --fallback-demo
    ```
 
    - Wrapper：`skills/novel-market-scan/scripts/intel_scan.py` → `engine/scripts/intel_scan.py`
    - 写入 radar + `*.completion.json`
+   - **联网失败：** 见 [AGENTS.md](../../../AGENTS.md)「Phase 0 离线 fallback」→ `--demo` / `--input` → P0-S2 补平台快照
 
 3. **P0-S2** Agent 按 [platform-scan-guide.md](./references/platform-scan-guide.md) 补全 radar 内 `## 平台快照`（番茄/起点/晋江/盐选）
 4. **P0-S3** 对齐 [radar-report-template.md](./references/radar-report-template.md)
@@ -74,9 +75,10 @@ novel suite doctor
 
 ```bash
 python engine/novel_cli.py intel paths
-python engine/novel_cli.py intel scan --period week
+python engine/novel_cli.py intel scan --period week --fallback-demo
 python engine/novel_cli.py intel scan --period week --platforms douyin,bilibili
 python engine/novel_cli.py intel scan --demo --period week
+python engine/novel_cli.py intel scan --input intel/fixtures/smoke-hits.json --period week
 python engine/novel_cli.py node validate --phase 0
 python engine/novel_cli.py pipeline gate --phase 1
 ```
@@ -91,3 +93,10 @@ python engine/novel_cli.py pipeline gate --phase 1
 - [NODE-EXECUTION-CONTRACT](../../../docs/standards/NODE-EXECUTION-CONTRACT.md)
 
 Do **not** scrape logged-in pages or violate platform ToS.
+
+## Sprint 7 新增
+
+- 趋势预测：`predict_trend()` 基于历史热度预测走势
+- 竞品分析：`analyze_competition()` 评估题材竞争密度
+- `writer scan` 输出现在包含 `suggested_platform` / `competition_analysis` / `trend_prediction`
+- CLI：`novel-suite writer scan --period week --json` → 📊 `SCAN_OK`

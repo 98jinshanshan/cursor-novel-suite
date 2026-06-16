@@ -1,7 +1,8 @@
 # 平台 AI 写作合规参考（去 AI / 发表边界）
 
 > **用途：** novel-review Phase 6–8 与 deai-checklist 的 **平台合规轨**。  
-> **非法律意见**；规则随平台更新，发书前请阅最新官方公告。
+> **非法律意见**；规则随平台更新，发书前请阅最新官方公告。  
+> **篇幅/字数口径：** [PLATFORM-LENGTH-AND-NORMS.md](../../../../docs/standards/PLATFORM-LENGTH-AND-NORMS.md)（章均 CJK vs 后台日更额度，勿混用「4000+」）
 
 ## 1. 共性原则（2025–2026 行业动向）
 

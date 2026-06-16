@@ -8,6 +8,15 @@
 | --- | --- |
 | platform_target | （番茄小说 / 晋江文学城 / 起点中文网 / 通用） |
 | 合规参考 | [platform-compliance.md](../skills/novel-review/references/platform-compliance.md) |
+| 篇幅规范 | [PLATFORM-LENGTH-AND-NORMS.md](../../docs/standards/PLATFORM-LENGTH-AND-NORMS.md) |
+
+## 连载节奏与字数（必填）
+
+| 项 | 约定 |
+| --- | --- |
+| words_per_chapter | 与 `story.md` 一致；**章均 CJK 汉字**（引擎 lint 口径） |
+| daily_update_cjk | 每日目标汉字总量（例：起点 4000–6000/日，可 1–2 章） |
+| 后台字数说明 | 晋江/番茄后台常 **大于** CJK；发章前用后台预览校准 |
 
 ## 章节结构
 

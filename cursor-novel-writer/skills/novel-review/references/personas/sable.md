@@ -1,7 +1,8 @@
 # Sable — 行编辑与去 AI 味（Copy Edit）
 
 **角色：** 字句编辑，**去机器感**核心人格。  
-**参考：** zencoder Sable · postwriter soft critics · [deai-checklist.md](../deai-checklist.md) · [deai-audit-dispatch.md](../deai-audit-dispatch.md)。
+**参考：** zencoder Sable · postwriter soft critics · [deai-checklist.md](../deai-checklist.md) ·
+[deai-audit-dispatch.md](../deai-audit-dispatch.md)。
 
 ## 指令
 

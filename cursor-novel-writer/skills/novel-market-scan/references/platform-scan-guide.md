@@ -28,7 +28,18 @@ CLI 扫描后 radar 已含「平台快照」骨架表；Agent **必须**替换 `
 3. 提取：**类型标签、高频设定、标题模式、开篇钩子类型**
 4. 合并去重 → 补全 Top 10 题材簇（与 CLI 热度榜对照）
 5. 对每个簇用 [short-video-fit-rubric.md](./short-video-fit-rubric.md) 粗评
-6. 更新 `intel/radar/YYYY-Www.md` 并刷新 `*.completion.json` 中 P0-S2/P0-S3 为 `done`
+6. 各平台表增加 **字数统计口径** 行（CJK / 含标点 / 日更额度）— 见
+[PLATFORM-LENGTH-AND-NORMS.md](../../../../docs/standards/PLATFORM-LENGTH-AND-NORMS.md)
+7. 更新 `intel/radar/YYYY-Www.md` 并刷新 `*.completion.json` 中 P0-S2/P0-S3 为 `done`
+
+## 离线 / 联网失败（P0-S1 降级）
+
+CLI 直连检索失败或零命中时，**禁止**跳过 Phase 0：
+
+1. `novel intel scan --period week --fallback-demo`（零命中自动加载 `intel/fixtures/smoke-hits.json`）
+2. 仍失败 → `--demo` 或 `--input <自采 hits.json>`
+3. 必须执行本指南 **P0-S2** 补全文字平台 `## 平台快照`（fixture 不含番茄/起点真实榜）
+4. 周报复用 [radar-report-template.md](./radar-report-template.md) 或复制上周 radar 骨架，只更新摘要与表格
 
 ## 数据质量
 

@@ -12,10 +12,14 @@ try:
     from novel_suite.core.paths import novels_dir as _paths_novels_dir, suite_root, writer_root
     from novel_suite.writer import registry as _reg
 
-    _reg.NOVELS_DIR = _paths_novels_dir()
-    _reg.REGISTRY_PATH = _reg.NOVELS_DIR / _reg.REGISTRY_NAME
-    _reg.ACTIVE_PATH = _reg.NOVELS_DIR / _reg.ACTIVE_NAME
-    _reg.MONOREPO_ROOT = suite_root()
+    if _reg.NOVELS_DIR is None:
+        _reg.NOVELS_DIR = _paths_novels_dir()
+    if _reg.REGISTRY_PATH is None:
+        _reg.REGISTRY_PATH = _reg.NOVELS_DIR / _reg.REGISTRY_NAME
+    if _reg.ACTIVE_PATH is None:
+        _reg.ACTIVE_PATH = _reg.NOVELS_DIR / _reg.ACTIVE_NAME
+    if _reg.MONOREPO_ROOT is None:
+        _reg.MONOREPO_ROOT = suite_root()
 
     MONOREPO_ROOT = _reg.MONOREPO_ROOT
     WRITER_ROOT = writer_root()

@@ -3,7 +3,8 @@
 > 阶段 7（Sable pass）必查。来源：zencoder Sable copy edit + postwriter soft critics + 中文网文编辑惯例。  
 > **章节 Markdown 格式（`# 第N章`、`## 一/二/三`）在 Phase 6 硬校验，不在本表重复。**
 
-**L2 先跑：** `novel audit deai --project … --chapter … --json` → 读 `reviews/chNN-deai-scan.json` 与 [deai-corpus](./deai-corpus/README.md)。路由：[deai-audit-dispatch.md](./deai-audit-dispatch.md)。
+**L2 先跑：** `novel audit deai --project … --chapter … --json` → 读 `reviews/chNN-deai-scan.json` 与
+[deai-corpus](./deai-corpus/README.md)。路由：[deai-audit-dispatch.md](./deai-audit-dispatch.md)。
 
 ## A. 句式与连接词
 
@@ -23,6 +24,9 @@
 - [ ] 同场景「目光 / 眼神 / 视线」≤ 2 次
 - [ ] 无连续 3 句以上排比
 - [ ] 无 AI 高频词：「深入探讨」「值得注意的是」「总的来说」
+- [ ] **装饰比喻**：同章「像一枚/像一滴/像一场/像…的…」≤ 1 次；禁「朱砂、白宣纸、未落的章」等古风喻体（见
+[rhetoric-patterns.md](./deai-corpus/rhetoric-patterns.md)、[narrative-patterns.md](./deai-corpus/narrative-patterns.md)
+替换表）
 
 ## D. 对话自然度（Fiction Workshop Reader Test 简化）
 

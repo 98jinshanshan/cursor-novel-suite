@@ -1,10 +1,12 @@
 ---
 name: novel-review
 description: |
-  Consistency review via graphify, editorial personas (Ghostlight/Lumen/Sable), de-AI checklist, and validate-then-rewrite gates.
+  Consistency review via graphify, editorial personas (Ghostlight/Lumen/Sable), de-AI checklist, and validate-then-rewrite
+  gates.
   Use for 审稿、一致性检查、review chapter, 查伏笔, graphify, 润色前诊断, 去AI味, de-AI.
 license: MIT
-compatibility: Requires graphify CLI for full graph features; full repo clone for scripts/. Offline checklists work without graphify.
+compatibility: Requires graphify CLI for full graph features; full repo clone for scripts/. Offline checklists work
+without graphify.
 metadata:
   author: cursor-novel-writer
   version: "1.1.0"
@@ -21,7 +23,8 @@ Integrates graphify-novel, zencoder editor roles, postwriter validation layers, 
 
 ## Hard Validators (must pass)
 
-**章节格式（Blocker）：** [chapter-format.md](../chapter-writing/references/chapter-format.md)、[chinese-prose-layout.md](../chapter-writing/references/chinese-prose-layout.md)
+**章节格式（Blocker）：**
+[chapter-format.md](../chapter-writing/references/chapter-format.md)、[chinese-prose-layout.md](../chapter-writing/references/chinese-prose-layout.md)
 
 - [ ] 文件层：`# 第N章`、`---`、`（第N章完）`
 - [ ] `continuous`：无章内 `一/二/三` 或 `## 一/二/三`
@@ -119,3 +122,9 @@ Repair action spec table: [templates/review-repair-spec.md](../../templates/revi
 Do not auto-rewrite full chapter unless user asks; provide surgical edits first.
 
 For full pipeline orchestration use skill **`novel-pipeline`**.
+
+## Sprint 3 新增
+
+- `novel-suite video gate` 包含角色一致性检查（`consistency.py`）
+- gate 报告可直接作为 review 参考，与 `publish_readiness` 预检联动
+- MCP：`publish_readiness(platform, project)` 发布前一键检查

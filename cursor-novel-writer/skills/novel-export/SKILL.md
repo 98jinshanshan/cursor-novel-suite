@@ -53,3 +53,9 @@ python engine/novel_cli.py export --format epub
 
 - **Markdown bundle**: copy chapters to `dist/manuscript.md`
 - **Marketing** (Novel Master): title, blurb — user request only
+
+## Sprint 5 新增
+
+- 导出章节可直接用于番茄/起点/晋江发布准备（`dist/` 目录）
+- `novel-suite novel publish upload --platform fanqie|qidian|jinjiang --project <path> --json`
+- 番茄需 `novel-suite auth login --platform fanqie`（`FANQIE_API_KEY`）

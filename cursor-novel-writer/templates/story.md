@@ -9,6 +9,7 @@ themes:
   - 记忆与真相
 target_chapters: 12
 words_per_chapter: 4000
+# words_per_chapter = 章均 CJK 汉字（非平台后台字数）；按 platform_target 改 — 见 docs/standards/PLATFORM-LENGTH-AND-NORMS.md
 status: drafting
 author: 作者名
 ---

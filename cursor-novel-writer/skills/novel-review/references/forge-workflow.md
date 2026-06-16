@@ -17,7 +17,8 @@ python engine/novel_cli.py audit blocker --project novels/<slug> --json
 
 落盘 `reviews/chNN-format-scan.json`、`reviews/chNN-blocker-scan.json`。
 
-**Format** 小节：对照 [chapter-format.md](../../chapter-writing/references/chapter-format.md)、[chinese-prose-layout.md](../../chapter-writing/references/chinese-prose-layout.md)
+**Format** 小节：对照
+[chapter-format.md](../../chapter-writing/references/chapter-format.md)、[chinese-prose-layout.md](../../chapter-writing/references/chinese-prose-layout.md)
 
 - 文件层 + `continuous` 无一二三小节
 - `prose_layout: cn-fiction-indent`：叙事段首 `　　`；顶格正文 → **blocker**

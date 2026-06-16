@@ -38,3 +38,9 @@ Templates: [references/blurb-templates.md](./references/blurb-templates.md)
 - Do not invent plot beats not in canon
 - Match genre and tone from story.md
 - Export to `dist/marketing.md` if user wants a file
+
+## Sprint 6 新增
+
+- `novel-suite analytics report --project <path> --json` → 📈 查看项目效果报告
+- `novel-suite analytics cross-report --json` → 📊 跨项目对比，找出最佳变现题材
+- `novel-suite analytics record --metrics "播放量=X 收入=Y"` → 发布后隔天录入数据

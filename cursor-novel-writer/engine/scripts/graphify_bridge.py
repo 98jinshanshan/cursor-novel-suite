@@ -53,9 +53,10 @@ def run_graphify(args: list[str], project: Path) -> int | None:
     cmd = base + args
     print(f"Running: {' '.join(cmd)}")
     try:
-        return subprocess.call(cmd, cwd=str(project))
-    except OSError as exc:
-        print(f"WARN: graphify CLI failed ({exc}); using offline fallback.", file=sys.stderr)
+        proc = subprocess.run(cmd, cwd=str(project), timeout=120, check=False)
+        return proc.returncode
+    except subprocess.TimeoutExpired:
+        print("WARN: graphify CLI timed out after 120s; using offline fallback.", file=sys.stderr)
         return None
 
 

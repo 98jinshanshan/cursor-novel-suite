@@ -15,11 +15,12 @@ from scripts.audit_common import parse_story_meta  # noqa: E402
 from scripts.audit_result import AuditHit, AuditReport, emit_audit, write_audit_file  # noqa: E402
 from scripts import project_registry as reg  # noqa: E402
 
+# words_per_chapter = engine CJK target (see docs/standards/PLATFORM-LENGTH-AND-NORMS.md)
 PLATFORM_DEFAULTS = {
-    "晋江文学城": {"chapters_min": 200, "chapters_max": 500, "wpc": 3500},
-    "番茄小说": {"chapters_min": 100, "chapters_max": 800, "wpc": 2200},
-    "起点中文网": {"chapters_min": 300, "chapters_max": 1500, "wpc": 3500},
-    "通用": {"chapters_min": 12, "chapters_max": 999, "wpc": 4000},
+    "晋江文学城": {"chapters_min": 200, "chapters_max": 500, "wpc": 3500, "wpc_min": 3000, "wpc_max": 4500},
+    "番茄小说": {"chapters_min": 100, "chapters_max": 800, "wpc": 2200, "wpc_min": 2000, "wpc_max": 2800},
+    "起点中文网": {"chapters_min": 300, "chapters_max": 1500, "wpc": 3500, "wpc_min": 2800, "wpc_max": 4500},
+    "通用": {"chapters_min": 12, "chapters_max": 999, "wpc": 4000, "wpc_min": 2500, "wpc_max": 5500},
 }
 
 
@@ -73,16 +74,27 @@ def run_audit(project: Path) -> AuditReport:
             )
         )
 
+    wpc_min = int(norms.get("wpc_min", 1500))
+    wpc_max = int(norms.get("wpc_max", 99999))
     if wpc < 1500:
         report.add(AuditHit("plot.wpc_low", "warn", f"words_per_chapter={wpc} 偏低"))
-    elif platform == "番茄小说" and wpc > 3500:
+    elif wpc < wpc_min:
         report.add(
             AuditHit(
-                "plot.wpc_high_fanqie",
-                "nit",
-                f"番茄建议章均 2000–2300，当前 {wpc}",
+                "plot.wpc_below_platform",
+                "warn",
+                f"{platform} 建议章均 CJK ≥{wpc_min}，当前 {wpc}（见 PLATFORM-LENGTH-AND-NORMS.md）",
             )
         )
+    elif wpc > wpc_max:
+        report.add(
+            AuditHit(
+                "plot.wpc_above_platform",
+                "warn",
+                f"{platform} 建议章均 CJK ≤{wpc_max}，当前 {wpc}",
+            )
+        )
+    report.summary["wpc_unit"] = "cjk_chars_per_chapter"
 
     arcs = list((project / "plot" / "arcs").glob("*.md")) if (project / "plot" / "arcs").is_dir() else []
     if not arcs:
