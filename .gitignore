@@ -35,5 +35,6 @@ dist/
 .tmp/
 **/__pycache__/
 *.log
+tools/maintenance/_cleanup_logs/
 .mypy_cache/
 .ruff_cache/
