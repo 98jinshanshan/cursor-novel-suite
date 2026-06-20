@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -16,9 +17,13 @@ sys.path.insert(0, str(VIDEO_RENDER))
 sys.path.insert(0, str(ADAPTERS))
 
 from image_quality_check import (  # noqa: E402
+    SEVERITY_S0,
+    SEVERITY_S1,
     check_controlnet_used,
     check_human_anomaly,
+    check_pixel_complexity,
     run_quality_check,
+    run_shot_batch_qc,
 )
 from comfyui_workflow import controlnet_openpose_workflow, safe_text2img_workflow  # noqa: E402
 
@@ -81,17 +86,109 @@ def test_run_quality_check_fails_without_controlnet(tmp_path: Path):
     img = tmp_path / "one.png"
     _make_single_figure(img)
     wf = safe_text2img_workflow("test prompt")
-    result = run_quality_check(img, prompt="test", workflow_data=wf, auto_delete=False)
+    result = run_quality_check(
+        img,
+        prompt="test",
+        workflow_data=wf,
+        auto_delete=False,
+        vr2r_gate=False,
+    )
     assert result["overall_passed"] is False
     assert "controlnet_used" in result["critical_failed"]
+    assert any(d["severity"] == SEVERITY_S0 for d in result["defects"])
 
 
 def test_run_quality_check_fails_stacked_ghost_with_controlnet(tmp_path: Path):
     img = tmp_path / "ghost.png"
     _make_stacked_ghost(img)
     wf = controlnet_openpose_workflow("test prompt")
-    result = run_quality_check(img, prompt="test", workflow_data=wf, auto_delete=True)
+    result = run_quality_check(
+        img,
+        prompt="test",
+        workflow_data=wf,
+        auto_delete=True,
+        shot_id="sh03",
+        vr2r_gate=False,
+    )
     assert result["overall_passed"] is False
+    assert result["final_verdict"] == "D_BLOCKED"
     assert "human_anomaly" in result["critical_failed"]
+    assert any(d["severity"] == SEVERITY_S0 and d["type"] == "human_anomaly" for d in result["defects"])
+    assert "S0_human_anomaly_sh03" in result["one_vote_blockers"]
     assert result["auto_delete_executed"] is True
     assert not img.exists()
+
+
+def test_s0_solid_color_pixel_complexity(tmp_path: Path):
+    flat = tmp_path / "flat.png"
+    Image.new("RGB", (768, 1344), (128, 128, 128)).save(flat)
+    result = check_pixel_complexity(flat)
+    assert result["passed"] is False
+    assert "S0" in result["message"] or result.get("severity") == SEVERITY_S0
+
+
+def test_run_quality_check_passes_single_figure_with_controlnet(tmp_path: Path):
+    img = tmp_path / "good.png"
+    _make_single_figure(img)
+    wf = controlnet_openpose_workflow("bad anatomy deformed mutilated extra limbs missing limbs floating")
+    result = run_quality_check(
+        img,
+        prompt="bad anatomy deformed mutilated extra limbs missing limbs floating disconnected",
+        workflow_data=wf,
+        auto_delete=False,
+        shot_id="sh01",
+        vr2r_gate=False,
+    )
+    assert result["overall_passed"] is True
+    assert result["final_verdict"] == "PASS"
+    assert result["defects"] == []
+    assert result["severity_max"] is None
+
+
+def test_run_shot_batch_qc_repair_list(tmp_path: Path):
+    good = tmp_path / "good.png"
+    bad = tmp_path / "bad.png"
+    _make_single_figure(good)
+    _make_stacked_ghost(bad)
+    wf = controlnet_openpose_workflow("test")
+    report_dir = tmp_path / "qc_out"
+    report = run_shot_batch_qc(
+        [
+            {
+                "shot_id": "sh01",
+                "path": good,
+                "prompt": "bad anatomy deformed mutilated extra limbs missing limbs floating disconnected",
+                "workflow_data": wf,
+            },
+            {"shot_id": "sh03", "path": bad, "prompt": "test", "workflow_data": wf},
+        ],
+        report_dir=report_dir,
+        auto_delete=False,
+        vr2r_gate=False,
+    )
+    assert report["total_shots"] == 2
+    assert report["passed_shots"] == 1
+    assert report["failed_shots"] == 1
+    assert len(report["repair_list"]) == 1
+    assert report["repair_list"][0]["shot_id"] == "sh03"
+    assert report["final_verdict"] == "D_BLOCKED"
+    assert (report_dir / "shot_qc_report.json").is_file()
+    assert (report_dir / "repair_list.json").is_file()
+    repair_payload = json.loads((report_dir / "repair_list.json").read_text(encoding="utf-8"))
+    assert repair_payload["repair_list"][0]["shot_id"] == "sh03"
+
+
+def test_s1_anatomy_protection_fail_blocks(tmp_path: Path):
+    img = tmp_path / "one.png"
+    _make_single_figure(img)
+    wf = controlnet_openpose_workflow("test")
+    result = run_quality_check(
+        img,
+        prompt="plain prompt without protection terms",
+        workflow_data=wf,
+        auto_delete=False,
+        vr2r_gate=False,
+    )
+    assert result["overall_passed"] is False
+    assert any(d["severity"] == SEVERITY_S1 and d["type"] == "anatomy_protection" for d in result["defects"])
+    assert result["final_verdict"] == "S1_REPAIR_REQUIRED"

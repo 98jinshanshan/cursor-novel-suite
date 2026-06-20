@@ -41,6 +41,43 @@ FLOATING_MIN_AREA_RATIO = 0.004
 FLOATING_MARGIN_RATIO = 0.18
 LIMB_COMPONENT_MIN = 4
 
+# VR-2R-QF delivery thresholds (see AI_Workspace_OS VR-2R-Quality-Fix checklist)
+VR2R_MIN_FILE_SIZE_KB = 500
+VR2R_MAX_FILE_SIZE_KB = 5120
+MIN_PIXEL_STD = 20.0
+MIN_SUBJECT_EDGE_PEAK = 18.0
+TEXT_CARD_MAX_STD = 12.0
+TEXT_CARD_MAX_EDGE_RATIO = 0.018
+DETECTION_METHOD = "edge_heuristic_v1"  # TODO: MediaPipe/OpenPose pose when model dep available
+
+SEVERITY_S0 = "S0"
+SEVERITY_S1 = "S1"
+SEVERITY_S2 = "S2"
+SEVERITY_S3 = "S3"
+
+CHECK_SEVERITY: dict[str, str] = {
+    "file_exists": SEVERITY_S0,
+    "non_placeholder": SEVERITY_S0,
+    "file_size_vr2r": SEVERITY_S0,
+    "pixel_complexity": SEVERITY_S0,
+    "text_card_proxy": SEVERITY_S0,
+    "subject_presence": SEVERITY_S0,
+    "human_anomaly": SEVERITY_S0,
+    "content_anomaly": SEVERITY_S0,
+    "controlnet_used": SEVERITY_S0,
+    "image_integrity": SEVERITY_S1,
+    "anatomy_protection": SEVERITY_S1,
+}
+
+REPAIR_ACTIONS: dict[str, str] = {
+    "human_anomaly": "regenerate_shot_adjust_controlnet",
+    "controlnet_used": "enable_controlnet_openpose",
+    "subject_presence": "regenerate_shot_fix_prompt",
+    "text_card_proxy": "regenerate_shot_not_textcard",
+    "pixel_complexity": "regenerate_shot",
+    "file_size_vr2r": "regenerate_shot_higher_quality",
+}
+
 
 def check_file_exists(path: Path) -> dict[str, Any]:
     """检测项1: 文件存在"""
@@ -53,12 +90,13 @@ def check_file_exists(path: Path) -> dict[str, Any]:
     }
 
 
-def check_non_placeholder(path: Path) -> dict[str, Any]:
+def check_non_placeholder(path: Path, *, min_size_kb: float | None = None) -> dict[str, Any]:
     """检测项2: 非占位符检测"""
+    size_floor = MIN_FILE_SIZE_KB if min_size_kb is None else min_size_kb
     size_kb = path.stat().st_size / 1024 if path.exists() else 0
     
     # 检查文件大小
-    size_ok = size_kb >= MIN_FILE_SIZE_KB
+    size_ok = size_kb >= size_floor
     
     # 检查分辨率
     dim_ok = True
@@ -82,7 +120,7 @@ def check_non_placeholder(path: Path) -> dict[str, Any]:
     passed = size_ok and dim_ok
     message = []
     if not size_ok:
-        message.append(f"文件过小: {size_kb:.1f}KB < {MIN_FILE_SIZE_KB}KB")
+        message.append(f"文件过小: {size_kb:.1f}KB < {size_floor}KB")
     if not dim_ok:
         message.append(f"分辨率过低: {width}x{height} < {MIN_WIDTH}x{MIN_HEIGHT}")
     
@@ -399,13 +437,22 @@ def check_human_anomaly(path: Path) -> dict[str, Any]:
                 anomalies.append(f"检测到肢体断裂/分离 ({disconnected_limbs} 处)")
 
         passed = len(anomalies) == 0
+        issue_types: list[str] = []
+        if any("鬼影" in a or "双体" in a or "多人体" in a for a in anomalies):
+            issue_types.append("ghost_duplicate_figure")
+        if any("漂浮" in a for a in anomalies):
+            issue_types.append("floating_limbs")
+        if any("断裂" in a or "分离" in a for a in anomalies):
+            issue_types.append("disconnected_limbs")
         return {
             "name": "human_anomaly",
             "passed": passed,
             "message": "人体结构检测通过" if passed else "; ".join(anomalies),
             "critical": True,
             "anomalies": anomalies,
+            "issue_types": issue_types,
             "metrics": metrics,
+            "detection_method": DETECTION_METHOD,
         }
     except Exception as e:
         return {
@@ -414,6 +461,217 @@ def check_human_anomaly(path: Path) -> dict[str, Any]:
             "message": f"人体结构检测失败: {e}",
             "critical": True,
         }
+
+
+def check_file_size_vr2r(path: Path) -> dict[str, Any]:
+    """VR-2R 交付文件大小：>500KB S0，>5MB S2"""
+    if not path.exists():
+        return {
+            "name": "file_size_vr2r",
+            "passed": False,
+            "message": "文件不存在",
+            "critical": True,
+        }
+    size_kb = path.stat().st_size / 1024
+    if size_kb < VR2R_MIN_FILE_SIZE_KB:
+        return {
+            "name": "file_size_vr2r",
+            "passed": False,
+            "message": f"文件过小(S0): {size_kb:.1f}KB < {VR2R_MIN_FILE_SIZE_KB}KB",
+            "critical": True,
+            "size_kb": round(size_kb, 1),
+        }
+    if size_kb > VR2R_MAX_FILE_SIZE_KB:
+        return {
+            "name": "file_size_vr2r",
+            "passed": False,
+            "message": f"文件过大(S2): {size_kb:.1f}KB > {VR2R_MAX_FILE_SIZE_KB}KB",
+            "critical": False,
+            "size_kb": round(size_kb, 1),
+        }
+    return {
+        "name": "file_size_vr2r",
+        "passed": True,
+        "message": f"文件大小合规: {size_kb:.1f}KB",
+        "critical": True,
+        "size_kb": round(size_kb, 1),
+    }
+
+
+def check_pixel_complexity(path: Path) -> dict[str, Any]:
+    """像素复杂度：RGB 标准差均值须 > MIN_PIXEL_STD（排除纯色/placeholder）"""
+    if not PIL_AVAILABLE or not path.exists():
+        return {
+            "name": "pixel_complexity",
+            "passed": False,
+            "message": "PIL不可用或文件缺失，无法检测像素复杂度",
+            "critical": True,
+        }
+    try:
+        with Image.open(path) as img:
+            rgb = img.convert("RGB")
+            data = list(rgb.getdata())
+        if not data:
+            return {
+                "name": "pixel_complexity",
+                "passed": False,
+                "message": "空图像",
+                "critical": True,
+            }
+        rs = [p[0] for p in data]
+        gs = [p[1] for p in data]
+        bs = [p[2] for p in data]
+
+        def _std(vals: list[int]) -> float:
+            mean = sum(vals) / len(vals)
+            return math.sqrt(sum((v - mean) ** 2 for v in vals) / len(vals))
+
+        std_r, std_g, std_b = _std(rs), _std(gs), _std(bs)
+        complexity = (std_r + std_g + std_b) / 3.0
+        passed = complexity >= MIN_PIXEL_STD
+        return {
+            "name": "pixel_complexity",
+            "passed": passed,
+            "message": (
+                f"像素复杂度通过: {complexity:.1f}"
+                if passed
+                else f"像素复杂度过低(S0): {complexity:.1f} < {MIN_PIXEL_STD}"
+            ),
+            "critical": True,
+            "pixel_std_mean": round(complexity, 2),
+        }
+    except Exception as e:
+        return {
+            "name": "pixel_complexity",
+            "passed": False,
+            "message": f"像素复杂度检测失败: {e}",
+            "critical": True,
+        }
+
+
+def check_text_card_proxy(path: Path) -> dict[str, Any]:
+    """非文字卡代理：低复杂度 + 低边缘密度 => 疑似文字卡/placeholder"""
+    if not PIL_AVAILABLE or not path.exists():
+        return {
+            "name": "text_card_proxy",
+            "passed": True,
+            "message": "跳过文字卡检测",
+            "critical": False,
+        }
+    try:
+        with Image.open(path) as img:
+            gray = img.convert("L")
+            w, h = gray.size
+            data = list(gray.getdata())
+        mean = sum(data) / len(data)
+        std = math.sqrt(sum((p - mean) ** 2 for p in data) / len(data))
+        edges = gray.filter(ImageFilter.FIND_EDGES)
+        edge_data = list(edges.getdata())
+        edge_ratio = sum(1 for p in edge_data if p > 40) / len(edge_data)
+        is_text_card = std <= TEXT_CARD_MAX_STD and edge_ratio <= TEXT_CARD_MAX_EDGE_RATIO
+        return {
+            "name": "text_card_proxy",
+            "passed": not is_text_card,
+            "message": (
+                "非文字卡检测通过"
+                if not is_text_card
+                else f"疑似文字卡/纯色卡(S0): std={std:.1f}, edge_ratio={edge_ratio:.3f}"
+            ),
+            "critical": True,
+            "gray_std": round(std, 2),
+            "edge_ratio": round(edge_ratio, 4),
+        }
+    except Exception as e:
+        return {
+            "name": "text_card_proxy",
+            "passed": False,
+            "message": f"文字卡检测失败: {e}",
+            "critical": True,
+        }
+
+
+def check_subject_presence(path: Path) -> dict[str, Any]:
+    """人物主体代理：中心区域边缘峰值过低 => 明显非人物/主体缺失"""
+    if not PIL_AVAILABLE or not path.exists():
+        return {
+            "name": "subject_presence",
+            "passed": False,
+            "message": "PIL不可用，无法检测人物主体",
+            "critical": True,
+        }
+    try:
+        matrix = _edge_matrix(path)
+        h, w = len(matrix), len(matrix[0])
+        col_start, col_end = int(w * 0.25), int(w * 0.75)
+        profile = _vertical_profile(matrix, col_start, col_end)
+        peak = max(profile) if profile else 0.0
+        passed = peak >= MIN_SUBJECT_EDGE_PEAK
+        return {
+            "name": "subject_presence",
+            "passed": passed,
+            "message": (
+                "人物主体代理检测通过"
+                if passed
+                else f"人物主体缺失(S0): 中心边缘峰值 {peak:.1f} < {MIN_SUBJECT_EDGE_PEAK}"
+            ),
+            "critical": True,
+            "edge_peak": round(peak, 2),
+            "detection_method": DETECTION_METHOD,
+        }
+    except Exception as e:
+        return {
+            "name": "subject_presence",
+            "passed": False,
+            "message": f"人物主体检测失败: {e}",
+            "critical": True,
+        }
+
+
+def _attach_severity(check: dict[str, Any]) -> dict[str, Any]:
+    check["severity"] = CHECK_SEVERITY.get(check.get("name", ""), SEVERITY_S2)
+    return check
+
+
+def _defects_from_checks(checks: list[dict[str, Any]], *, shot_id: str = "") -> list[dict[str, Any]]:
+    defects: list[dict[str, Any]] = []
+    for check in checks:
+        if check.get("passed"):
+            continue
+        defects.append(
+            {
+                "shot_id": shot_id,
+                "severity": check.get("severity", CHECK_SEVERITY.get(check.get("name", ""), SEVERITY_S2)),
+                "type": check.get("name", "unknown"),
+                "description": check.get("message", ""),
+                "check": check.get("name", ""),
+            }
+        )
+    return defects
+
+
+def _severity_max(defects: list[dict[str, Any]]) -> str | None:
+    order = {SEVERITY_S0: 0, SEVERITY_S1: 1, SEVERITY_S2: 2, SEVERITY_S3: 3}
+    if not defects:
+        return None
+    return min(defects, key=lambda d: order.get(str(d.get("severity")), 9)).get("severity")
+
+
+def _repair_action_for_defects(defects: list[dict[str, Any]]) -> str:
+    for defect in defects:
+        action = REPAIR_ACTIONS.get(str(defect.get("type", "")))
+        if action:
+            return action
+    return "regenerate_shot"
+
+
+def _final_verdict(defects: list[dict[str, Any]], overall_passed: bool) -> str:
+    if overall_passed:
+        return "PASS"
+    if any(d.get("severity") == SEVERITY_S0 for d in defects):
+        return "D_BLOCKED"
+    if any(d.get("severity") == SEVERITY_S1 for d in defects):
+        return "S1_REPAIR_REQUIRED"
+    return "FAIL"
 
 
 def analyze_image_content(path: Path) -> dict[str, Any]:
@@ -478,6 +736,9 @@ def run_quality_check(
     prompt: str = "",
     workflow_data: dict | None = None,
     auto_delete: bool = True,
+    *,
+    shot_id: str = "",
+    vr2r_gate: bool = True,
 ) -> dict[str, Any]:
     """运行全套质量检测
     
@@ -486,9 +747,11 @@ def run_quality_check(
         prompt: 生成使用的prompt
         workflow_data: ComfyUI workflow数据
         auto_delete: 检测失败时自动删除文件
+        shot_id: 镜头 ID（shot-level QC）
+        vr2r_gate: 启用 VR-2R-QF 内容质量门禁（像素复杂度/500KB/主体/文字卡）
     
     Returns:
-        检测结果字典
+        检测结果字典（含 defects / severity / repair_action）
     """
     path = Path(image_path)
     
@@ -498,18 +761,36 @@ def run_quality_check(
     checks.append(check_file_exists(path))
     
     if path.exists():
-        checks.append(check_non_placeholder(path))
+        placeholder_min_kb = 1.0 if not vr2r_gate else MIN_FILE_SIZE_KB
+        checks.append(check_non_placeholder(path, min_size_kb=placeholder_min_kb))
         checks.append(check_image_integrity(path))
         checks.append(analyze_image_content(path))
         checks.append(check_human_anomaly(path))
+        checks.append(check_subject_presence(path))
+        checks.append(check_text_card_proxy(path))
+        if vr2r_gate:
+            checks.append(check_file_size_vr2r(path))
+            checks.append(check_pixel_complexity(path))
     
     if prompt:
         checks.append(check_anatomy_protection(prompt))
     
     checks.append(check_controlnet_used(workflow_data))
-    
-    # 统计结果：任一 critical 失败即 overall 失败
-    passed_all = all(c["passed"] for c in checks if c.get("critical", False))
+
+    checks = [_attach_severity(c) for c in checks]
+    defects = _defects_from_checks(checks, shot_id=shot_id)
+    severity_max = _severity_max(defects)
+
+    s0_defects = [d for d in defects if d.get("severity") == SEVERITY_S0]
+    s1_defects = [d for d in defects if d.get("severity") == SEVERITY_S1]
+    critical_failed = [c["name"] for c in checks if c.get("critical", False) and not c["passed"]]
+
+    # S0 一票否决；S1 默认 fail；其余 critical 失败也 fail
+    overall_passed = (
+        not s0_defects
+        and not s1_defects
+        and all(c["passed"] for c in checks if c.get("critical", False))
+    )
     warnings = [
         c["message"]
         for c in checks
@@ -517,16 +798,26 @@ def run_quality_check(
     ]
     
     result = {
+        "shot_id": shot_id or None,
         "image_path": str(path),
-        "overall_passed": passed_all,
-        "critical_failed": [c["name"] for c in checks if c.get("critical", False) and not c["passed"]],
+        "overall_passed": overall_passed,
+        "final_verdict": _final_verdict(defects, overall_passed),
+        "severity_max": severity_max,
+        "defects": defects,
+        "s0_defects": s0_defects,
+        "s1_defects": s1_defects,
+        "one_vote_blockers": [f"S0_{d['type']}_{shot_id or 'unknown'}" for d in s0_defects],
+        "critical_failed": critical_failed,
         "warnings": warnings,
         "checks": checks,
+        "repair_action": None if overall_passed else _repair_action_for_defects(defects),
+        "detection_method": DETECTION_METHOD,
         "auto_delete_executed": False,
+        "commercial_release_allowed": False,
     }
     
     # 失败时自动删除
-    if not passed_all and auto_delete and path.exists():
+    if not overall_passed and auto_delete and path.exists():
         try:
             path.unlink()
             result["auto_delete_executed"] = True
@@ -537,6 +828,85 @@ def run_quality_check(
             result["delete_error"] = str(e)
     
     return result
+
+
+def run_shot_batch_qc(
+    shots: list[dict[str, Any]],
+    *,
+    report_dir: str | Path | None = None,
+    auto_delete: bool = False,
+    vr2r_gate: bool = True,
+    video_id: str = "ch02_comfyui_quality_fix",
+) -> dict[str, Any]:
+    """Shot-level 批量 QC：逐镜结论 + repair list，不默认整片重做。"""
+    shot_results: list[dict[str, Any]] = []
+    repair_list: list[dict[str, Any]] = []
+    one_vote_blockers: list[str] = []
+
+    for spec in shots:
+        sid = str(spec.get("shot_id") or "")
+        img_path = spec.get("path") or spec.get("image_path")
+        if not img_path:
+            continue
+        qc = run_quality_check(
+            img_path,
+            prompt=str(spec.get("prompt") or spec.get("positive_prompt") or ""),
+            workflow_data=spec.get("workflow_data"),
+            auto_delete=auto_delete,
+            shot_id=sid,
+            vr2r_gate=vr2r_gate,
+        )
+        shot_results.append(qc)
+        if not qc["overall_passed"]:
+            repair_list.append(
+                {
+                    "shot_id": sid,
+                    "image_path": qc.get("image_path"),
+                    "repair_action": qc.get("repair_action", "regenerate_shot"),
+                    "severity_max": qc.get("severity_max"),
+                    "defects": qc.get("defects", []),
+                    "final_verdict": qc.get("final_verdict"),
+                }
+            )
+        one_vote_blockers.extend(qc.get("one_vote_blockers") or [])
+
+    passed = sum(1 for r in shot_results if r.get("overall_passed"))
+    total = len(shot_results)
+    any_s0 = any(r.get("severity_max") == SEVERITY_S0 for r in shot_results if not r.get("overall_passed"))
+    final_verdict = "PASS"
+    if any_s0:
+        final_verdict = "D_BLOCKED"
+    elif repair_list:
+        final_verdict = "S1_REPAIR_REQUIRED"
+
+    report: dict[str, Any] = {
+        "video_id": video_id,
+        "target_quality_level": "B-",
+        "detection_method": DETECTION_METHOD,
+        "total_shots": total,
+        "passed_shots": passed,
+        "failed_shots": total - passed,
+        "shot_results": shot_results,
+        "repair_list": repair_list,
+        "one_vote_blockers": one_vote_blockers,
+        "final_verdict": final_verdict if total else "NO_SHOTS",
+        "commercial_release_allowed": False,
+        "note": "Ken Burns / static motion not evaluated in image-only QC",
+    }
+
+    if report_dir is not None:
+        out = Path(report_dir)
+        out.mkdir(parents=True, exist_ok=True)
+        (out / "shot_qc_report.json").write_text(
+            json.dumps(report, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+        (out / "repair_list.json").write_text(
+            json.dumps({"video_id": video_id, "repair_list": repair_list}, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+
+    return report
 
 
 def controlnet_stub_workflow() -> dict[str, Any]:
@@ -599,11 +969,24 @@ def batch_check_directory(
             prompt=shot_prompts.get(shot_id, ""),
             workflow_data=workflow_data,
             auto_delete=auto_delete,
+            shot_id=shot_id,
+            vr2r_gate=True,
         )
         results.append(result)
     
     passed = sum(1 for r in results if r["overall_passed"])
     deleted = sum(1 for r in results if r["auto_delete_executed"])
+    repair_list = [
+        {
+            "shot_id": r.get("shot_id") or "",
+            "image_path": r.get("image_path"),
+            "repair_action": r.get("repair_action"),
+            "defects": r.get("defects", []),
+            "severity_max": r.get("severity_max"),
+        }
+        for r in results
+        if not r.get("overall_passed")
+    ]
     
     # 生成报告
     report = {
@@ -613,6 +996,13 @@ def batch_check_directory(
         "failed": len(results) - passed,
         "auto_deleted": deleted,
         "overall_pass_rate": passed / len(results) if results else 0,
+        "repair_list": repair_list,
+        "one_vote_blockers": [
+            b for r in results for b in (r.get("one_vote_blockers") or [])
+        ],
+        "final_verdict": "PASS" if passed == len(results) and results else (
+            "D_BLOCKED" if any(r.get("severity_max") == SEVERITY_S0 for r in results if not r.get("overall_passed")) else "S1_REPAIR_REQUIRED"
+        ),
         "results": results,
     }
     
