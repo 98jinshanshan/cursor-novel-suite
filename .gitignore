@@ -38,3 +38,4 @@ dist/
 tools/maintenance/_cleanup_logs/
 .mypy_cache/
 .ruff_cache/
+*.bak
