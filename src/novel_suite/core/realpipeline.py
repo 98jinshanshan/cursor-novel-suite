@@ -168,12 +168,27 @@ def validate_realpipeline(project: str | Path) -> Result:
 
     qc = vid / "video_qc_report.md"
     video_level = "D"
+    comfy_true = False
+    comfy_manifest = vid / "comfyui_render_manifest.json"
+    if comfy_manifest.is_file():
+        try:
+            cm = json.loads(comfy_manifest.read_text(encoding="utf-8"))
+            shots = cm.get("rendered_shots") or []
+            comfy_true = len(shots) >= 5 and all(
+                (s.get("source") == "comfyui" and s.get("prompt_id")) for s in shots[:5]
+            )
+            add("video_ch02.comfyui_render_manifest.json", True, _rel(root, comfy_manifest))
+        except json.JSONDecodeError:
+            add("video_ch02.comfyui_render_manifest.json", False, _rel(root, comfy_manifest))
     if qc.is_file():
         text = qc.read_text(encoding="utf-8")
-        m = re.search(r"video_level:\s*([ABCD])", text, re.I)
+        m = re.search(r"video_level:\s*([ABCD][+-]?)", text, re.I)
         if m:
             video_level = m.group(1).upper()
-        add("video_level_not_ab_for_textcard", video_level in "CD", _rel(root, qc), f"level={video_level}")
+        if comfy_true and video_level.startswith("B"):
+            add("video_level_not_ab_for_textcard", True, _rel(root, qc), f"level={video_level} comfyui_verified")
+        else:
+            add("video_level_not_ab_for_textcard", video_level in "CD", _rel(root, qc), f"level={video_level}")
 
     manifest_path = rep / "realpipeline_2b_nvp_manifest.json"
     overall = "D"

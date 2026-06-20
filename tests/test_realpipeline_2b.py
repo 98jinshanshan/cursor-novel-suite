@@ -92,9 +92,19 @@ def test_video_ch02_package_and_qc():
     ):
         assert (vid / name).is_file(), name
     qc = (vid / "video_qc_report.md").read_text(encoding="utf-8")
-    m = re.search(r"video_level:\s*([ABCD])", qc, re.I)
+    m = re.search(r"video_level:\s*([ABCD][+-]?)", qc, re.I)
     assert m, "video_qc_report must declare video_level"
-    assert m.group(1).upper() in "CD", "dynamic text card / no mp4 must not be A/B"
+    level = m.group(1).upper()
+    comfy_manifest = vid / "comfyui_render_manifest.json"
+    comfy_verified = False
+    if comfy_manifest.is_file():
+        data = json.loads(comfy_manifest.read_text(encoding="utf-8"))
+        shots = data.get("rendered_shots") or []
+        comfy_verified = len(shots) >= 5 and all(s.get("prompt_id") for s in shots[:5])
+    if comfy_verified and level.startswith("B"):
+        assert level in ("B-", "B", "A-", "A")
+    else:
+        assert level in "CD", "dynamic text card / no mp4 must not be A/B without ComfyUI evidence"
 
 
 def test_no_realgen_demo_success_path():
