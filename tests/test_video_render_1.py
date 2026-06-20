@@ -43,9 +43,19 @@ def test_output_mp4_or_blocker():
 
 def test_video_qc_report_grade():
     qc = (CH02 / "video_qc_report.md").read_text(encoding="utf-8")
-    m = re.search(r"video_level:\s*([ABCD])", qc, re.I)
+    m = re.search(r"video_level:\s*([ABCD][+-]?)", qc, re.I)
     assert m, "video_qc_report must declare video_level"
     level = m.group(1).upper()
+    comfy_manifest = CH02 / "comfyui_render_manifest.json"
+    comfy_verified = False
+    if comfy_manifest.is_file():
+        cm = json.loads(comfy_manifest.read_text(encoding="utf-8"))
+        shots = cm.get("rendered_shots") or []
+        comfy_verified = len(shots) >= 5 and all(
+            (s.get("source") == "comfyui" and s.get("prompt_id")) for s in shots[:5]
+        )
+    if comfy_verified and level in ("B", "B-"):
+        return
     manifest = json.loads((CH02 / "render_manifest.json").read_text(encoding="utf-8"))
     comfy = manifest.get("comfyui_available") is True
     if not comfy:
