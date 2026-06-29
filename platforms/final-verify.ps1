@@ -103,6 +103,16 @@ if (-not $SkipMarkdown) {
     $summary["intel_radar_md"] = "skipped"
 }
 
+Write-Host "`n-- Secret scan (staged) --"
+$scanScript = Join-Path $RepoRoot "platforms\scan-staged-secrets.ps1"
+if (Test-Path $scanScript) {
+    & powershell -NoProfile -ExecutionPolicy Bypass -File $scanScript
+    if ($LASTEXITCODE -ne 0) { $failures += "scan-staged-secrets.ps1" }
+    else { $summary["secret_scan"] = "passed" }
+} else {
+    $summary["secret_scan"] = "skipped"
+}
+
 Write-Host "`n== Final Verification Summary ==" -ForegroundColor Cyan
 foreach ($kv in $summary.GetEnumerator()) {
     Write-Host ("  {0}: {1}" -f $kv.Key, $kv.Value)

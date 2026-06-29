@@ -26,6 +26,8 @@ __pycache__/
 .env
 *.env
 platforms/data/
+**/local-secrets/
+**/local-secrets/**
 **/credentials.json
 **/secrets*.json
 dist/
